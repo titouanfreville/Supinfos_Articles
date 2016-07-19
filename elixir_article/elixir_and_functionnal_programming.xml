@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE section PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<section>
+  <title>La programmation fonctionnelle et Elixir</title>
+
+  <para/>
+
+  <section>
+    <title>Introduction</title>
+
+    <para/>
+
+    <para>
+      Cet article a pour but de vous présenter un nouveau langage (Elixir <ulink url="http://elixir-lang.org/">http://elixir-lang.org/</ulink>) et le concept de programmation fonctionnelle.</para>
+    <para/>
+
+    <para>
+      Je vais tout d'abord rappeler ce qu'est la programmation fonctionnelle. Je vous invite à consulter les cours et vidéo à ce sujet si vous accés aux ressources de Supinfo pour plus de détails (cf 3AIT notemment) ainsi que les articles suivants : 
+      <ulink url="https://fr.wikipedia.org/wiki/Programmation_fonctionnelle"> https://fr.wikipedia.org/wiki/Programmation_fonctionnelle</ulink> et <ulink url="http://deptinfo.unice.fr/~roy/progfonc.html"> http://deptinfo.unice.fr/~roy/progfonc.html</ulink> 
+    </para>
+
+    <para/>
+  </section>
+
+  <section>
+    <title>La programmation fonctionnelle, en bref.</title>
+
+    <para/>
+    <para>
+      Il est plus simple de parler de programmation fonctionnelle par opposition à la programmation impérative, plus connues et abordée plus tôt dans les programmes scolaires. Si vous ne savez pas ce qu'est la programmation impérative, je vous invite à ignorer ce paragraphe pour passer directement à l'introduction d’Élixir après avoir lue ou regarder les articles et ressources précédemment cités.
+    </para>
+
+    <section>
+      <title>Concept de programmation fonctionnelle.</title>
+      <para>
+        La programmation fonctionnelle est un concept de programmation ayant pour but principal de s'affranchir des problèmes d'affectation présent dans la programmation impérative. Ainsi, en programmation fonctionnelle, nous n'utilisons plus des états de la machine (ex : x=1 =&gt; J'ai créer un entier référencer par x dont la valeur est 1 donc ma machine est dans l'état X. x++ -&gt;x vaut maintenant 2, ma machine est dans un nouvel état Y.) mais des fonctions imbriquées. La principale différence étant que : En programmation fonctionnelle, je sais exactement ce que FAIT mon programme et comment il évolue LOGIQUEMENT (essentiellement basée sur les concepts de récursion en mathématiques) tandis que en programmation impérative, je sais dans quel état est ma machine, ce qui est présent en mémoire (à qu'elle endroit dans les langages de plus bas niveaux) et quel état je dois atteindre. D'un côté, je sais COMMENT mon programme fonctionne (impératif), de l'autre, je sais POURQUOI et je peux le démontrer (fonctionnel).
+      </para><para>
+        Une autre différence : il est possible, en programmation impérative, de modifier plusieurs Pointeurs dans une même fonctions (et donc d'avoir d'une certaine façon, une fonction qui 'retourne' plusieurs valeurs). C'est impossible en programmation fonctionnel. Une fonction en programmation fonctionnel prend des ensembles d'arguments (liste, tuples, singleton, etc.) et ne retourne qu'un seul ensemble.
+      </para>
+    </section>
+    <section>
+      <title>Utilisations de la programmation fonctionnelle.</title>
+      <para/>
+      <para>
+        La programmation fonctionnelle est aujourd'hui principalement utilisée dans deux domaines :
+        <itemizedlist>
+          <listitem>
+            <para>
+              Les preuves, démonstrations et calculs dans le domaine scientifique (ex : démontrer la validité d'un concept mathématique)
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              L'intelligence artificielle (IA). (cf cours 3AIT)
+            </para>
+          </listitem>
+        </itemizedlist>
+        Pourquoi ces deux domaines ? Pour la partie scientifique, les langage de programmation fonctionnelle cherchant à être aussi proche que possible des bases mathématiques, il est logique de les utiliser pour des applications et programmes liées à ce domaines. Pour son utilisation en intelligence artificielle, l'IA est un domaine ou l'algorithmie occupe une place centrale. Or en programmation fonctionnelle, si l'algorithme implémenter fait ce que nous voulons, et qu'il est correctement implémenter, nous pouvons être sur qu'il fera ce qu'il faut.
+      </para>
+    </section>
+    <para/>
+    <para>
+      Ceci étant fixer, présentons maintenant Élixir. Pour cela, je vous invite à consulter la page web officiel du langage (<ulink url="http://elixir-lang.org/")>http://elixir-lang.org/</ulink>) et suivre le GETTING STARTED. Pour ceux qui ne comprendrait pas l'anglais, sachez qu'Elixir est un langage basé sur Erlang ayant pour objectif d'être puissant (et bien sur, implémentant tout les concepts de programmation fonctionnelle).
+    </para> 
+  </section>
+  <section>
+    <title>PRÉREQUIS</title>
+    <para/>
+    <para>
+      Pour la suite du voyage, il vous faudra avoir : 
+      <itemizedlist>
+        <listitem>
+          Installer Élixir sur votre local ou avoir une solution pour compiler et exécuter les programmes.
+        </listitem>
+        <listitem>
+          Avoir un éditeur de texte avec la coloration syntaxique pour Élixir (parce que c'est plus agréables). J'utilise pour ma part Sublime Text 3 avec le package Élixir basique. 
+        </listitem>
+        <listitem>
+          Être prêt à souffrir ;)
+        </listitem>
+      </itemizedlist>
+    </para>
+    <para/>
+  </section>
+</section>
+      <programlisting language="console">root@ns1:~# dnssec-keygen -a HMAC-MD5 -b 128 -r /dev/urandom -n USER DDNS_UPDATE</programlisting>
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="http://scr.sad.supinfo.com/articles/resources/212360/1715/0.png"/>
+        </imageobject>
+      </mediaobject>
