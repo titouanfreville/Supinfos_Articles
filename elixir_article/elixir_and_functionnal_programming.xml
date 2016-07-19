@@ -2,9 +2,7 @@
 <!DOCTYPE section PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
 <section>
   <title>La programmation fonctionnelle et Elixir</title>
-
   <para/>
-
   <section>
     <title>Introduction</title>
 
@@ -15,21 +13,18 @@
     <para/>
 
     <para>
-      Je vais tout d'abord rappeler ce qu'est la programmation fonctionnelle. Je vous invite à consulter les cours et vidéo à ce sujet si vous accés aux ressources de Supinfo pour plus de détails (cf 3AIT notemment) ainsi que les articles suivants : 
-      <ulink url="https://fr.wikipedia.org/wiki/Programmation_fonctionnelle"> https://fr.wikipedia.org/wiki/Programmation_fonctionnelle</ulink> et <ulink url="http://deptinfo.unice.fr/~roy/progfonc.html"> http://deptinfo.unice.fr/~roy/progfonc.html</ulink> 
+      Je vais tout d'abord rappeler ce qu'est la programmation fonctionnelle. Je vous invite à consulter les cours et vidéo à ce sujet si vous accés aux ressources de Supinfo pour plus de détails (cf 3AIT notemment) ainsi que les articles suivants :
+      <ulink url="http://www.supinfo.com/articles/single/1572-programmer-elixir"> http://www.supinfo.com/articles/single/1572-programmer-elixir</ulink>, <ulink url="https://fr.wikipedia.org/wiki/Programmation_fonctionnelle"> https://fr.wikipedia.org/wiki/Programmation_fonctionnelle</ulink> et <ulink url="http://deptinfo.unice.fr/~roy/progfonc.html"> http://deptinfo.unice.fr/~roy/progfonc.html</ulink> 
     </para>
 
     <para/>
   </section>
-
   <section>
     <title>La programmation fonctionnelle, en bref.</title>
-
     <para/>
     <para>
       Il est plus simple de parler de programmation fonctionnelle par opposition à la programmation impérative, plus connues et abordée plus tôt dans les programmes scolaires. Si vous ne savez pas ce qu'est la programmation impérative, je vous invite à ignorer ce paragraphe pour passer directement à l'introduction d’Élixir après avoir lue ou regarder les articles et ressources précédemment cités.
     </para>
-
     <section>
       <title>Concept de programmation fonctionnelle.</title>
       <para>
@@ -60,8 +55,8 @@
     </section>
     <para/>
     <para>
-      Ceci étant fixer, présentons maintenant Élixir. Pour cela, je vous invite à consulter la page web officiel du langage (<ulink url="http://elixir-lang.org/")>http://elixir-lang.org/</ulink>) et suivre le GETTING STARTED. Pour ceux qui ne comprendrait pas l'anglais, sachez qu'Elixir est un langage basé sur Erlang ayant pour objectif d'être puissant (et bien sur, implémentant tout les concepts de programmation fonctionnelle).
-    </para> 
+      Ceci étant fixer, présentons maintenant Élixir. Pour cela, je vous invite à consulter la page web officiel du langage (<ulink url="http://elixir-lang.org/">http://elixir-lang.org/</ulink>) et suivre le GETTING STARTED. Pour ceux qui ne comprendrait pas l'anglais, sachez qu'Elixir est un langage basé sur Erlang ayant pour objectif d'être puissant (et bien sur, implémentant tout les concepts de programmation fonctionnelle).
+    </para>
   </section>
   <section>
     <title>PRÉREQUIS</title>
@@ -80,12 +75,227 @@
         </listitem>
       </itemizedlist>
     </para>
+
+    <para>
+      Nous allons apprendre Élixir en suivant les étapes :
+      <itemizedlist>
+        <listitem>
+          Premiers pas : Faire une fonction arithmétique simple
+        </listitem>
+        <listitem>
+          Manipuler les listes 
+        </listitem>
+        <listitem>
+          Fonctions de tri sur les listes
+        </listitem>
+        <listitem>
+          Résolution de problèmes de façon fonctionnelle (ex Tour de Hanoï)
+        </listitem>
+        <listitem>
+          Manipulation simple d'arbre
+        </listitem>
+      </itemizedlist>
+      Les codes seront présentés de façon à être réutilisable via la création de librairie. Tous ce qui va être aboder par la suite sont des concepts et applications basiques de la programmation fonctionnelle. 
+    </para>
     <para/>
   </section>
+  <section>
+    <title>Jouons avec Élixir</title>
+    <para/>
+    <section>
+      <title>A petits pas</title>
+      <para/>
+      <para>
+        Pour cette première expérience, nous allons créer deux fonctions mathématiques : Factorielle (!) et Puissance. Ces fonctions seront implémenter de 2 façons : avec des boucles (classique en impératif) en C, de façon récursive (idéologie fonctionnelle) en Élixir.
+        Mais tout d'abord, quelques rappels : 
+        <itemizedlist>
+          <listitem>
+            <para>
+              Élixir est un langage purement fonctionnel. Il n'existe pas de syntaxe pour les boucles en Élixir :)
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              Élixir est un langage dynamiquement typé. C'est à dire que le type de la variable est déterminer après son affectation. 
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              Il faut manipuler les types avec précaution. En effet, chaque fonction attendra un certains type données. Afin d'être le plus réutilisable possible, les fonctions proposés auront toujours une dépendance de type minimal (ex : une fonction d'addition sera typés pour être utilisable par tous floats même si elle utilisé principalement sur des entiers dans notre cas)...
+            </para>
+            <para>
+              Afin que tous sache les prérequis de chaque fonction et sont utilités, celles ci seront commenter comme suit :        
+              <programlisting language="elixir">
+                # @name: Nom_de_la_fonction
+                # @ Description_de_la_fonction
+                # @parameter: Nom_du_paramètre Type Description
+                # ....
+                # @return: Description (Ce que retourne la fonction, dans quelle situation)
+                # @throw: Erreur Description
+              </programlisting>
+            </para>
+          </listitem>
+        </itemizedlist>
+      </para>
+      <para/>
+      <section>
+        <title>En mode Impératifs</title>
+        <section>
+          <title>Théorie</title>
+          <para>
+            Nous avons dit plus haut que l'algorithme était essentiel en programmation fonctionnel. Bien que ce ne soit pas le cas en programmation impérative, je vous propose de tout de même les écrire en pseudo code afin d'avoir une base de comparaison pour les algorithme donner en fonctionnel.
+          </para>
+          <para>
+            Les algorithmes impératif permettant d'exécuter nos deux fonctions sont les suivants. 
+          </para>
+          <para>
+            puissance : <br/> 
+            Soit PUISSANCE (a,b) une fonction sur les entiers Naturels. <br />
+            PUISSANCE (a,b) = <br/>
+            Soit res un entier tel que res = 1 <br/>
+            SI b strictement plus petit que 1, Retourner res.  <br/>
+            Si non <br/>
+            Pour i allant de 1 à b faire : <br/>
+              res = res * a  <br/>
+            Fait;  <br/>
+            Retourner res. 
+          </para>
+          
+          <para>
+            factorielle : <br/> 
+            Soit FACTORIELLE (a) une fonction sur les entiers Naturels. <br />
+            PUISSANCE (a,b) = <br/>
+            Soit res un entier tel que res = 1   <br/>
+            Pour i allant de 1 à a faire : <br/>
+              res = res * a 
+            Fait; <br/>
+            Retourner res.
+          </para>
+        </section>
+        <section>
+          <title>En C</title>
+          <para>
+            Implémentation en C
+          </para>
+          <para>
+            <programlisting language="C">
+              int Puissance(int a, int b)  {
+                int res=1;
+                int i;
+                for (i=1; i&gt;b;i++) {
+                  res=res*b;
+                }
+                return res;
+              }
+            </programlisting>
+          </para>
+          <para>
+            <programlisting language="C">
+              int Factorielle(int a)  {
+                int res=1;
+                int i;
+                for (i=0; i&gt;a;i++) {
+                  res=res*i;
+                }
+                return res;
+              }
+            </programlisting>
+          </para>
+        </section>
+      </section>
+      <section>
+        <title>En fonctionnel</title>
+        <section>
+          <title>Algorithme</title>
+          <para>
+            Les algorithme fonctionnel sont les suivants :
+          </para>
+          <para>
+            puissance: <br/>
+            Soit PUISSANCE (a,b) une fonction sur les entiers Naturels,  <br/>
+            PUISSANCE (a,b) = SELON b   <br/>
+            b = 0 -&gt; 1  <br/>
+            b -&gt; a*PUISSANCE (a,b-1) <br/>
+          </para>
+          <para>
+            L'idée de cet algorithme récursif est le suivant: à chaque étape, on regarde si b est égale à 0. Si il est égale à 0, on renvoie la valeur 1. Sinon, on renvoie la valeur a multiplié par la valeur renvoyer par Puissance (a, b-1). Comme b diminue à chaque étape, on va nécessairement arriver au cas ou b=0 (que l'on appelle cas simple ou cas de base). Et pour parvenir à cette étape, on aura multiplier a par lui même b fois puis par 1. Ce qui est la définition de la puissance (la puissance mathématique est naturellement récursive, comme beaucoup d'outils mathématiques).
+          </para>
+          <para>
+            factorielle : <br/>
+            Soit FACTORIELLE (a) une fonction sur les entiers Naturels, <br/>
+            FACTORIELLE (a) = SELON a <br/>
+            a = 0 -&gt; 1
+            a -&gt; a*FACTORIELLE (a-1)
+          </para>
+          <para>
+            Cet algorithme fonctionne comme le précédent, si ce n'est que l'on a un paramètre unique. On aura donc multiplier a par (a-1) par (a-2) par ... par 1.
+          </para>
+        </section>
+        <section>
+          <title>En Élixir</title>
+          <para>
+            Implémentation en Élixir
+          </para>          
+          <para>
+            <programlisting language="exs">
+              defmodule Maths do
+                # @name puissance
+                # Fonction permettant de calculer la valeur de a^b. 
+                # @param a int entier dont on cherche la puissance
+                # @param b int entier représenter la puissance à la quelle élever a
+                # @return a^b
+                def puissance(a, b) do
+                  cond do
+                    b==0 -&gt; 1
+                    true -&gt; a * puissance(a, b-1)
+                  end
+                end
+                # @name puissance
+                # Fonction permettant de calculer la valeur de a!. 
+                # @param a int entier dont on cherche la factorielle
+                # @return a!
+                def factorielle(a) do
+                  cond do
+                    a==0 -&gt; 1
+                    true -&gt; a * factorielle(a-1)
+                  end
+                end
+              end 
+            </programlisting>
+          </para>
+          <para>
+            Si vous avez lue et suivie le Getting Stared d'Élixir, vous aurez vue les fonctions récursive sous une forme un peu différente, propre à Élixir : 
+
+            <programlisting language="exs">
+              defmodule Maths do
+                # @name puissance
+                # Fonction permettant de calculer la valeur de a!. 
+                # @param a int entier dont on cherche la factorielle
+                # @return a!
+                def factorielle(0) do
+                  1
+                done
+
+                def factorielle(a) do
+                  a * factorielle(a-1)
+                done
+              end 
+            </programlisting>
+
+            Cette forme est tout aussi fonctionnelle, mais plus lourde à écrire, aussi préférerais-je la version que j'ai moi même proposé. À vous de choisir ce qui vous convient le mieux. 
+          </para>
+        </section>
+      </section>
+      <para>
+        Nous venons donc de réaliser deux fonctions mathématiques simple, une fois en fonctionnel, une fois en impératif. On peut dors et déjà pointé quelque différence entre ces deux visions de programmation : 
+        Au niveau de la preuve d'algorithme (ici fait de façon grossière par une explication logique), l'algorithme fonctionnel n'est pas mathématiquement démontrables (il existe des méthodes de preuves pour de tels algorithme, mais elle définissent de nouveau axiomes) contrairement aux algorithme fonctionnel qui sont des algorithme mathématique. C'est l'une des principales différences entre ces deux visions de la programmation, et la raison de préférer l'un à l'autre. Si vous avez besoin d'être certains de comment, et où sont stocker les éléments dans votre ordinateur, comment est utiliser la mémoire, etc., la programmation impérative est la plus adapté. Par contre, si vous avez besoin d'être sur que votre programme va fonctionner comme attendu et être capable de le démontrer simplement, la programmation fonctionnelle est plus adapté.
+      </para>
+    </section>
+  </section>
 </section>
-      <programlisting language="console">root@ns1:~# dnssec-keygen -a HMAC-MD5 -b 128 -r /dev/urandom -n USER DDNS_UPDATE</programlisting>
+<!--       <programlisting language="console">root@ns1:~# dnssec-keygen -a HMAC-MD5 -b 128 -r /dev/urandom -n USER DDNS_UPDATE</programlisting>
       <mediaobject>
         <imageobject>
           <imagedata fileref="http://scr.sad.supinfo.com/articles/resources/212360/1715/0.png"/>
         </imageobject>
-      </mediaobject>
+      </mediaobject> -->
