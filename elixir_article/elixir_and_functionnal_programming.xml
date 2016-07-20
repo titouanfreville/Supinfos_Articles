@@ -14,7 +14,7 @@
 
     <para>
       Je vais tout d'abord rappeler ce qu'est la programmation fonctionnelle. Je vous invite à consulter les cours et vidéo à ce sujet si vous accés aux ressources de Supinfo pour plus de détails (cf 3AIT notemment) ainsi que les articles suivants :
-      <ulink url="http://www.supinfo.com/articles/single/1572-programmer-elixir"> http://www.supinfo.com/articles/single/1572-programmer-elixir</ulink>, <ulink url="https://fr.wikipedia.org/wiki/Programmation_fonctionnelle"> https://fr.wikipedia.org/wiki/Programmation_fonctionnelle</ulink> et <ulink url="http://deptinfo.unice.fr/~roy/progfonc.html"> http://deptinfo.unice.fr/~roy/progfonc.html</ulink> 
+      <ulink url="http://www.supinfo.com/articles/single/1572-programmer-elixir"> http://www.supinfo.com/articles/single/1572-programmer-elixir</ulink>, <ulink url="https://fr.wikipedia.org/wiki/Programmation_fonctionnelle">https://fr.wikipedia.org/wiki/Programmation_fonctionnelle</ulink> et <ulink url="http://deptinfo.unice.fr/~roy/progfonc.html">http://deptinfo.unice.fr/~roy/progfonc.html</ulink> 
     </para>
 
     <para/>
@@ -125,7 +125,7 @@
             </para>
             <para>
               Afin que tous sache les prérequis de chaque fonction et sont utilités, celles ci seront commenter comme suit :        
-              <programlisting language="elixir">
+              <programlisting langage="exs">
                 # @name: Nom_de_la_fonction
                 # @ Description_de_la_fonction
                 # @parameter: Nom_du_paramètre Type Description
@@ -149,27 +149,31 @@
             Les algorithmes impératif permettant d'exécuter nos deux fonctions sont les suivants. 
           </para>
           <para>
-            puissance : <br/> 
-            Soit PUISSANCE (a,b) une fonction sur les entiers Naturels. <br />
-            PUISSANCE (a,b) = <br/>
-            Soit res un entier tel que res = 1 <br/>
-            SI b strictement plus petit que 1, Retourner res.  <br/>
-            Si non <br/>
-            Pour i allant de 1 à b faire : <br/>
-              res = res * a  <br/>
-            Fait;  <br/>
-            Retourner res. 
+            <programlisting>
+              puissance :  
+              Soit PUISSANCE (a,b) une fonction sur les entiers Naturels. 
+              PUISSANCE (a,b) = 
+              Soit res un entier tel que res = 1 
+              SI b strictement plus petit que 1, Retourner res.  
+              Si non 
+              Pour i allant de 1 à b faire : 
+                res = res * a  
+              Fait;  
+              Retourner res. 
+            </programlisting>
           </para>
           
           <para>
-            factorielle : <br/> 
-            Soit FACTORIELLE (a) une fonction sur les entiers Naturels. <br />
-            PUISSANCE (a,b) = <br/>
-            Soit res un entier tel que res = 1   <br/>
-            Pour i allant de 1 à a faire : <br/>
-              res = res * a 
-            Fait; <br/>
-            Retourner res.
+            <programlisting>
+              factorielle :  
+              Soit FACTORIELLE (a) une fonction sur les entiers Naturels. 
+              PUISSANCE (a,b) = 
+              Soit res un entier tel que res = 1   
+              Pour i allant de 1 à a faire : 
+                res = res * a 
+              Fait; 
+              Retourner res.
+            </programlisting>
           </para>
         </section>
         <section>
@@ -178,7 +182,7 @@
             Implémentation en C
           </para>
           <para>
-            <programlisting language="C">
+            <programlisting langage="c">
               int Puissance(int a, int b)  {
                 int res=1;
                 int i;
@@ -190,7 +194,7 @@
             </programlisting>
           </para>
           <para>
-            <programlisting language="C">
+            <programlisting langage="c">
               int Factorielle(int a)  {
                 int res=1;
                 int i;
@@ -211,21 +215,25 @@
             Les algorithme fonctionnel sont les suivants :
           </para>
           <para>
-            puissance: <br/>
-            Soit PUISSANCE (a,b) une fonction sur les entiers Naturels,  <br/>
-            PUISSANCE (a,b) = SELON b   <br/>
-            b = 0 -&gt; 1  <br/>
-            b -&gt; a*PUISSANCE (a,b-1) <br/>
+            <programlisting>
+              puissance: 
+              Soit PUISSANCE (a,b) une fonction sur les entiers Naturels,  
+              PUISSANCE (a,b) = SELON b   
+              b = 0 -&gt; 1  
+              b -&gt; a*PUISSANCE (a,b-1) 
+            </programlisting>
           </para>
           <para>
             L'idée de cet algorithme récursif est le suivant: à chaque étape, on regarde si b est égale à 0. Si il est égale à 0, on renvoie la valeur 1. Sinon, on renvoie la valeur a multiplié par la valeur renvoyer par Puissance (a, b-1). Comme b diminue à chaque étape, on va nécessairement arriver au cas ou b=0 (que l'on appelle cas simple ou cas de base). Et pour parvenir à cette étape, on aura multiplier a par lui même b fois puis par 1. Ce qui est la définition de la puissance (la puissance mathématique est naturellement récursive, comme beaucoup d'outils mathématiques).
           </para>
           <para>
-            factorielle : <br/>
-            Soit FACTORIELLE (a) une fonction sur les entiers Naturels, <br/>
-            FACTORIELLE (a) = SELON a <br/>
-            a = 0 -&gt; 1
-            a -&gt; a*FACTORIELLE (a-1)
+            <programlisting>
+              factorielle : 
+              Soit FACTORIELLE (a) une fonction sur les entiers Naturels, 
+              FACTORIELLE (a) = SELON a 
+              a = 0 -&gt; 1 
+              a -&gt; a*FACTORIELLE (a-1)
+            </programlisting>
           </para>
           <para>
             Cet algorithme fonctionne comme le précédent, si ce n'est que l'on a un paramètre unique. On aura donc multiplier a par (a-1) par (a-2) par ... par 1.
@@ -237,7 +245,7 @@
             Implémentation en Élixir
           </para>          
           <para>
-            <programlisting language="exs">
+            <programlisting langage="elixir">
               defmodule Maths do
                 # @name puissance
                 # Fonction permettant de calculer la valeur de a^b. 
@@ -250,7 +258,7 @@
                     true -&gt; a * puissance(a, b-1)
                   end
                 end
-                # @name puissance
+                # @name factorielle
                 # Fonction permettant de calculer la valeur de a!. 
                 # @param a int entier dont on cherche la factorielle
                 # @return a!
@@ -266,9 +274,9 @@
           <para>
             Si vous avez lue et suivie le Getting Stared d'Élixir, vous aurez vue les fonctions récursive sous une forme un peu différente, propre à Élixir : 
 
-            <programlisting language="exs">
+            <programlisting langage="exs">
               defmodule Maths do
-                # @name puissance
+                # @name factorielle
                 # Fonction permettant de calculer la valeur de a!. 
                 # @param a int entier dont on cherche la factorielle
                 # @return a!
@@ -291,11 +299,132 @@
         Au niveau de la preuve d'algorithme (ici fait de façon grossière par une explication logique), l'algorithme fonctionnel n'est pas mathématiquement démontrables (il existe des méthodes de preuves pour de tels algorithme, mais elle définissent de nouveau axiomes) contrairement aux algorithme fonctionnel qui sont des algorithme mathématique. C'est l'une des principales différences entre ces deux visions de la programmation, et la raison de préférer l'un à l'autre. Si vous avez besoin d'être certains de comment, et où sont stocker les éléments dans votre ordinateur, comment est utiliser la mémoire, etc., la programmation impérative est la plus adapté. Par contre, si vous avez besoin d'être sur que votre programme va fonctionner comme attendu et être capable de le démontrer simplement, la programmation fonctionnelle est plus adapté.
       </para>
     </section>
+    <section>
+      <title>Listes</title>
+      <para/>
+      <para>
+        La structure de listes est une structure mathématique naturellement récursive. En effet, une liste est un ensemble d'élément telle que l'on ne peut accéder qu'à l'élément en tête de la liste (le dernier entré). Une liste sera donc représenter ainsi : Liste = Tête :: Queue dans les algorithme. Dans un premier temps, nous allons apprendre à manipuler ce type de structure puis nous verrons ce qu'il est possible de faire dessus. 
+      </para>
+      <para/>
+      <section>
+        <title>Manipuler des listes.</title>
+        <para>
+          Nous avons dit que les listes était des structures récursive (ou inductive). Pour construire une liste, on "empile" des éléments les uns au dessus des autres puis on les dépiles. Il convient donc de manipuler principalement via des fonctions récursive. Si il est possible de recréer des listes et leurs opérateurs dans des langages impératif (tel que C ou JAVA), ce n'est pas une façon "logique" pour stocker des éléments en impératif (on utilisera plutôt des tableaux, permettant d'accéder directement à tous les éléments). Par contre, les listes sont des structures natives en programmation fonctionnelle. La structure est dynamique et sera souvent utiliser pour stocker un ensemble d'élément amené à être régulièrement modifier. Si non, les tuples (que nous verront plus tard) seront des structures plus appréciées. 
+        </para>
+        <para/>
+        <section>
+          <title>Premières armes</title>
+          <para/>
+          <para>
+            Commençons par manipuler simplement des listes
+          </para>
+          <section>
+            <title>Affichons tous les éléments d'une liste simple (ne contenant que des singletons)</title>
+            <para>
+              Voyons comment lire une liste et en afficher chaque éléments. 
+            </para>
+            <para>
+              Tout d'abord, l'algorithme : 
+              <programlisting>
+                Soit L une liste. 
+                Soit F une fonction de X Liste dans Vide (ou X est un type quelconque).
+                F (l) = Selon l
+                Vide(l) -&gt; Rien à faire ou afficher Vide selon les envies (On est arrivé au bout de liste puis ce qu'elle est vide).
+                NonVide(l) -&gt; Afficher Tête(l); F (Queue (l)). (On affiche le premier élément de la liste puis on rappelle la fonction avec la suite de la liste).
+              </programlisting>
+            </para>
+            <para>
+              On se contente de prendre le premier élément que l'on trouve pour l'afficher, puis on passe à la suite. Le cas de base est vide car il n'a rien à faire.
+            </para>
+            <para>
+              Le code en élixir : 
+              <programlisting langage="exs">
+                defmodule Listes do
+                  # @name affiche
+                  # Fonction permettant d'afficher chaque élément de la liste sous la forme E\nE\nE...Vide
+                  # @param l liste liste d'élément à afficher
+                  def affiche(l) do
+                    cond do
+                      l==[] -&gt; IO.puts "Vide"
+                      true -&gt; 
+                        IO.puts (hd l)
+                        affiche(tl l)
+                    end
+                  end
+                end 
+            </programlisting>
+            </para>
+            <para>
+              Cette fonction affichera tout les éléments d'une liste en passant à la ligne entre chaque éléments. C'est une fonction basique qui permet surtout de voir comment manipuler une liste. Maintenant, travaillons sur des listes.
+            </para>
+          </section>
+          <section>
+            <title>Fonctions de recherche et spécifications</title>
+            <para>
+              Nous allons implémenter les fonctions suivantes : Recherche d'un élément e dans une liste, suppression des doublons dans une liste puis comptage du nombre d'occurrence (nombre de fois ou il apparaît) d'un élément placer en paramètre. Mais tout d'abord, les algorithmes :).
+            </para>
+            <section>
+              <title>Les algorithmes</title>
+              <para>
+                Recherche d'une élément : 
+                Le concept est simple. On parcourt la liste jusqu'à ce que l'on trouve l'élément chercher. On a donc : 
+                <programlisting>
+                  Soit Recherche un fonction dans Booléen (Vrai ou Faux). 
+                  Recherche(Élément, Liste) = Selon (Liste) 
+                  Vide(Liste) -&gt; Faux 
+                  NonVide(Liste) -&gt; Tête(Liste) = Éléments ou alors Recherche(Éléments, Queue(Liste)) 
+                </programlisting>
+              </para>
+              <para>
+                Suppression des doublons dans une liste : 
+                Cette fois, on va parcourir la liste et, pour chaque élément, appeler la fonction de recherche. Si l'élément est encore dans la liste, on passe au suivant, sinon, on passe au suivant en ajoutant l'élément courant à la liste de retour. Ce qui donne : 
+                <programlisting>
+                  Soit SupDoublons une fonctions dans X Liste
+                  SupDoublons(l) = Selon l 
+                  Vide(l) -&gt; Vide
+                  NonVide(l) -&gt; Si Recherche(Tête(l),Queue(l)) alors SupDoublons(Queue(l)) ou alors Construire Tête(l) (SupDoublons(Queue(l)))
+                </programlisting>
+              </para>
+              <para>
+                Nombre d'occurrence de E dans L :
+                <programlisting>  
+                  Soit NombreDe une fonction dans int (entiers)
+                  NombreDe(E,L) = Selon (L) 
+                  Vide(L) -&gt; 0
+                  NonVide(L) -&gt; Si Tête(L)=E alors 1 + NombreDe(E,Queue(L)) ou alors NombreDe(E,Queue(L))
+                </programlisting>
+              </para>
+              <para/>
+            </section>
+            <para>
+              Place au code.
+            </para>
+            <section>
+              <title>Code Ex</title>
+              <para>
+                <programlisting langage="exs">
+                  defmodule Listes do
+                    # @name affiche
+                    # Fonction permettant d'afficher chaque élément de la liste sous la forme E\nE\nE...Vide
+                    # @param l liste liste d'élément à afficher
+                    def affiche(l) do
+                      cond do
+                        l==[] -&gt; IO.puts "Vide"
+                        true -&gt; 
+                          IO.puts (hd l)
+                          affiche(tl l)
+                      end
+                    end
+
+                    
+
+                  end 
+                </programlisting>
+              </para>
+            </section>
+          </section>
+        </section>
+      </section>
+    </section>
   </section>
 </section>
-<!--       <programlisting language="console">root@ns1:~# dnssec-keygen -a HMAC-MD5 -b 128 -r /dev/urandom -n USER DDNS_UPDATE</programlisting>
-      <mediaobject>
-        <imageobject>
-          <imagedata fileref="http://scr.sad.supinfo.com/articles/resources/212360/1715/0.png"/>
-        </imageobject>
-      </mediaobject> -->
