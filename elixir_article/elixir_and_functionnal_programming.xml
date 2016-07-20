@@ -126,12 +126,12 @@
             <para>
               Afin que tous sache les prérequis de chaque fonction et sont utilités, celles ci seront commenter comme suit :        
               <programlisting langage="exs">
-                # @name: Nom_de_la_fonction
-                # @ Description_de_la_fonction
-                # @parameter: Nom_du_paramètre Type Description
-                # ....
-                # @return: Description (Ce que retourne la fonction, dans quelle situation)
-                # @throw: Erreur Description
+# @name: Nom_de_la_fonction
+# @ Description_de_la_fonction
+# @parameter: Nom_du_paramètre Type Description
+# ....
+# @return: Description (Ce que retourne la fonction, dans quelle situation)
+# @throw: Erreur Description
               </programlisting>
             </para>
           </listitem>
@@ -150,29 +150,29 @@
           </para>
           <para>
             <programlisting>
-              puissance :  
-              Soit PUISSANCE (a,b) une fonction sur les entiers Naturels. 
-              PUISSANCE (a,b) = 
-              Soit res un entier tel que res = 1 
-              SI b strictement plus petit que 1, Retourner res.  
-              Si non 
-              Pour i allant de 1 à b faire : 
-                res = res * a  
-              Fait;  
-              Retourner res. 
+puissance :  
+Soit PUISSANCE (a,b) une fonction sur les entiers Naturels. 
+PUISSANCE (a,b) = 
+Soit res un entier tel que res = 1 
+SI b strictement plus petit que 1, Retourner res.  
+Si non 
+Pour i allant de 1 à b faire : 
+  res = res * a  
+Fait;  
+Retourner res. 
             </programlisting>
           </para>
           
           <para>
             <programlisting>
-              factorielle :  
-              Soit FACTORIELLE (a) une fonction sur les entiers Naturels. 
-              PUISSANCE (a,b) = 
-              Soit res un entier tel que res = 1   
-              Pour i allant de 1 à a faire : 
-                res = res * a 
-              Fait; 
-              Retourner res.
+factorielle :  
+Soit FACTORIELLE (a) une fonction sur les entiers Naturels. 
+PUISSANCE (a,b) = 
+Soit res un entier tel que res = 1   
+Pour i allant de 1 à a faire : 
+  res = res * a 
+Fait; 
+Retourner res.
             </programlisting>
           </para>
         </section>
@@ -183,26 +183,26 @@
           </para>
           <para>
             <programlisting langage="c">
-              int Puissance(int a, int b)  {
-                int res=1;
-                int i;
-                for (i=1; i&gt;b;i++) {
-                  res=res*b;
-                }
-                return res;
-              }
+int Puissance(int a, int b)  {
+  int res=1;
+  int i;
+  for (i=1; i&gt;b;i++) {
+    res=res*b;
+  }
+  return res;
+}
             </programlisting>
           </para>
           <para>
             <programlisting langage="c">
-              int Factorielle(int a)  {
-                int res=1;
-                int i;
-                for (i=0; i&gt;a;i++) {
-                  res=res*i;
-                }
-                return res;
-              }
+int Factorielle(int a)  {
+  int res=1;
+  int i;
+  for (i=0; i&gt;a;i++) {
+    res=res*i;
+  }
+  return res;
+}
             </programlisting>
           </para>
         </section>
@@ -216,11 +216,11 @@
           </para>
           <para>
             <programlisting>
-              puissance: 
-              Soit PUISSANCE (a,b) une fonction sur les entiers Naturels,  
-              PUISSANCE (a,b) = SELON b   
-              b = 0 -&gt; 1  
-              b -&gt; a*PUISSANCE (a,b-1) 
+puissance: 
+Soit PUISSANCE (a,b) une fonction sur les entiers Naturels,  
+PUISSANCE (a,b) = SELON b   
+b = 0 -&gt; 1  
+b -&gt; a*PUISSANCE (a,b-1) 
             </programlisting>
           </para>
           <para>
@@ -228,11 +228,11 @@
           </para>
           <para>
             <programlisting>
-              factorielle : 
-              Soit FACTORIELLE (a) une fonction sur les entiers Naturels, 
-              FACTORIELLE (a) = SELON a 
-              a = 0 -&gt; 1 
-              a -&gt; a*FACTORIELLE (a-1)
+factorielle : 
+Soit FACTORIELLE (a) une fonction sur les entiers Naturels, 
+FACTORIELLE (a) = SELON a 
+a = 0 -&gt; 1 
+a -&gt; a*FACTORIELLE (a-1)
             </programlisting>
           </para>
           <para>
@@ -246,48 +246,48 @@
           </para>          
           <para>
             <programlisting langage="elixir">
-              defmodule Maths do
-                # @name puissance
-                # Fonction permettant de calculer la valeur de a^b. 
-                # @param a int entier dont on cherche la puissance
-                # @param b int entier représenter la puissance à la quelle élever a
-                # @return a^b
-                def puissance(a, b) do
-                  cond do
-                    b==0 -&gt; 1
-                    true -&gt; a * puissance(a, b-1)
-                  end
-                end
-                # @name factorielle
-                # Fonction permettant de calculer la valeur de a!. 
-                # @param a int entier dont on cherche la factorielle
-                # @return a!
-                def factorielle(a) do
-                  cond do
-                    a==0 -&gt; 1
-                    true -&gt; a * factorielle(a-1)
-                  end
-                end
-              end 
+defmodule Maths do
+  # @name puissance
+  # Fonction permettant de calculer la valeur de a^b. 
+  # @param a int entier dont on cherche la puissance
+  # @param b int entier représenter la puissance à la quelle élever a
+  # @return a^b
+  def puissance(a, b) do
+    cond do
+      b==0 -&gt; 1
+      true -&gt; a * puissance(a, b-1)
+    end
+  end
+  # @name factorielle
+  # Fonction permettant de calculer la valeur de a!. 
+  # @param a int entier dont on cherche la factorielle
+  # @return a!
+  def factorielle(a) do
+    cond do
+      a==0 -&gt; 1
+      true -&gt; a * factorielle(a-1)
+    end
+  end
+end 
             </programlisting>
           </para>
           <para>
             Si vous avez lue et suivie le Getting Stared d'Élixir, vous aurez vue les fonctions récursive sous une forme un peu différente, propre à Élixir : 
 
             <programlisting langage="exs">
-              defmodule Maths do
-                # @name factorielle
-                # Fonction permettant de calculer la valeur de a!. 
-                # @param a int entier dont on cherche la factorielle
-                # @return a!
-                def factorielle(0) do
-                  1
-                done
+defmodule Maths do
+  # @name factorielle
+  # Fonction permettant de calculer la valeur de a!. 
+  # @param a int entier dont on cherche la factorielle
+  # @return a!
+  def factorielle(0) do
+    1
+  done
 
-                def factorielle(a) do
-                  a * factorielle(a-1)
-                done
-              end 
+  def factorielle(a) do
+    a * factorielle(a-1)
+  done
+end 
             </programlisting>
 
             Cette forme est tout aussi fonctionnelle, mais plus lourde à écrire, aussi préférerais-je la version que j'ai moi même proposé. À vous de choisir ce qui vous convient le mieux. 
@@ -391,7 +391,7 @@
                   Soit NombreDe une fonction dans int (entiers)
                   NombreDe(E,L) = Selon (L) 
                   Vide(L) -&gt; 0
-                  NonVide(L) -&gt; Si Tête(L)=E alors 1 + NombreDe(E,Queue(L)) ou alors NombreDe(E,Queue(L))
+                  NonVide(L) -&gt; Si Tête(L)=E alors 1 + NombreDe(E,Queue(L)) sinon NombreDe(E,Queue(L))
                 </programlisting>
               </para>
               <para/>
@@ -404,24 +404,88 @@
               <para>
                 <programlisting langage="exs">
                   defmodule Listes do
-                    # @name affiche
-                    # Fonction permettant d'afficher chaque élément de la liste sous la forme E\nE\nE...Vide
-                    # @param l liste liste d'élément à afficher
-                    def affiche(l) do
+                    # @name est_dans
+                    # Fonction testant la présence d'un élément dans une liste
+                    # @param e any élément à rechercher
+                    # @param l list liste dans la quelle cherché l'élément
+                    # @return true si l'élément existe, false sinon
+                    def est_dans(e,l) do
                       cond do
-                        l==[] -&gt; IO.puts "Vide"
-                        true -&gt; 
-                          IO.puts (hd l)
-                          affiche(tl l)
+                        l==[] -&gt; false
+                        true -&gt; (hd l) == e || est_dans e,(tl l)
                       end
                     end
-
-                    
-
+                    # @name doublons_sk
+                    # Fonction permettant de supprimer les doublons dans une liste.
+                    # @param l liste liste dont on veux supprimer les doublons.
+                    # @return liste sans doublons.
+                    def doublons_sk(l) do
+                      cond do
+                        l==[] -&gt; []
+                        true -&gt; if est_dans (hd l),(tl l) do doublons_sk (tl l) else [hd l] ++ doublons_sk (tl l) end
+                      end
+                    end
+                    # @name nb_de
+                    # Fonction pour trouver le nombre d’occurrence de E dans L
+                    # @param e any éléments à compter
+                    # @param l list liste dans la quelle compter
+                    # @return nombre d’occurrence de E dans L
+                    def nb_de(e,l) do
+                      cond do
+                        l==[] -&gt; 0
+                        true -&gt; (hd l) == e &amp;&amp; 1 + nb_de(e,(tl l)) || nb_de(e,(tl l))
+                      end
+                    end
                   end 
                 </programlisting>
               </para>
+              <para>
+                Vous voilà désormais armé de quelque fonctions basique sur les listes. Vous pouvez compléter ces fonctions avec des fonctions pour inverser la liste par exemple. Et nous allons tout de suite compléter notre collection avec quelque fonction un peu plus amusantes :)
+              </para>
             </section>
+          </section>
+        </section>
+        <section>
+          <title>Les fonctions de tri, de l'élèves au maître.</title>
+          <para>
+            Voyons maintenant deux fonctions de tri sur les listes. La première est la fonction basique de trie. Il est déconseillé de l'utiliser, elle est particulièrement peu efficace. Nous allons également profité de ces fonctions de tri pour voir les 2 méthodologies d'implémentation pour les fonctions récursive. Jusqu'à présent, nous avons empiler les opérations dans les algorithmes et programmes au niveau de l'appel récursif. C'est ce que l'on appel de la récursivité non terminale, car au moments de l'appel récursif, il y a encore des opérations à effectuer. L'avantage de cette façon de faire est qu'elle est logique vis à vis de la récursivité mathématique. L'inconvénient, c'est que cela prend vite beaucoup de place dans la mémoire de notre environnement. Aussi, pour éviter cela, une autre façon de faire, la récursivité terminale existe. Dans ce cas, l'objectif est que au moment de l'appel récursif, le programme n'est plus d'opération à exécuter. Il va donc être nécessaire d'utiliser des accumulateurs. Nous allons utiliser la première fonction de tri (que l'on va appeler tri_bulles) pour illustrer cette différence. 
+          </para>
+          <para/>
+          <section>
+            <title>Tri Bulle</title>
+            <para/>
+            <para>
+              La fonction tri bulle est la fonction de tri la plus 'instinctive'. Elle ce contente de regarder chaque éléments puis dans les insérer dans la liste triée. 
+            </para>
+            <para>
+              Nous allons donc avoir l'algorithme suivant en fonctionnel non terminal : 
+              <programlisting>
+Soit tribulle une fonction dans listes.
+tribulle(l) = Selon l
+Vide(l) -&gt; Vide
+NonVide(l) -&gt; Faire 
+  Soit ltriée = tribulle(Queue l) dans
+  Si Tête(l) &lt; Tête(ltriée) alors Construire Tête(l) ltriée sinon Construire Tête(ltriée) tribulle(Construire Tête(l) Queue(ltriée))
+              </programlisting>
+              et celui-ci en récursif terminal :
+              <programlisting>
+Soit tribulle une fonction dans listes.
+tribulle(l, acc) = Selon l
+Vide(l) -&gt; acc
+NonVide(l) -&gt; Faire 
+  Si Tête(l) &lt; Tête(acc) alors Construire Tête(l) acc sinon Construire Tête(acc) tribulle(Construire Tête(l) Queue(acc))
+              </programlisting>
+            </para>
+            <para>
+              Nous voyons bien sur cet exemple que les deux façons de procédés on globalement le même fonctionnement. Ici, dans les deux cas, on compare l'élément courant à une liste déjà triée (soit l'accumulateur, soit le tri de la suite de la fonction). On voit aussi, pour cette fonction qu'il n'y a pas de gain de temps quelque soit la solution. Une fonction en récursif terminal et une fonction en récursif non terminal auront, si elles sont bien pensée, le même temps d'exécution. Cependant, l'espace n'est clairement pas occupé de la même façon. Dans la récursivité terminal, on demande au programme de travailler avec un espace mémoire connue représenter par l'accumulateur, et c'est ce paramètre que l'on fait varié à chaque étape. En non terminal, on demande à la pile d'exécution (généralement, cela va se traduire par une occupation de la RAM et de la mémoire processeur) de garder en mémoire les actions à effectuer une fois que l'on aura atteint un cas connue. Vous pourrez voir en testant les programmes que nous allons maintenant élaboré que en la méthode non terminale finira par échouer si vous lui passer une liste trop grosse. Mais vous pourrez aller beaucoup plus loin en utilisant la méthode terminale. 
+            </para>
+            <para/>
+            <para>
+              Le code :
+              <programlisting langage="elixir">
+
+              </programlisting>
+            </para>
           </section>
         </section>
       </section>
