@@ -13,7 +13,7 @@
     <para/>
 
     <para>
-      Je vais tout d'abord rappeler ce qu'est la programmation fonctionnelle. Je vous invite à consulter les cours et vidéo à ce sujet si vous accés aux ressources de Supinfo pour plus de détails (cf 3AIT notemment) ainsi que les articles suivants :
+      Je vais tout d'abord rappeler ce qu'est la programmation fonctionnelle. Je vous invite à consulter les cours et vidéo à ce sujet si vous accès aux ressources de Supinfo pour plus de détails (cf 3AIT notamment) ainsi que les articles suivants :
       <ulink url="http://www.supinfo.com/articles/single/1572-programmer-elixir"> http://www.supinfo.com/articles/single/1572-programmer-elixir</ulink>, <ulink url="https://fr.wikipedia.org/wiki/Programmation_fonctionnelle">https://fr.wikipedia.org/wiki/Programmation_fonctionnelle</ulink> et <ulink url="http://deptinfo.unice.fr/~roy/progfonc.html">http://deptinfo.unice.fr/~roy/progfonc.html</ulink> 
     </para>
 
@@ -55,7 +55,7 @@
     </section>
     <para/>
     <para>
-      Ceci étant fixer, présentons maintenant Élixir. Pour cela, je vous invite à consulter la page web officiel du langage (<ulink url="http://elixir-lang.org/">http://elixir-lang.org/</ulink>) et suivre le GETTING STARTED. Pour ceux qui ne comprendrait pas l'anglais, sachez qu'Elixir est un langage basé sur Erlang ayant pour objectif d'être puissant (et bien sur, implémentant tout les concepts de programmation fonctionnelle).
+      Ceci étant fixer, présentons maintenant Élixir. Pour cela, je vous invite à consulter la page web officiel du langage (<ulink url="http://elixir-lang.org/">http://elixir-lang.org/</ulink>) et suivre le GETTING STARTED. Pour ceux qui ne comprendrait pas l'anglais, sachez qu’Élixir est un langage basé sur Erlang ayant pour objectif d'être puissant (et bien sur, implémentant tout les concepts de programmation fonctionnelle).
     </para>
   </section>
   <section>
@@ -679,7 +679,7 @@
         </para>
         <para/>
         <para>
-          Cette suite à été découverte par un mathématicien italien cherchant à modéliser l'évolution d'une population de lapin. Pour plus d'information sur l'histoire de cette suite et les liens entre elle et d'autre concept mathématique (comme le nombre d'or), je vous invite à consulter cet article <ulink href = "http://images.math.cnrs.fr/Mysteres-arithmetiques-de-la-suite-de-Fibonacci.html">http://images.math.cnrs.fr/Mysteres-arithmetiques-de-la-suite-de-Fibonacci.html</ulink> du cnrs et/ou, la vidéo suivante <ulink href="https://www.youtube.com/watch?v=DxmFbdp7v9Q">https://www.youtube.com/watch?v=DxmFbdp7v9Q</ulink> de micmaths. Pour ce que nous allons faire, il suffit de savoir comment se construit la suite. Cette suite est une structure définie récursivement de la façon suivante : le terme n+1 de la suite se calcule en faisant la somme des deux termes précédent. Ce qui donne fibonacci(n+1)= fibonacci(n) + fibonacci(n-1). Et comme il faut commencer quelque part, les termes 0 et 1 sont égaux respectivement à 0 et 1. On a donc : fibonacci(0)=0, fibonacci(1)=1, pout tout n &gt; 1 fibonacci(n+1)=fibonacci(n)+fibonacci(n-1). 
+          Cette suite à été découverte par un mathématicien italien cherchant à modéliser l'évolution d'une population de lapin. Pour plus d'information sur l'histoire de cette suite et les liens entre elle et d'autre concept mathématique (comme le nombre d'or), je vous invite à consulter cet article <ulink href = "http://images.math.cnrs.fr/Mysteres-arithmetiques-de-la-suite-de-Fibonacci.html">http://images.math.cnrs.fr/Mysteres-arithmetiques-de-la-suite-de-Fibonacci.html</ulink> du CNRS et/ou, la vidéo suivante <ulink href="https://www.youtube.com/watch?v=DxmFbdp7v9Q">https://www.youtube.com/watch?v=DxmFbdp7v9Q</ulink> de micmaths. Pour ce que nous allons faire, il suffit de savoir comment se construit la suite. Cette suite est une structure définie récursivement de la façon suivante : le terme n+1 de la suite se calcule en faisant la somme des deux termes précédent. Ce qui donne fibonacci(n+1)= fibonacci(n) + fibonacci(n-1). Et comme il faut commencer quelque part, les termes 0 et 1 sont égaux respectivement à 0 et 1. On a donc : fibonacci(0)=0, fibonacci(1)=1, pout tout n &gt; 1 fibonacci(n+1)=fibonacci(n)+fibonacci(n-1). 
         </para>
         <para/>
         <para>
@@ -871,16 +871,32 @@
         </para>
         <para/>
         <para>
-          Créons donc un module Élixir pour gérer les arbres binaires de recherche.
-        </para>
-        <para/>
-        <para>
-          Par soucis de simplicité, nous ne définirons les arbres binaire de recherche (abr) que pour des entiers.
-          <programlisting langage="elixir">
-
-          </programlisting>
+          Je vous laisse le plaisir de créer un module ÉLixir pour ces arbres. Vous pourrez trouver mon implémentation de ce module sur mon répertoire git (lien en fin d'article).
         </para>
       </section>
     </section>
   </section>
+  <para/>
+  <para>
+    Voici donc pour cet article. J'espère que vous aurez appris de nouvelle chose :) Je vous laisse les liens vers les sources utilisés pour faire cette article, et mon répertoire git ou vous pourrez retrouver tous les fichiers de codes présenter ici. 
+  </para>
+  <para>
+    <itemizedlist>
+      <listitem>
+         <ulink href = "http://elixir-lang.org/docs.html">Élixir, page officielle</ulink>
+      </listitem>
+      <listitem>
+        <ulink href = "https://fr.wikipedia.org/wiki/Programmation_fonctionnelle">La programmation fonctionnelle, version wikipédia</ulink>
+      </listitem>
+      <listitem>
+        <ulink href = "http://deptinfo.unice.fr/~roy/progfonc.html">La programmation fonctionnelle, version Paul Graham</ulink>
+      </listitem>
+      <listitem>
+        <ulink href = "hhttps://github.com/titouanfreville/Supinfos_Articles/tree/master/elixir_article">Les codes de l'article</ulink>
+      </listitem>
+    </itemizedlist>
+  </para>
+  <para>
+    Vous remarquerez sans doute que je n'ai pas relever toutes les références citées, mais seulement celle qui me semble indispensable pour suivre cet article.
+  </para>
 </section>
