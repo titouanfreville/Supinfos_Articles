@@ -1,0 +1,888 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE section PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<section>
+  <title>La programmation fonctionnelle et Elixir</title>
+  <para/>
+  <section>
+    <title>Introduction</title>
+
+    <para/>
+
+    <para>
+      Cet article a pour but de vous présenter un nouveau langage (Ocaml <ulink url="http://caml.inria.fr/ocaml/index.fr.html">http://caml.inria.fr/ocaml/index.fr.html</ulink>) et le concept de programmation fonctionnelle.</para>
+    <para/>
+
+    <para>
+      Je vais tout d'abord rappeler ce qu'est la programmation fonctionnelle. Je vous invite à consulter les cours et vidéo à ce sujet si vous avez accès aux ressources de Supinfo pour plus de détails (cf 3AIT notamment) ainsi que les articles suivants :
+      <ulink url="http://www.supinfo.com/articles/single/1572-programmer-elixir"> http://www.supinfo.com/articles/single/1572-programmer-elixir</ulink>, <ulink url="https://fr.wikipedia.org/wiki/Programmation_fonctionnelle">https://fr.wikipedia.org/wiki/Programmation_fonctionnelle</ulink> et <ulink url="http://deptinfo.unice.fr/~roy/progfonc.html">http://deptinfo.unice.fr/~roy/progfonc.html</ulink> 
+    </para>
+
+    <para/>
+  </section>
+  <section>
+    <title>La programmation fonctionnelle, en bref.</title>
+    <para/>
+    <para>
+      Il est plus simple de parler de programmation fonctionnelle par opposition à la programmation impérative, plus connues et abordée plus tôt dans les programmes scolaires. Si vous ne savez pas ce qu'est la programmation impérative, je vous invite à ignorer ce paragraphe pour passer directement à l'introduction d’Élixir après avoir lue ou regarder les articles et ressources précédemment cités.
+    </para>
+    <section>
+      <title>Concept de programmation fonctionnelle.</title>
+      <para>
+        La programmation fonctionnelle est un concept de programmation ayant pour but principal de s'affranchir des problèmes d'affectation présent dans la programmation impérative. Ainsi, en programmation fonctionnelle, nous n'utilisons plus des états de la machine (ex : x=1 =&gt; J'ai créé un entier référencer par x dont la valeur est 1 donc ma machine est dans l'état X. x++ -&gt;x vaut maintenant 2, ma machine est dans un nouvel état Y.) mais des fonctions imbriquées. La principale différence étant que : En programmation fonctionnelle, je sais exactement ce que FAIT mon programme et comment il évolue LOGIQUEMENT (essentiellement basée sur les concepts de récursion en mathématiques) tandis qu'en programmation impérative, je sais dans quel état est ma machine, ce qui est présent en mémoire (à qu'elle endroit dans les langages de plus bas niveaux) et quel état je dois atteindre. D'un côté, je sais COMMENT mon programme fonctionne (impératif), de l'autre, je sais POURQUOI et je peux le démontrer (fonctionnel).
+      </para><para>
+        Une autre différence : il est possible, en programmation impérative, de modifier plusieurs Pointeurs dans une même fonction (et donc d'avoir d'une certaine façon, une fonction qui 'retourne' plusieurs valeurs). C'est impossible en programmation fonctionnelle. Une fonction en programmation fonctionnelle prend des ensembles d'arguments (liste, tuples, singleton, etc.) et ne retourne qu'un seul ensemble.
+      </para>
+    </section>
+    <section>
+      <title>Utilisations de la programmation fonctionnelle.</title>
+      <para/>
+      <para>
+        La programmation fonctionnelle est aujourd'hui principalement utilisée dans deux domaines :
+        <itemizedlist>
+          <listitem>
+            <para>
+              Les preuves, démonstrations et calculs dans le domaine scientifique (ex : démontrer la validité d'un concept mathématique)
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              L'intelligence artificielle (IA). (cf cours 3AIT)
+            </para>
+          </listitem>
+        </itemizedlist>
+        Pourquoi ces deux domaines ? Pour la partie scientifique, les langages de programmation fonctionnelles cherchant à être aussi proche que possible des bases mathématiques, il est logique de les utiliser pour des applications et programmes liés à ce domaine. Pour son utilisation en intelligence artificielle, l'IA est un domaine ou l'algorithmie occupe une place centrale. Or en programmation fonctionnelle, si l'algorithme implémenter fait ce que nous voulons et qu'il est correctement implémenter, nous pouvons être sûr qu'il fera ce qu'il faut.
+      </para>
+    </section>
+    <para/>
+    <para>
+      Ceci étant fixé, présentons maintenant OCaml. Vous pouvez commencer par lire les informations et faire les tutoriels du site officiel <ulink url="https://ocaml.org/learn/tutorials/basics.fr.html">https://ocaml.org/learn/tutorials/basics.fr.html</ulink>
+    </para>
+  </section>
+  <section>
+    <title>PRÉREQUIS</title>
+    <para/>
+    <para>
+      Pour la suite du voyage, il vous faudra avoir : 
+      <itemizedlist>
+        <listitem>
+          Installer OCmal sur votre local ou avoir une solution pour compiler et exécuter les programmes.
+        </listitem>
+        <listitem>
+          Avoir un éditeur de texte avec la coloration syntaxique pour OCaml (parce que c'est plus agréables). J'utilise pour ma part Sublime Text 3 avec le package OCaml basique. 
+        </listitem>
+        <listitem>
+          Être prêt à souffrir ;)
+        </listitem>
+      </itemizedlist>
+    </para>
+
+    <para>
+      Nous allons apprendre Ocaml en suivant les étapes :
+      <itemizedlist>
+        <listitem>
+          Premiers pas : Faire une fonction arithmétique simple
+        </listitem>
+        <listitem>
+          Manipuler les listes 
+        </listitem>
+        <listitem>
+          Fonctions de tri sur les listes
+        </listitem>
+        <listitem>
+          Résolution de problèmes de façon fonctionnelle (ex Tour de Hanoï)
+        </listitem>
+        <listitem>
+          Manipulation simple d'arbre
+        </listitem>
+      </itemizedlist>
+      Les codes seront présentés de façon à être réutilisable via la création de librairie. Tous ce qui va être abordé par la suite sont des concepts et applications basiques de la programmation fonctionnelle.
+    </para>
+    <para/>
+  </section>
+  <section>
+    <title>Jouons avec le chameau</title>
+    <para/>
+    <section>
+      <title>A petits pas</title>
+      <para/>
+      <para>
+        Pour cette première expérience, nous allons créer deux fonctions mathématiques : Factorielle (!) et Puissance. Ces fonctions seront implémentées de deux façons : avec des boucles (classique en impératif) en C, de façon récursive (idéologie fonctionnelle) en OCaml.
+        Mais tout d'abord, quelques rappels : 
+        <itemizedlist>
+          <listitem>
+            <para>
+              OCaml est un langage principalement fonctionnelle. Il existe des syntaxes et des modules impératifs, mais il ne seront pas abordés dans cet article.
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              OCaml est un langage dynamiquement typé. C'est à dire que le type de la variable est déterminée après son affectation. Il est cependant possible de forcer le type d'une variable. 
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              Il faut manipuler les types avec précaution. En effet, chaque fonction attendra un certains type données. Afin d'être le plus réutilisable possible, les fonctions proposées auront toujours une dépendance de type minimal (ex : une fonction d'addition sera typés pour être utilisable par tous floats même si elle utilisé principalement sur des entiers dans notre cas)...
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              OCaml est très fortement typée. Les opérateurs sont souvent spécifiques à un type donné. Par exemple, si vous travaillez sur des entiers, les opérateurs standards seront +, -, *, /. Mais sur des réels, ces opérateurs seront toujours suivis d'un point : +., -., *., /. . Aussi, 0 +. 1.5 renverra une erreur. Il faudra écrire 0. +3 1.5. Il est possible de supprimer ces vérifications, mais il vaut mieux éviter de le faire tant que l'on n'est pas certains de la justesse du code.
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              Afin que tous sachent les prérequis de chaque fonction et sont utilités, celles ci seront commenter comme suit :        
+              <programlisting langage="ocaml">
+                (* 
+                  @name: Nom_de_la_fonction
+                  @ Description_de_la_fonction
+                  @parameter: Nom_du_paramètre Type Description
+                  ....
+                  @return: Description (Ce que retourne la fonction, dans quelle situation)
+                  @throw: Erreur Description 
+                *)
+
+              </programlisting>
+            </para>
+          </listitem>
+        </itemizedlist>
+      </para>
+      <para/>
+      <section>
+        <title>En mode Impératif</title>
+        <section>
+          <title>Théorie</title>
+          <para>
+            Nous avons dit plus haut que l'algorithme était essentiel en programmation fonctionnelle. Bien que ce ne soit pas le cas en programmation impérative, je vous propose de tout de même les écrire en pseudo code afin d'avoir une base de comparaison pour les algorithme donner en fonctionnel.
+          </para>
+          <para>
+            Les algorithmes impératifs permettant d'exécuter nos deux fonctions sont les suivants. 
+          </para>
+          <para>
+            <programlisting>
+              puissance :  
+              Soit PUISSANCE (a,b) une fonction sur les entiers Naturels. 
+              PUISSANCE (a,b) = 
+              Soit res un entier tel que res = 1 
+              SI b strictement plus petit que 1, Retourner res.  
+              Si non 
+              Pour i allant de 1 à b faire : 
+                res = res * a  
+              Fait;  
+              Retourner res. 
+            </programlisting>
+          </para>
+          
+          <para>
+            <programlisting>
+              factorielle :  
+              Soit FACTORIELLE (a) une fonction sur les entiers Naturels. 
+              PUISSANCE (a,b) = 
+              Soit res un entier tel que res = 1   
+              Pour i allant de 1 à a faire : 
+                res = res * a 
+              Fait; 
+              Retourner res.
+            </programlisting>
+          </para>
+        </section>
+        <section>
+          <title>En C</title>
+          <para>
+            Implémentation en C
+          </para>
+          <para>
+            <programlisting langage="c">
+              int Puissance(int a, int b)  {
+                int res=1;
+                int i;
+                for (i=1; i&gt;b;i++) {
+                  res=res*b;
+                }
+                return res;
+              }
+            </programlisting>
+          </para>
+          <para>
+            <programlisting langage="c">
+              int Factorielle(int a)  {
+                int res=1;
+                int i;
+                for (i=0; i&gt;a;i++) {
+                  res=res*i;
+                }
+                return res;
+              }
+            </programlisting>
+          </para>
+        </section>
+      </section>
+      <section>
+        <title>En fonctionnel</title>
+        <section>
+          <title>Algorithme</title>
+          <para>
+            Les algorithme fonctionnels sont les suivants :
+          </para>
+          <para>
+            <programlisting>
+              puissance: 
+              Soit PUISSANCE (a,b) une fonction sur les entiers Naturels,  
+              PUISSANCE (a,b) = SELON b   
+              b = 0 -&gt; 1  
+              b -&gt; a*PUISSANCE (a,b-1) 
+            </programlisting>
+          </para>
+          <para>
+            L'idée de cet algorithme récursif est le suivant: à chaque étape, on regarde si b est égale à 0. Si il est égale à 0, on renvoie la valeur 1. Sinon, on renvoie la valeur a multiplié par la valeur renvoyée par Puissance (a, b-1). Comme b diminue à chaque étape, on va nécessairement arriver au cas ou b=0 (que l'on appelle cas simple ou cas de base). Et pour parvenir à cette étape, on aura multiplié a par lui-même b fois puis par 1. Ce qui est la définition de la puissance (la puissance mathématique est naturellement récursive, comme beaucoup d'outils mathématiques).
+          </para>
+          <para>
+            <programlisting>
+              factorielle : 
+              Soit FACTORIELLE (a) une fonction sur les entiers Naturels, 
+              FACTORIELLE (a) = SELON a 
+              a = 0 -&gt; 1 
+              a -&gt; a*FACTORIELLE (a-1)
+            </programlisting>
+          </para>
+          <para>
+            Cet algorithme fonctionne comme le précédent, si ce n'est que l'on a un paramètre unique. On aura donc multiplié a par (a-1) par (a-2) par ... par 1.
+          </para>
+        </section>
+        <section>
+          <title>En OCaml</title>
+          <para>
+            Implémentation en OCaml
+          </para>          
+          <para>
+            <programlisting langage="ocaml">
+             (**
+                @name: Puissance
+                @ Fonction permettant de calculer la valeur a^b sur des réels
+                @parameter: a float Nombre à mettre en puissance.
+                @parameter: b int Puissance entière..
+                @return: a^b 
+              *)
+              let rec pow a b = 
+                match b with
+                |0 -&gt; 1.
+                |_ -&gt; a *. pow a (b-1);;
+
+              (**
+                @name: Puissance
+                @ Fonction permettant de calculer la valeur a^b sur des réels
+                @parameter: a float Nombre à mettre en puissance.
+                @parameter: b int Puissance entière..
+                @return: a^b 
+              *)
+              let rec factorielle a =
+                match a with 
+                |0 -&gt; 1
+                |_ -&gt; a * factorielle (a-1);;
+            </programlisting>
+          </para>
+        </section>
+      </section>
+      <para>
+        Nous venons donc de réaliser deux fonctions mathématiques simples, une fois en fonctionnel, une fois en impératif. On peut dors et déjà pointé quelque différence entre ces deux visions de programmation : 
+        Au niveau de la preuve d'algorithme (ici fait de façon grossière par une explication logique), l'algorithme fonctionnel n'est pas mathématiquement démontrables (il existe des méthodes de preuves pour de tels algorithme, mais elles définissent de nouveau axiomes) contrairement aux algorithme fonctionnel qui sont des algorithme mathématique. C'est l'une des principales différences entre ces deux visions de la programmation et la raison de préférer l'un à l'autre. Si vous avez besoin d'être certains de comment et où sont stockés les éléments dans votre ordinateur, comment est utilisée la mémoire, etc., la programmation impérative est la plus adaptée. Par contre, si vous avez besoin d'être sûr que votre programme va fonctionner comme attendu et être capable de le démontrer simplement, la programmation fonctionnelle est plus adaptée.
+      </para>
+    </section>
+    <section>
+      <title>Listes</title>
+      <para/>
+      <para>
+        La structure de listes est une structure mathématique naturellement récursive. En effet, une liste est un ensemble d'élément tel que l'on ne peut accéder qu'à l'élément en tête de la liste (le dernier entré). Une liste sera donc représentée ainsi : Liste = Tête :: Queue dans les algorithme. Dans un premier temps, nous allons apprendre à manipuler ce type de structure puis nous verrons ce qu'il est possible de faire dessus. 
+      </para>
+      <para/>
+      <section>
+        <title>Manipuler des listes.</title>
+        <para>
+          Nous avons dit que les listes étaient des structures récursives (ou inductives). Pour construire une liste, on "empile" des éléments les uns au-dessus des autres puis on les dépile. Il convient donc de manipuler principalement via des fonctions récursives. Si il est possible de recréer des listes et leurs opérateurs dans des langages impératifs (tel que C ou JAVA), ce n'est pas une façon "logique" pour stocker des éléments en impératif (on utilisera plutôt des tableaux, permettant d'accéder directement à tous les éléments). Par contre, les listes sont des structures natives en programmation fonctionnelle. La structure est dynamique et sera souvent utilisée pour stocker un ensemble d'élément amené à être régulièrement modifier. Sinon, les tuples (que nous verrons plus tard) seront des structures plus appréciées. 
+        </para>
+        <para/>
+        <section>
+          <title>Premières armes</title>
+          <para/>
+          <para>
+            Commençons par manipuler simplement des listes
+          </para>
+          <section>
+            <title>Affichons tous les éléments d'une liste simple (ne contenant que des singletons)</title>
+            <para>
+              Voyons comment lire une liste et en afficher chaque éléments. 
+            </para>
+            <para>
+              Tout d'abord, l'algorithme : 
+              <programlisting>
+                Soit L une liste. 
+                Soit F une fonction de X Liste dans Vide (ou X est un type quelconque).
+                F (l) = Selon l
+                Vide(l) -&gt; Rien à faire ou afficher Vide selon les envies (On est arrivé au bout de liste puis ce qu'elle est vide).
+                NonVide(l) -&gt; Afficher Tête(l); F (Queue (l)). (On affiche le premier élément de la liste puis on rappelle la fonction avec la suite de la liste).
+              </programlisting>
+            </para>
+            <para>
+              On se contente de prendre le premier élément que l'on trouve pour l'afficher, puis on passe à la suite. Le cas de base est vide car il n'a rien à faire.
+            </para>
+            <para>
+              Le code en caml : 
+              <programlisting langage="ocaml">
+                (** 
+                  @name print_list
+                  @ Fonction affichant les éléments d'une liste 1 à 1 a  -&gt; b  -&gt; x  -&gt; []
+                  @param l string list Liste de chaînes de charactère à afficher
+                  @print List element in the format E  -&gt; E  -&gt; E  -&gt; ...  -&gt; []
+                *)
+                let rec print_list l =
+                  match l with
+                  |[]  -&gt; print_string "[]"
+                  |t::q  -&gt; print_string t; print_string "  -&gt; "; print_list q;;
+            </programlisting>
+            </para>
+            <para>
+              Cette fonction affichera tous les éléments d'une liste. C'est une fonction basique qui permet surtout de voir comment manipuler une liste. Maintenant, travaillons sur des listes.
+            </para>
+          </section>
+          <section>
+            <title>Fonctions de recherche et spécifications</title>
+            <para>
+              Nous allons implémenter les fonctions suivantes : Recherche d'un élément e dans une liste, suppression des doublons dans une liste puis comptage du nombre d'occurrence (nombre de foi où il apparaît) d'un élément placer en paramètre. Mais tout d'abord, les algorithmes :).
+            </para>
+            <section>
+              <title>Les algorithmes</title>
+              <para>
+                Recherche d'un élément : 
+                Le concept est simple. On parcourt la liste jusqu'à ce que l'on trouve l'élément chercher. On a donc : 
+                <programlisting>
+                  Soit Recherche un fonction dans Booléen (Vrai ou Faux). 
+                  Recherche(Élément, Liste) = Selon (Liste) 
+                  Vide(Liste) -&gt; Faux 
+                  NonVide(Liste) -&gt; Tête(Liste) = Éléments ou alors Recherche(Éléments, Queue(Liste)) 
+                </programlisting>
+              </para>
+              <para>
+                Suppression des doublons dans une liste : 
+                Cette fois, on va parcourir la liste et, pour chaque élément, appeler la fonction de recherche. Si l'élément est encore dans la liste, on passe au suivant, sinon, on passe au suivant en ajoutant l'élément courant à la liste de retour. Ce qui donne : 
+                <programlisting>
+                  Soit SupDoublons une fonctions dans X Liste
+                  SupDoublons(l) = Selon l 
+                  Vide(l) -&gt; Vide
+                  NonVide(l) -&gt; Si Recherche(Tête(l),Queue(l)) alors SupDoublons(Queue(l)) ou alors Construire Tête(l) (SupDoublons(Queue(l)))
+                </programlisting>
+              </para>
+              <para>
+                Nombre d'occurrence de E dans L :
+                <programlisting>  
+                  Soit NombreDe une fonction dans int (entiers)
+                  NombreDe(E,L) = Selon (L) 
+                  Vide(L) -&gt; 0
+                  NonVide(L) -&gt; Si Tête(L)=E alors 1 + NombreDe(E,Queue(L)) sinon NombreDe(E,Queue(L))
+                </programlisting>
+              </para>
+              <para/>
+            </section>
+            <para>
+              Place au code.
+            </para>
+            <section>
+              <title>Code OCaml</title>
+              <para>
+                <programlisting langage="exs">
+                  defmodule Listes do
+                    # @name est_dans
+                    # Fonction testant la présence d'un élément dans une liste
+                    # @param e any élément à rechercher
+                    # @param l list liste dans la quelle cherché l'élément
+                    # @return true si l'élément existe, false sinon
+                    def est_dans(e,l) do
+                      cond do
+                        l==[] -&gt; false
+                        true -&gt; (hd l) == e || est_dans e,(tl l)
+                      end
+                    end
+                    # @name doublons_sk
+                    # Fonction permettant de supprimer les doublons dans une liste.
+                    # @param l liste liste dont on veux supprimer les doublons.
+                    # @return liste sans doublons.
+                    def doublons_sk(l) do
+                      cond do
+                        l==[] -&gt; []
+                        true -&gt; if est_dans (hd l),(tl l) do doublons_sk (tl l) else [hd l] ++ doublons_sk (tl l) end
+                      end
+                    end
+                    # @name nb_de
+                    # Fonction pour trouver le nombre d’occurrence de E dans L
+                    # @param e any éléments à compter
+                    # @param l list liste dans la quelle compter
+                    # @return nombre d’occurrence de E dans L
+                    def nb_de(e,l) do
+                      cond do
+                        l==[] -&gt; 0
+                        true -&gt; (hd l) == e &amp;&amp; 1 + nb_de(e,(tl l)) || nb_de(e,(tl l))
+                      end
+                    end
+                  end 
+                </programlisting>
+              </para>
+              <para>
+                Vous voilà désormais armé de quelque fonctions basique sur les listes. Vous pouvez compléter ces fonctions avec des fonctions pour inverser la liste par exemple. Et nous allons tout de suite compléter notre collection avec quelque fonction un peu plus amusantes :)
+              </para>
+            </section>
+          </section>
+        </section>
+        <section>
+          <title>Les fonctions de tri, de l'élèves au maître.</title>
+          <para>
+            Voyons maintenant deux fonctions de tri sur les listes. La première est la fonction basique de trie. Il est déconseillé de l'utiliser, elle est particulièrement peu efficace. Nous allons également profité de ces fonctions de tri pour voir les 2 méthodologies d'implémentation pour les fonctions récursive. Jusqu'à présent, nous avons empiler les opérations dans les algorithmes et programmes au niveau de l'appel récursif. C'est ce que l'on appel de la récursivité non terminale, car au moments de l'appel récursif, il y a encore des opérations à effectuer. L'avantage de cette façon de faire est qu'elle est logique vis à vis de la récursivité mathématique. L'inconvénient, c'est que cela prend vite beaucoup de place dans la mémoire de notre environnement. Aussi, pour éviter cela, une autre façon de faire, la récursivité terminale existe. Dans ce cas, l'objectif est que au moment de l'appel récursif, le programme n'est plus d'opération à exécuter. Il va donc être nécessaire d'utiliser des accumulateurs. Nous allons utiliser la première fonction de tri (que l'on va appeler tri_bulles) pour illustrer cette différence. 
+          </para>
+          <para/>
+          <section>
+            <title>Tri Bulle</title>
+            <para/>
+            <para>
+              La fonction tri bulle est la fonction de tri la plus 'instinctive'. Elle ce contente de regarder chaque éléments puis dans les insérer dans la liste triée. 
+            </para>
+            <para>
+              Nous allons donc avoir l'algorithme suivant en fonctionnel non terminal : 
+              <programlisting>
+                Soit tribulle une fonction dans listes.
+                tribulle(l) = Selon l
+                Vide(l) -&gt; Vide
+                NonVide(l) -&gt; Faire 
+                  Soit ltriée = tribulle(Queue l) dans
+                  Si Tête(l) &lt; Tête(ltriée) alors Construire Tête(l) ltriée sinon Construire Tête(ltriée) tribulle(Construire Tête(l) Queue(ltriée))
+              </programlisting>
+              et celui-ci en récursif terminal :
+              <programlisting>
+                Soit tribulle une fonction dans listes.
+                tribulle(l, acc) = Selon l
+                Vide(l) -&gt; acc
+                NonVide(l) -&gt; Faire 
+                  Si Tête(l) &lt; Tête(acc) 
+                  alors tribulle Queue(l) (Construire Tête(l) acc) 
+                  sinon tribulle Queue(l) (tribulle (Construire Tête(l) Queue(acc)) [Tête (acc)])
+              </programlisting>
+            </para>
+            <para>
+              Nous voyons bien sur cet exemple que les deux façons de procédés on globalement le même fonctionnement. Ici, dans les deux cas, on compare l'élément courant à une liste déjà triée (soit l'accumulateur, soit le tri de la suite de la fonction). On voit aussi, pour cette fonction qu'il n'y a pas de gain de temps quelque soit la solution. Une fonction en récursif terminal et une fonction en récursif non terminal auront, si elles sont bien pensée, le même temps d'exécution. Cependant, l'espace n'est clairement pas occupé de la même façon. Dans la récursivité terminal, on demande au programme de travailler avec un espace mémoire connue représenter par l'accumulateur, et c'est ce paramètre que l'on fait varié à chaque étape. En non terminal, on demande à la pile d'exécution (généralement, cela va se traduire par une occupation de la RAM et de la mémoire processeur) de garder en mémoire les actions à effectuer une fois que l'on aura atteint un cas connue. Vous pourrez voir en testant les programmes que nous allons maintenant élaboré que en la méthode non terminale finira par échouer si vous lui passer une liste trop grosse. Mais vous pourrez aller beaucoup plus loin en utilisant la méthode terminale. 
+            </para>
+            <para/>
+            <para>
+              Le code :
+              <programlisting langage="elixir">
+                defmodule Listes do
+                  # @name tribulle_nonterminale
+                  # Fonction pour trier une liste d'entier dans l'ordre croissant. Une extension de cette fonction pourra être réaliser pour la rendre
+                  # plus souple ;)
+                  # @param l int list liste d'entier à trier
+                  # @return liste l trier.
+                  def tribulle_nonterminale(l) do
+                    cond do
+                      l==[] -&gt; []
+                      (tl l) == [] -&gt; [hd l]
+                      true -&gt; 
+                        ltriee=tribulle_nonterminale(tl l)
+                        ((hd l) &lt; (hd ltriee)) &amp;&amp; ([hd l] ++ ltriee) || ([hd ltriee] ++ (tribulle_nonterminale([hd l]++(tl ltriee))))
+                    end
+                  end
+
+                  # @name add
+                  # Fonction ajoutant un élément à sa place dans une liste triée.
+                  # @param l int list liste triée d'entier ou ajouter l'élément
+                  # @param e int élément à ajouter
+                  # @parama acc int list liste utiliser pour stocker le résulat (devrait êter vide) 
+                  # @return liste contenant l'élément à sa place
+                  def add(l,e, acc) do 
+                    cond do
+                      l==[] -&gt; acc++[e]
+                      true -&gt; (e &lt; hd l) &amp;&amp; (acc++[e]++l) || (add((tl l),e,acc++[(hd l)]))
+                    end
+                  end
+                  # @name tribulle_terminale
+                  # Fonction pour trier une liste d'entier dans l'ordre croissant. Une extension de cette fonction pourra être réaliser pour la rendre
+                  # plus souple ;)
+                  # @param l int list liste d'entier à trier
+                  # @param acc int list liste pour stocker le résultat (vide le plus souvent)
+                  # @return liste l trier.
+                  def tribulle_terminale(l, acc) do
+                    cond do
+                      l==[] -&gt; acc
+                      acc == [] -&gt; tribulle_terminale (tl l), [hd l]
+                      true  -&gt;
+                        (hd l) &lt; (hd acc) &amp;&amp; 
+                        tribulle_terminale((tl l),[hd l]++acc) ||
+                        tribulle_terminale((tl l), add(acc,hd(l),[]))
+                    end
+                  end
+                end 
+              </programlisting>
+            </para>
+            <para>
+              Pour le code, nous avons décomposer la partie terminale en deux fonctions pour plus de clarté. Aussi, la sous fonction add est une fonction capable d'ajouter un élément dans une listes déjà trié. On peut aussi voir que l'on a travailler uniquement sur des entiers. Il est possible de supprimer cette restriction en passant en argument à la fonction une fonction de tri quelconque. Ainsi, si vous travailler sur un ensemble à trier n'ayant pas de comparaison native, vous pourrez donner à la fonction de tri, la fonction de comparaison nécessaire. 
+            </para>
+            <para/>
+            <para>
+              C'est ce que nous allons faire dans la fonction de tri suivante, la fonction tri fusion.
+            </para>
+          </section>
+          <section>
+            <title>Tri Fusion</title>
+            <para/>
+            <para>
+              Tout d'abord, présentons le principe de cette fonction.
+            </para>
+            <para>
+              La fonction de tri fusion (appelé quick_sort en anglais) est la fonction de tri optimale, à l'heure actuelle, quand on fait face à un ensemble quelconque de donné (exemple général : une listes d'entier aléatoire). Cette fonction sur la méthode dites 'Diviser pour Régner' consistant à 'découper' un grand problème en plusieurs sous tache que l'on sait effectuer. Ici, notre problème est : Ayant une liste quelconque d'entier, j'aimerais être capable de la trié par ordre croissant. Ce que je sais assurément faire : fusionner des listes triés pour obtenir une liste trié (il suffit de comparer les éléments un à un), diviser une liste deux (je prend les deux premiers éléments et les mets chacun dans une liste), compter le nombre d'éléments, etc ... Savoir compter le nombre d'élément de la liste ne nous aidera pas à la triée. Par contre, sachant couper une liste en 2, je sais transformer une liste en un ensemble de singleton, et je sais trier un singleton (c'est un élément seul donc il est naturellement trié). Donc si je coupe ma liste jusqu'à n'avoir que des singletons, j'obtiens plein de petite liste triées. Ensuite, j'ai dit que je savais fusionner deux listes triées de sorte que la liste obtenue soit triée. Donc, il ne me reste qu'à fusionner toutes les listes triées 2 par 2, puis fusionné les listes obtenues, etc., etc., jusqu'à n'avoir plus qu'une liste contenant tout les éléments d'origine, mais trié. 
+            </para>
+            <para/>
+            <para>
+              Nous somme donc face à un processus qui effectue deux action : l'une consiste à découper la liste, l'autre à fusionner les listes obtenues une fois celles-ci triées. Je vous propose donc de faire trois fonctions, en récursivité terminale, pour résoudre notre problème. Une fonction DIVISE, qui coupe la liste en deux, une fonction FUSIONNE qui prend deux listes triées et renvoie une seule liste triées, et la fonction qui nous intéresse TRI_FUSION qui va prendre une liste et effectué dessus les opérations de fusion et division jusqu'à avoir le résultat attendu. 
+            </para>
+            <para/>
+            <para>
+              Ce qui donne l'algorithme : 
+            </para>
+            <programlisting>
+              Soit DIVISE une fonction dans (liste,liste).
+              DIVISE(l,acc1,acc2) = Selon l
+              Vide(l) -&gt; (acc1,acc2)
+              Vide(Queue(l)) -&gt; (Construire 1 acc1, acc2)
+              NonVide(l) -&gt; DIVISE Queue(Queue(l)) (Construire Tête(l) acc1) (Construire Tête(Queue(l)) acc2)
+
+              Soit FUSIONNE un fonction dans liste.
+              FUSIONNE(l1,l2,acc, comparateur) = Selon l1, l2
+              Vide(l1) -&gt; Construire l2 acc
+              Vide (l2) -&gt; Contruire l1 acc
+              NonVide(l1) et NonVide(l2) -&gt; Si hd(l1) comparateur hd(l2) alors FUSIONNE(Queue(l1),l2, Construire acc l1) sinon FUSIONNE(l1,Queue(l2), Construire acc l2)
+
+              La fonction comparateur est une fonction de X dans Booléen. 
+
+              Soit TRI_FUSION (l,acc, comparateur) = selon l
+              Vide(l) -&gt; acc
+              NonVide(l) -&gt; Soit (l1,l2)=DIVISE(l,[],[]) dans
+                FUSIONNE (TRI_FUSION l1 [], comparateur) (TRI_FUSION l2 [] comparateur) [] comparateur
+            </programlisting>
+            <para/>
+            <para>
+              Cet ensemble est un peu plus complexe à écrire et retenir que le tri bulle, mais il est beaucoup plus efficace. Et au final, les trois fonctions réaliser sont vraiment simple à comprendre et réaliser.
+            </para>
+            <para/>
+            <para>
+              Côté code maintenant : 
+            </para>
+            <programlisting langage="elixir">
+              defmodule Listes do
+                # @name divise
+                # Fonction prenant une liste et renvoyant celle ci coupé en deux moitié si possible égale.
+                # @param l list liste à diviser
+                # @param acc1 list liste de stockage
+                # @param acc2 list liste de stockage
+                # @return la liste divisé en 2 sous forme de couple. 
+                def divise(l, acc1 \\ [], acc2 \\ []) do
+                  cond do 
+                    l == [] -&gt; { acc1, acc2 }
+                    (tl l) == [] -&gt; { [hd l] ++ acc1 , acc2 }
+                    true -&gt;
+                      divise(tl(tl l), ([hd l] ++ acc1), ([hd(tl l)] ++ acc2))
+                  end
+                end
+                # @name fusionne
+                # Fonction fusionnant deux liste trié en une unique liste triée
+                # @param l1 list première liste triée
+                # @param l2 list deuxième liste triée
+                # @param acc list liste de stockage
+                # @param comp function fonction de comparaison
+                # @return l1 fusionné à l2 et trié.
+                def fusionne(l1,l2,acc \\ []) do
+                  cond do
+                    l1 == [] -&gt; acc ++ l2
+                    l2 == [] -&gt; acc ++ l1
+                    true -&gt; 
+                      (hd l1) &lt; (hd l2) &amp;&amp;
+                      fusionne((tl l1), l2, (acc ++ [hd l1])) ||
+                      fusionne(l1, (tl l2), (acc ++ [hd l2]))
+                  end
+                end
+                # @name tri_fusion
+                # Trie la liste passé en argument
+                # @param l list liste à triée
+                # @param acc list list de stockage
+                # @param comp function fonction de comparaison à utiliser
+                # @return liste l triée
+                def tri_fusion(l,acc \\ []) do
+                  cond do
+                    l == [] -&gt; acc
+                    (tl l)==[] -&gt; l
+                    true -&gt; 
+                      tuple = divise l
+                      l1 = elem(tuple, 0)
+                      l2 = elem(tuple, 1)
+                      fusionne (tri_fusion l1), (tri_fusion l2), []
+                  end
+                end
+                # @name croissant
+                # Opérateur de comparaison pour trier les entier par ordres croissant
+                # @param a int entier a
+                # @param b int entier b
+                # @return true si a &lt; b, false sinon
+                def croissant(a,b) do
+                  a &lt; b
+                end
+
+                def ex_trifusion_cint(l) do
+                  tri_fusion(l)
+                end
+              end 
+            </programlisting>
+          </section>
+        </section>
+      </section>
+      <para/>
+      <para>
+        Ceci termine notre présentation des listes, structures centrale de la programmation fonctionnelle. Nous allons maintenant nous atteler à la résolution de problème récursif.
+      </para>
+    </section>
+    <section>
+      <title>Des problèmes</title>
+      <para/>
+      <para>
+        <quote>A tous les problèmes une solution, si pas de solution, pas de problème., Sur deux tons, Maxime le Forestier</quote>
+      </para>
+      <para>
+        Attaquons nous donc à de petits problèmes dont les solutions sont déjà connues et démontrées. Nous allons implémenter les fonctions de résolution de deux problèmes naturellement récursif. La suite de Fibonacci puis le problème des tours de Hanoï. Les deux problèmes sont énoncés, respectivement, en ces termes : Avoir une fonction permettant d'obtenir la valeur de la suite de Fibonacci au rang n (donné en argument), avoir une fonction me permettant d'obtenir tous les mouvements nécessaire à la résolution du problème des tours de Hanoï pour n éléments (donné en argument). Je vous invite à réfléchir par vous même à ces problèmes si vous en avez le courage avant d'en lire la résolution.
+      </para>
+      <para/>
+      <section>
+        <title>Fibonacci, la suite.</title>
+        <para/>
+        <para>
+          Commençons par un petit rappel.
+        </para>
+        <para/>
+        <para>
+          Qu'est ce que la suite de Fibonacci ? 
+        </para>
+        <para/>
+        <para>
+          Cette suite à été découverte par un mathématicien italien cherchant à modéliser l'évolution d'une population de lapin. Pour plus d'information sur l'histoire de cette suite et les liens entre elle et d'autre concept mathématique (comme le nombre d'or), je vous invite à consulter cet article <ulink href = "http://images.math.cnrs.fr/Mysteres-arithmetiques-de-la-suite-de-Fibonacci.html">http://images.math.cnrs.fr/Mysteres-arithmetiques-de-la-suite-de-Fibonacci.html</ulink> du CNRS et/ou, la vidéo suivante <ulink href="https://www.youtube.com/watch?v=DxmFbdp7v9Q">https://www.youtube.com/watch?v=DxmFbdp7v9Q</ulink> de micmaths. Pour ce que nous allons faire, il suffit de savoir comment se construit la suite. Cette suite est une structure définie récursivement de la façon suivante : le terme n+1 de la suite se calcule en faisant la somme des deux termes précédent. Ce qui donne fibonacci(n+1)= fibonacci(n) + fibonacci(n-1). Et comme il faut commencer quelque part, les termes 0 et 1 sont égaux respectivement à 0 et 1. On a donc : fibonacci(0)=0, fibonacci(1)=1, pout tout n &gt; 1 fibonacci(n+1)=fibonacci(n)+fibonacci(n-1). 
+        </para>
+        <para/>
+        <para>
+          Implémentation : 
+          <programlisting langage="exs">
+            defmodule Problemes do
+              # @name fibo
+              # fonction calculant le n-ème terme de la suite de Fibonacci
+              # @param n int n ;)
+              # @return valeur du n eme terme de la suite de Fibonacci
+              def fibo n do
+                cond do
+                  n == 0 -&gt; 0
+                  n == 1 -&gt; 1
+                  true -&gt; fibo(n-1) + fibo(n-2) 
+                end
+              end
+            end
+          </programlisting>
+        </para>
+        <para/>
+        <para>
+          Et voila une toute petite fonction pour calculer de très grand nombre ;). Passons à un problème un peu plus tendu. 
+        </para>
+      </section>
+      <section>
+        <title>Les tours ... de Hanoï</title>
+        <para/>
+        <para>
+          Pour ce qui ne connaîtrais pas les tours de Hanoï, il s'agit d'un casse tête français, imaginé par un mathématicien. Il consiste en un support sur le quel sont disposé trois pique. Une tour de disques (de taille croissante) et placé sur l'un des disques extrêmes et le but est  de déplacer la tour sur le pique opposée sachant que l'on ne peut bouger qu'un disque à la fois et qu'un disque ne peut se placer qu'au dessus d'un disque plus petit. Vous pouvez y jouer ici <ulink href="http://matoumatheux.ac-rennes.fr/tous/enigme/tour0.htm">http://matoumatheux.ac-rennes.fr/tous/enigme/tour0.htm</ulink> et en apprendre plus sur wikipédia. 
+        </para>
+        <para/>
+        <para>
+          Encore une fois, ce problème est naturellement récursif. Une suite d'action répétée permet de résoudre le problème. La question est qu'elle suite d'action. Et pour cela, il nous faut trouver deux choses : les cas simples (les situations dans les qu'elles je sais ce qu'il faut faire), et la condition de récurrence (étant dans la situation N comment puis-je me rapprocher de mes cas simples S). Ici, je sais comment résoudre le problème si je n'ai pas de disque à déplacer (je n'ai alors rien faire), si je n'ai qu'un seul disque (je n'ai qu'a l'amener à l'arrivée), et quand je n'ai plus que deux disques (il faut que je déplace le premier disque sur la part intermédiaire, puis le second sur l'arrivée puis redéplacer le plus petit de l'intermédiaire vers l'arrivée). Ensuite, si je veux résoudre pour le problème pour 3 disques, je connaît la méthode : Déplacer le plus petit sur l'arrivé (cas à un disque), puis déplacer le disque moyen sur le disque intermédiaire (début cas à deux éléments). Après l'enchaînement d'action est un peu différent puisque je déplace le plus petit (qui était sur l'arrivé) vers le moyen, puis le plus grand vers l'arrivée. Il ne me reste donc plus que le cas à deux éléments que je connais met en utilisant le piquet originellement intermédiaire en départ et celui de départ en intermédiaire. La résolution de ce problème est donc une simple succession de rotation sur les statuts des piquets (départ, intermédiaire, arrivée) et le choix entre une des deux actions Simple, ou Double. La condition de simplification peut s'exprimer ainsi : 
+          <itemizedlist>
+            Déplacer N disques de D vers A en passant par I revient à: 
+            <listitem>
+              Déplacer N-1 disques de D vers I en passant par A
+            </listitem> 
+            <listitem>
+              Déplacer 1 disques de D vers A
+            </listitem>
+            <listitem>
+              Déplacer N-1 disques de I vers A en passant par D
+            </listitem>
+          </itemizedlist>
+        </para>
+        <para/>
+        <para>
+          Implémentons : 
+          <programlisting langage="elixir">
+            defmodule Problemes do 
+              # @name hanoi
+                # fonction affichant la combinaison d'étape à faire pour résoudre le problème.
+                # @param n int nombre de disque 
+                # @para d string pique de départ
+                # @para a string pique intermédiaire
+                # @para i string pique d'arrivée
+                def hanoi n,d,a,i do
+                  cond do
+                    n == 0 -&gt; ""
+                    n == 1 -&gt; d &lt;&gt; a 
+                    true -&gt; hanoi((n-1),d,i,a) &lt;&gt; "- " &lt;&gt; hanoi(1,d,a,i) &lt;&gt; " - " &lt;&gt; hanoi((n-1),i,a,d) 
+                  end
+                end
+              end
+          </programlisting>
+        </para>
+        <para>
+          Cette fonction affichera bien les étapes nécessaire à la résolution du problème, et ces étapes seront optimale (impossible d'en faire moins). Je vous renvoi à wikipédia pour les démonstrations si vous être dubitatifs :). Attention cependant lors de la création de cette fonction à l'ordre des paramètres si vous voulez avoir l'affichage correctement ;).
+        </para>
+        <para/>
+        <para>
+          Je ne vous proposerez pas de problème plus complexe dans cet articles, mais vous pourrez toujours trouver des problèmes amusant à résoudre dans les énigmes impliquant des déplacements. Encore une fois, comme on a pu le voir dans ces deux problèmes, le plus difficile n'est pas de créer le code mais bien de trouver comment résoudre le problème. 
+        </para>
+      </section>
+    </section>
+    <section>
+      <title>Les arbres</title>
+      <para/>
+      <para>
+        Terminons sur un peu de verdure et de repos en travaillant sur les structures d'arbres. 
+      </para>
+      <para/>
+      <para>
+        Tout d'abord, il faut savoir que contrairement au listes, les structures d'arbres ne sont pas natives dans les langages fonctionnelles. De nombreux langages ont implémenter ces structures dans des modules, parfois ouvert par défaut (ex: OCaml) mais c'est souvent à l'utilisateur de définir ces propres arbres (par exemple, en OCaml encore, les structure d'arbres par défaut sont des arbres binaire (qui n'ont que deux branches possible à chaque nœud) ce qui ne permettrait pas de représenter un arbre généalogique par exemple). Nous allons donc définir une structure globale d'arbre en élixir que vous pourrez adapter à vos besoin puis nous verrons quelque structure d'arbres particulières ayant de nombreuse application en informatiques. 
+      </para>
+      <para/>
+      <section>
+        <title>Structurons les arbres</title>
+        <para>
+          Une structure d'arbre d'arbre est une structure naturellement récursive. Il s'agit d'une succession d'élément qui sont soit des Nœuds, soit des Feuilles, soit du Vide. Un nœud représente un embranchement. En fonction de la définition de l'arbre, un nœud à N fils. Il est possible de décider ce nombre de fils dynamiquement avec une propriété sur les nœuds, ou statiquement. Le fils d'un nœud est par définition un arbre. Une feuille est un élément simple. C'est un élément suivant un nœud mais qui n'a pas lui même de fils. Nous allons définir les arbres de façon statique puis dynamique.
+        </para>
+        <para/>
+        <para>
+          Un arbre avec des nœuds statique.
+        </para>
+        <para>
+          Ce type de structure est intéressante si l'on veut affirmer certaine propriété sur l'arbre (par exemple, pour un arbre binaire de recherche, il est essentiel que chaque nœud est deux fils, ni plus ni moins). Cette structure sera plus légère à manipuler qu'une structure dynamique car nous n'avons pas besoin de chercher le nombre de fils pour chaque nœud, par contre, elle manque d'intérêt pour la représentation d'un arbre généalogique par exemple ou chaque nœud à un nombre indéterminée de fils et pas de possibilité de prévoir ce nombre. 
+        </para>
+        <para/>
+        <para>
+          Nous avons, à notre disposition pour définir les structures d'arbres, des listes et des tuples. Ici, nous voulons un nombre fixe de fils par nœud. Aussi, je vous propose de définir les arbres statiques comme une suite de tuples. Un tuple représente un nœud ou une feuille. Chaque tuple est de la forme : (Racine, Fils1, Fils2, Fils3, etc.). Racine représente la valeur associer au nœud. Chaque fils est un arbre donc une liste de tuple. Un élément (ou arbre Vide) est représenté par une liste vide. Une feuille est un nœud dont tout les fils sont des arbres vides. Ainsi, l'arbre 
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref='http://freville.iiens.net/images/arbre1.png' />
+            </imageobject>
+          </mediaobject>
+          Sera représenter par : 
+          [ { A, 
+            [ { B, 
+              [ { E, [], [], [] } ]
+              [ { F, [], [], [] } ]
+              [ { G, [], [], [] } ]
+            } ],
+
+            [ { C, 
+              [ { H, [], [], [] } ]
+              [ { I, [], [], [] } ]
+              [ { J, [], [], [] } ]
+            } ],
+            [ { D, 
+              [ { K, [], [], [] } ]
+              [ { L, [], [], [] } ]
+              [ { M, [], [], [] } ]
+            } ]
+          } ]
+        </para>
+        <para/>
+        <para>
+          On peut voir que cette structure est assez lourde pour les feuilles, aussi est-ce une structure peut intéressante pour les arbres de petites tailles. Appliqué au bon problème cependant, elle permet de stocker des éléments retrouvable de façon assez rapide. Par exemple, si j'ai un arbre binaire qui représente un jeux de choix oui ou non tel que chaque le fils gauche corresponde au choix non et le droit au choix oui, je vais arrivé à la bonne solution beaucoup plus vite qu'avec une liste représentant le même choix. Voyons maintenant la définition dynamique de la structure d'arbre.
+        </para>
+        <para>
+          La structure va de nouveau être une liste, mais cette fois, plutôt que d'être une liste de tuples, ce sera tout simple une liste de liste. C'est à dire que chaque nœud est représenté par une liste. Une feuille est une liste qui n'a qu'un élément et le vide est une liste vide. Ce qui donnerai pour l'arbre précédent : 
+          [ A,
+            [ B , 
+              [E],
+              [F],
+              [G]
+            ],
+            [ C,
+              [H], [I], [J]
+            ],
+            [ D,
+              [ K, L, M ]
+            ]
+          ]
+            }
+        </para>
+        <para>
+          Et pour un arbre un peu plus dynamique : 
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref='http://freville.iiens.net/images/arbre2.png' />
+            </imageobject>
+          </mediaobject>
+          [ A,
+            [ B,
+              [D], [E], [F]
+            ],
+            [C,
+              [G]
+            ]
+          ]
+        </para>
+        <para>
+          Nous voici donc avec deux structure d'arbre, l'une étant plus légère à représenter pour nous, l'autre étant constante, donc plus rapide d'accès au éléments des nœud pour l'ordinateur. En effet, la plus grosse différence entre nos deux structure réside dans l'accès aux éléments des nœuds. La première structure nous permet un accès instantané à chaque fils du nœud car il s'agit d'un pointeur, donc un élément dont la position est connue exactement dans la mémoire. A contrario, dans la deuxième structure, l'accès au premier fils uniquement est instantanée. Par contre, pour la première structure, si une entrée imprévue arrive (par exemple un nœud à 6 fils dans un arbre à 4 branches), nous serons incapable de le gérer. Aussi, le choix de la structure doit se faire selon ces critères : ai-je besoin d'un accès instantanée à chaque fils (par exemple, si on implémente un gestionnaire de paquet ou les paquets sont gérer par des arbres, je vais plus souvent accéder aux éléments de chaque nœud que ajouter des nœud), ou ai je besoin d'une structure évolutive ou pour la qu'elle je n'ai pas de certitude sur la taille maximale d'un nœud (encore une fois, un arbre généalogique ;)). Vous pouvez aussi avoir d'autre critère, par exemple la simplicité d'implémentation, etc. 
+        </para>
+        <para/>
+        <para>
+          Voilà qui clos la définition des structure d'arbre. Intéressons nous maintenant à une structure d'arbre en particulier : les arbres binaire de recherche.
+        </para>
+      </section>
+      <section>
+        <title>Les arbres binaire de recherche</title>
+        <para/>
+        <para>
+          Les arbres binaire de recherche sont premièrement, des arbres binaire. C'est à dire que chaque nœud n'a que deux fils. Ensuite, c'est une structure définie dans un but précis, comme son nom l'indique, la recherche d'élément. Plus exactement, le stockage de données avec pour but principale un accès rapide aux différents éléments stocker. Je prenais tout à l'heure l'exemple d'un gestionnaire de paquets, c'est exactement le type de situation qui nous intéresse. Nous allons donc préciser les règles qui régissent les arbres binaires de recherches. 
+        </para>
+        <para/>
+        <para>
+          Tout d'abord, afin d'éviter une profondeur trop importante de l'arbre (la profondeur d'un arbre est la distance maximale entre la racine est chaque feuilles). (la profondeur des deux arbres présenter tout à l'heure est de 2). Aussi, nous définirons que la différence maximale de profondeur entre le fils droit et le fils gauche d'un arbre doit être de 1. Tant que cette propriété n'est pas respecter, c'est que les éléments sont mal stocker. 
+        </para>
+        <para>
+          Ensuite, pour pouvoir trouver facilement les éléments, il faut définir une propriété sur la façon de les ranger afin de pouvoir parcourir l'arbre plus rapidement. Par exemple, si je stocke un arbre d'entier, je peux dire que la racine d'un nœud (l'élément du nœud) est toujours plus grande que le fils gauche et plus petite que le fils droit. Ainsi, quand je cherche un élément, je sais à chaque étape si je dois aller vers la gauche ou la droite (dans le cas ou je ne suis pas arrivé).
+        </para>
+        <para>
+          Et c'est tout. En respectant strictement ces deux règles, nous avons des arbres binaires de recherche. Les arbres de recherches étant parmi les structures les plus efficaces pour la recherche d'éléments (loin derrière les graphes). 
+        </para>
+        <para/>
+        <para>
+          Je vous laisse le plaisir de créer un module ÉLixir pour ces arbres. Vous pourrez trouver mon implémentation de ce module sur mon répertoire git (lien en fin d'article).
+        </para>
+      </section>
+    </section>
+  </section>
+  <para/>
+  <para>
+    Voici donc pour cet article. J'espère que vous aurez appris de nouvelle chose :) Je vous laisse les liens vers les sources utilisés pour faire cette article, et mon répertoire git ou vous pourrez retrouver tous les fichiers de codes présenter ici. 
+  </para>
+  <para>
+    <itemizedlist>
+      <listitem>
+         <ulink href = "http://caml.inria.fr/ocaml/index.fr.html">Élixir, page officielle</ulink>
+      </listitem>
+      <listitem>
+        <ulink href = "https://fr.wikipedia.org/wiki/Programmation_fonctionnelle">La programmation fonctionnelle, version wikipédia</ulink>
+      </listitem>
+      <listitem>
+        <ulink href = "http://deptinfo.unice.fr/~roy/progfonc.html">La programmation fonctionnelle, version Paul Graham</ulink>
+      </listitem>
+      <listitem>
+        <ulink href = "hhttps://github.com/titouanfreville/Supinfos_Articles/tree/master/ocaml_articel/ressources">Les codes de l'article</ulink>
+      </listitem>
+    </itemizedlist>
+  </para>
+  <para>
+    Vous remarquerez sans doute que je n'ai pas relever toutes les références citées, mais seulement celle qui me semble indispensable pour suivre cet article.
+  </para>
+</section>
