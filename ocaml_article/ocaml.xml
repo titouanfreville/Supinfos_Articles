@@ -388,45 +388,43 @@
             <section>
               <title>Code OCaml</title>
               <para>
-                <programlisting langage="exs">
-                  defmodule Listes do
-                    # @name est_dans
-                    # Fonction testant la présence d'un élément dans une liste
-                    # @param e any élément à rechercher
-                    # @param l list liste dans la quelle cherché l'élément
-                    # @return true si l'élément existe, false sinon
-                    def est_dans(e,l) do
-                      cond do
-                        l==[] -&gt; false
-                        true -&gt; (hd l) == e || est_dans e,(tl l)
-                      end
-                    end
-                    # @name doublons_sk
-                    # Fonction permettant de supprimer les doublons dans une liste.
-                    # @param l liste liste dont on veux supprimer les doublons.
-                    # @return liste sans doublons.
-                    def doublons_sk(l) do
-                      cond do
-                        l==[] -&gt; []
-                        true -&gt; if est_dans (hd l),(tl l) do doublons_sk (tl l) else [hd l] ++ doublons_sk (tl l) end
-                      end
-                    end
-                    # @name nb_de
-                    # Fonction pour trouver le nombre d’occurrence de E dans L
-                    # @param e any éléments à compter
-                    # @param l list liste dans la quelle compter
-                    # @return nombre d’occurrence de E dans L
-                    def nb_de(e,l) do
-                      cond do
-                        l==[] -&gt; 0
-                        true -&gt; (hd l) == e &amp;&amp; 1 + nb_de(e,(tl l)) || nb_de(e,(tl l))
-                      end
-                    end
-                  end 
+                <programlisting langage="ocaml">
+                  (**
+                    @name est_dans
+                    @ Fonction permettant de savoir si un élement E est dans une liste L
+                    @param e 'a Paramètre de type quelconque 
+                    @param l 'a list List d'élément du même type que e
+                    @return true si e in list, false else
+                  *)
+                  let rec est_dans e l = 
+                    match l with
+                    |[] -&gt; false
+                    |t::q -&gt; t = e || est_dans e q;;
+                  (**
+                    @name doublons_sk
+                    @ Fonction retirant les doublons d'une liste
+                    @param l 'a list list d'élément.
+                    @return liste l sans doublons
+                  *)
+                  let rec doublons_sk l =
+                    match l with
+                    |[] -&gt; []
+                    |t::q -&gt; if est_dans t q then doublons_sk q else t :: doublons_sk q;;
+                  (**
+                    @name nb_de
+                    @ Fonction permettant de calculer le nombre d'occurence d'un élément dans une liste
+                    @param e 'a élément de type quelconque
+                    @param l 'a list Liste d'élément du même type
+                    @return nb d'occurence de e dans a
+                  *)
+                  let rec nb_de e l =
+                    match l with
+                    |[] -&gt; 0
+                    |t::q -&gt; if t = e then 1 + nb_de e q else nb_de e q;;
                 </programlisting>
               </para>
               <para>
-                Vous voilà désormais armé de quelque fonctions basique sur les listes. Vous pouvez compléter ces fonctions avec des fonctions pour inverser la liste par exemple. Et nous allons tout de suite compléter notre collection avec quelque fonction un peu plus amusantes :)
+                Vous voilà désormais armez de quelque fonctions basique sur les listes. Vous pouvez compléter ces fonctions avec des fonctions pour inverser la liste par exemple. Et nous allons tout de suite compléter notre collection avec quelque fonction un peu plus amusantes :)
               </para>
             </section>
           </section>
@@ -434,14 +432,14 @@
         <section>
           <title>Les fonctions de tri, de l'élèves au maître.</title>
           <para>
-            Voyons maintenant deux fonctions de tri sur les listes. La première est la fonction basique de trie. Il est déconseillé de l'utiliser, elle est particulièrement peu efficace. Nous allons également profité de ces fonctions de tri pour voir les 2 méthodologies d'implémentation pour les fonctions récursive. Jusqu'à présent, nous avons empiler les opérations dans les algorithmes et programmes au niveau de l'appel récursif. C'est ce que l'on appel de la récursivité non terminale, car au moments de l'appel récursif, il y a encore des opérations à effectuer. L'avantage de cette façon de faire est qu'elle est logique vis à vis de la récursivité mathématique. L'inconvénient, c'est que cela prend vite beaucoup de place dans la mémoire de notre environnement. Aussi, pour éviter cela, une autre façon de faire, la récursivité terminale existe. Dans ce cas, l'objectif est que au moment de l'appel récursif, le programme n'est plus d'opération à exécuter. Il va donc être nécessaire d'utiliser des accumulateurs. Nous allons utiliser la première fonction de tri (que l'on va appeler tri_bulles) pour illustrer cette différence. 
+            Voyons maintenant deux fonctions de tri sur les listes. La première est la fonction basique de trie. Il est déconseillé de l'utiliser, elle est particulièrement peu efficace. Nous allons également profiter de ces fonctions de tri pour voir les deux méthodologies d'implémentation pour les fonctions récursives. Jusqu'à présent, nous avons empiler les opérations dans les algorithmes et programmes au niveau de l'appel récursif. C'est ce que l'on appelle de la récursivité non terminale, car au moment de l'appel récursif, il y a encore des opérations à effectuer. L'avantage de cette façon de faire est qu'elle est logique vis-à-vis de la récursivité mathématique. L'inconvénient, c'est que cela prend vite beaucoup de place dans la mémoire de notre environnement. Aussi, pour éviter cela, une autre façon de faire, la récursivité terminale existe. Dans ce cas, l'objectif est qu'au moment de l'appel récursif, le programme n'est plus d'opération à exécuter. Il va donc être nécessaire d'utiliser des accumulateurs. Nous allons utiliser la première fonction de tri (que l'on va appeler tri_bulles) pour illustrer cette différence. 
           </para>
           <para/>
           <section>
             <title>Tri Bulle</title>
             <para/>
             <para>
-              La fonction tri bulle est la fonction de tri la plus 'instinctive'. Elle ce contente de regarder chaque éléments puis dans les insérer dans la liste triée. 
+              La fonction tri bulle est la fonction de tri la plus 'instinctive'. Elle se contente de regarder chaque élément puis dans les insérer dans la liste triée. 
             </para>
             <para>
               Nous allons donc avoir l'algorithme suivant en fonctionnel non terminal : 
@@ -465,66 +463,66 @@
               </programlisting>
             </para>
             <para>
-              Nous voyons bien sur cet exemple que les deux façons de procédés on globalement le même fonctionnement. Ici, dans les deux cas, on compare l'élément courant à une liste déjà triée (soit l'accumulateur, soit le tri de la suite de la fonction). On voit aussi, pour cette fonction qu'il n'y a pas de gain de temps quelque soit la solution. Une fonction en récursif terminal et une fonction en récursif non terminal auront, si elles sont bien pensée, le même temps d'exécution. Cependant, l'espace n'est clairement pas occupé de la même façon. Dans la récursivité terminal, on demande au programme de travailler avec un espace mémoire connue représenter par l'accumulateur, et c'est ce paramètre que l'on fait varié à chaque étape. En non terminal, on demande à la pile d'exécution (généralement, cela va se traduire par une occupation de la RAM et de la mémoire processeur) de garder en mémoire les actions à effectuer une fois que l'on aura atteint un cas connue. Vous pourrez voir en testant les programmes que nous allons maintenant élaboré que en la méthode non terminale finira par échouer si vous lui passer une liste trop grosse. Mais vous pourrez aller beaucoup plus loin en utilisant la méthode terminale. 
+              Nous voyons bien sur cet exemple que les deux façons de procédés on globalement le même fonctionnement. Ici, dans les deux cas, on compare l'élément courant à une liste déjà triée (soit l'accumulateur, soit le tri de la suite de la fonction). On voit aussi, pour cette fonction qu'il n'y a pas de gain de temps quel que soit la solution. Une fonction en récursif terminal et une fonction en récursif non terminal auront, si elles sont bien pensées, le même temps d'exécution. Cependant, l'espace n'est clairement pas occupé de la même façon. Dans la récursivité terminal, on demande au programme de travailler avec un espace mémoire connue représenter par l'accumulateur et c'est ce paramètre que l'on fait varier à chaque étape. En non terminal, on demande à la pile d'exécution (généralement, cela va se traduire par une occupation de la RAM et de la mémoire processeur) de garder en mémoire les actions à effectuer une fois que l'on aura atteint un cas connue. Vous pourrez voir en testant les programmes que nous allons maintenant élaborer qu'en la méthode non terminale finira par échouer si vous lui passez une liste trop grosse. Mais vous pourrez aller beaucoup plus loin en utilisant la méthode terminale. 
             </para>
             <para/>
             <para>
               Le code :
-              <programlisting langage="elixir">
-                defmodule Listes do
-                  # @name tribulle_nonterminale
-                  # Fonction pour trier une liste d'entier dans l'ordre croissant. Une extension de cette fonction pourra être réaliser pour la rendre
-                  # plus souple ;)
-                  # @param l int list liste d'entier à trier
-                  # @return liste l trier.
-                  def tribulle_nonterminale(l) do
-                    cond do
-                      l==[] -&gt; []
-                      (tl l) == [] -&gt; [hd l]
-                      true -&gt; 
-                        ltriee=tribulle_nonterminale(tl l)
-                        ((hd l) &lt; (hd ltriee)) &amp;&amp; ([hd l] ++ ltriee) || ([hd ltriee] ++ (tribulle_nonterminale([hd l]++(tl ltriee))))
-                    end
-                  end
-
-                  # @name add
-                  # Fonction ajoutant un élément à sa place dans une liste triée.
-                  # @param l int list liste triée d'entier ou ajouter l'élément
-                  # @param e int élément à ajouter
-                  # @parama acc int list liste utiliser pour stocker le résulat (devrait êter vide) 
-                  # @return liste contenant l'élément à sa place
-                  def add(l,e, acc) do 
-                    cond do
-                      l==[] -&gt; acc++[e]
-                      true -&gt; (e &lt; hd l) &amp;&amp; (acc++[e]++l) || (add((tl l),e,acc++[(hd l)]))
-                    end
-                  end
-                  # @name tribulle_terminale
-                  # Fonction pour trier une liste d'entier dans l'ordre croissant. Une extension de cette fonction pourra être réaliser pour la rendre
-                  # plus souple ;)
-                  # @param l int list liste d'entier à trier
-                  # @param acc int list liste pour stocker le résultat (vide le plus souvent)
-                  # @return liste l trier.
-                  def tribulle_terminale(l, acc) do
-                    cond do
-                      l==[] -&gt; acc
-                      acc == [] -&gt; tribulle_terminale (tl l), [hd l]
-                      true  -&gt;
-                        (hd l) &lt; (hd acc) &amp;&amp; 
-                        tribulle_terminale((tl l),[hd l]++acc) ||
-                        tribulle_terminale((tl l), add(acc,hd(l),[]))
-                    end
-                  end
-                end 
+              <programlisting langage="ocaml">
+                (**
+                  @name insert_nt
+                  @ Fonction permettant d'insérent un élément dans une liste triée.
+                  @param e 'a Élément du type de la liste
+                  @param l 'a list Liste d'élément triée
+                  @param comp 'a -&gt;'a -&gt;bool fonction de comparaison
+                  @return e inséré dans l triée.
+                *)
+                let rec insert_nt e l comp = 
+                  match l with
+                  |[] -&gt; [e]
+                  |t::q  -&gt; if comp e t then e::l else t::insert_nt e q comp;;
+                (**
+                  @name tri_bulle_nt
+                  @ Fonction permettant de trier une liste
+                  @param l 'a list Liste d'élément
+                  @param comp 'a -&gt;'a -&gt;bool fonction de comparaison
+                  @return l trié
+                *)
+                let rec tri_bulle_nt l comp =
+                  match l with 
+                  |[] -&gt; []
+                  |t::q  -&gt; insert_nt t (tri_bulle_nt q comp) comp;;
+                (**
+                  @name insert
+                  @ Fonction permettant d'insérent un élément dans une liste triée.
+                  @param e 'a Élément du type de la liste
+                  @param l 'a list Liste d'élément triée
+                  @param acc 'a list Accumulateur. '
+                  @param comp 'a -&gt;'a -&gt;bool fonction de comparaison
+                  @return e inséré dans l triée.
+                *)
+                let rec insert e l acc comp =
+                  match l with
+                  |[] -&gt; acc@[e]
+                  |t::q  -&gt; if comp e t then acc@(e::l) else insert e q (acc@[t]) comp;;
+                (**
+                  @name tri_bulle
+                  @ Fonction permettant de trier une liste
+                  @param l 'a list Liste d'élément
+                  @param acc 'a list Accumulateur. '
+                  @param comp 'a -&gt;'a -&gt;bool fonction de comparaison
+                  @return l trié
+                *)
+                let rec tri_bulle l acc comp =
+                  match l with 
+                  |[] -&gt; acc
+                  |t::q  -&gt; tri_bulle q (insert t acc [] comp) comp;;
               </programlisting>
             </para>
             <para>
-              Pour le code, nous avons décomposer la partie terminale en deux fonctions pour plus de clarté. Aussi, la sous fonction add est une fonction capable d'ajouter un élément dans une listes déjà trié. On peut aussi voir que l'on a travailler uniquement sur des entiers. Il est possible de supprimer cette restriction en passant en argument à la fonction une fonction de tri quelconque. Ainsi, si vous travailler sur un ensemble à trier n'ayant pas de comparaison native, vous pourrez donner à la fonction de tri, la fonction de comparaison nécessaire. 
+              Pour le code, nous avons décomposé la partie terminale en deux fonctions pour plus de clarté. Aussi, la sous-fonction insert est une fonction capable d'ajouter un élément dans une liste déjà triée. On peut aussi voir que l'on a travaillé sur des listes quelconques en passant en argument une fonction de comparaison comp. Ainsi, ces fonctions permettent de trier les listes par ordre croissant ou décroissant quel que soit le type de données dans la liste (et à condition qu'il existe une fonction de comparaison d'ordre).
             </para>
             <para/>
-            <para>
-              C'est ce que nous allons faire dans la fonction de tri suivante, la fonction tri fusion.
-            </para>
           </section>
           <section>
             <title>Tri Fusion</title>
@@ -533,11 +531,11 @@
               Tout d'abord, présentons le principe de cette fonction.
             </para>
             <para>
-              La fonction de tri fusion (appelé quick_sort en anglais) est la fonction de tri optimale, à l'heure actuelle, quand on fait face à un ensemble quelconque de donné (exemple général : une listes d'entier aléatoire). Cette fonction sur la méthode dites 'Diviser pour Régner' consistant à 'découper' un grand problème en plusieurs sous tache que l'on sait effectuer. Ici, notre problème est : Ayant une liste quelconque d'entier, j'aimerais être capable de la trié par ordre croissant. Ce que je sais assurément faire : fusionner des listes triés pour obtenir une liste trié (il suffit de comparer les éléments un à un), diviser une liste deux (je prend les deux premiers éléments et les mets chacun dans une liste), compter le nombre d'éléments, etc ... Savoir compter le nombre d'élément de la liste ne nous aidera pas à la triée. Par contre, sachant couper une liste en 2, je sais transformer une liste en un ensemble de singleton, et je sais trier un singleton (c'est un élément seul donc il est naturellement trié). Donc si je coupe ma liste jusqu'à n'avoir que des singletons, j'obtiens plein de petite liste triées. Ensuite, j'ai dit que je savais fusionner deux listes triées de sorte que la liste obtenue soit triée. Donc, il ne me reste qu'à fusionner toutes les listes triées 2 par 2, puis fusionné les listes obtenues, etc., etc., jusqu'à n'avoir plus qu'une liste contenant tout les éléments d'origine, mais trié. 
+              La fonction de tri fusion (appelé quick_sort en anglais) est la fonction de tri optimale, à l'heure actuelle, quand on fait face à un ensemble quelconque de données (exemple général : une liste d'entier aléatoire). Cette fonction sur la méthode dites 'Diviser pour Régner' consistant à 'découper' un grand problème en plusieurs sous tâche que l'on sait effectuer. Ici, notre problème est : Ayant une liste quelconque d'éléments, j'aimerais être capable de la trier dans un certain ordre. Ce que je sais assurément faire : fusionner des listes triées pour obtenir une liste triée (il suffit de comparer les éléments un à un), diviser une liste deux (je prends les deux premiers éléments et les mets chacun dans une liste), compter le nombre d'éléments, etc. ... Savoir compter le nombre d'élément de la liste ne nous aidera pas à la trier. Par contre, sachant couper une liste en 2, je sais transformer une liste en un ensemble de singleton et je sais trier un singleton (c'est un élément seul donc il est naturellement trié). Donc si je coupe ma liste jusqu'à n'avoir que des singletons, j'obtiens plein de petites listes triées. Ensuite, j'ai dit que je savais fusionner deux listes triées de sorte que la liste obtenue soit triée. Donc, il ne me reste qu'à fusionner toutes les listes triées deux à deux, puis fusionné les listes obtenues, etc., etc., jusqu'à n'avoir plus qu'une liste contenant tous les éléments d'origine, mais trié. 
             </para>
             <para/>
             <para>
-              Nous somme donc face à un processus qui effectue deux action : l'une consiste à découper la liste, l'autre à fusionner les listes obtenues une fois celles-ci triées. Je vous propose donc de faire trois fonctions, en récursivité terminale, pour résoudre notre problème. Une fonction DIVISE, qui coupe la liste en deux, une fonction FUSIONNE qui prend deux listes triées et renvoie une seule liste triées, et la fonction qui nous intéresse TRI_FUSION qui va prendre une liste et effectué dessus les opérations de fusion et division jusqu'à avoir le résultat attendu. 
+              Nous sommes donc face à un processus qui effectue deux actions : l'une consiste à découper la liste, l'autre à fusionner les listes obtenues une fois celles-ci triées. Je vous propose donc de faire trois fonctions, en récursivité terminale, pour résoudre notre problème. Une fonction DIVISE, qui coupe la liste en deux, une fonction FUSIONNE qui prend deux listes triées et renvoie une seule liste triée, et la fonction qui nous intéresse TRI_FUSION qui va prendre une liste et effectué dessus les opérations de fusion et division jusqu'à avoir le résultat attendu. 
             </para>
             <para/>
             <para>
@@ -559,81 +557,55 @@
               La fonction comparateur est une fonction de X dans Booléen. 
 
               Soit TRI_FUSION (l,acc, comparateur) = selon l
-              Vide(l) -&gt; acc
+              Vide(l) -&gt; []
               NonVide(l) -&gt; Soit (l1,l2)=DIVISE(l,[],[]) dans
-                FUSIONNE (TRI_FUSION l1 [], comparateur) (TRI_FUSION l2 [] comparateur) [] comparateur
+                FUSIONNE (TRI_FUSION l1 [] comparateur) (TRI_FUSION l2 [] comparateur) [] comparateur
             </programlisting>
             <para/>
             <para>
-              Cet ensemble est un peu plus complexe à écrire et retenir que le tri bulle, mais il est beaucoup plus efficace. Et au final, les trois fonctions réaliser sont vraiment simple à comprendre et réaliser.
+              Cet ensemble est un peu plus complexe à écrire et retenir que le tri bulle, mais il est beaucoup plus efficace. Et au final, les trois fonctions réaliser sont vraiment simples à comprendre et réaliser. Cependant, on peut remarquer que la partie TRI_FUSION n'est pas sous forme terminal. En effet, lors du dernier appel, une opération de fusion est mise en attente pendant que l'on tri les listes divisées. Je n'ai pas de solution terminale à vous proposer actuellement. Si quelqu'un à une solution à proposer, j'en serais ravie.
             </para>
             <para/>
             <para>
               Côté code maintenant : 
             </para>
-            <programlisting langage="elixir">
-              defmodule Listes do
-                # @name divise
-                # Fonction prenant une liste et renvoyant celle ci coupé en deux moitié si possible égale.
-                # @param l list liste à diviser
-                # @param acc1 list liste de stockage
-                # @param acc2 list liste de stockage
-                # @return la liste divisé en 2 sous forme de couple. 
-                def divise(l, acc1 \\ [], acc2 \\ []) do
-                  cond do 
-                    l == [] -&gt; { acc1, acc2 }
-                    (tl l) == [] -&gt; { [hd l] ++ acc1 , acc2 }
-                    true -&gt;
-                      divise(tl(tl l), ([hd l] ++ acc1), ([hd(tl l)] ++ acc2))
-                  end
-                end
-                # @name fusionne
-                # Fonction fusionnant deux liste trié en une unique liste triée
-                # @param l1 list première liste triée
-                # @param l2 list deuxième liste triée
-                # @param acc list liste de stockage
-                # @param comp function fonction de comparaison
-                # @return l1 fusionné à l2 et trié.
-                def fusionne(l1,l2,acc \\ []) do
-                  cond do
-                    l1 == [] -&gt; acc ++ l2
-                    l2 == [] -&gt; acc ++ l1
-                    true -&gt; 
-                      (hd l1) &lt; (hd l2) &amp;&amp;
-                      fusionne((tl l1), l2, (acc ++ [hd l1])) ||
-                      fusionne(l1, (tl l2), (acc ++ [hd l2]))
-                  end
-                end
-                # @name tri_fusion
-                # Trie la liste passé en argument
-                # @param l list liste à triée
-                # @param acc list list de stockage
-                # @param comp function fonction de comparaison à utiliser
-                # @return liste l triée
-                def tri_fusion(l,acc \\ []) do
-                  cond do
-                    l == [] -&gt; acc
-                    (tl l)==[] -&gt; l
-                    true -&gt; 
-                      tuple = divise l
-                      l1 = elem(tuple, 0)
-                      l2 = elem(tuple, 1)
-                      fusionne (tri_fusion l1), (tri_fusion l2), []
-                  end
-                end
-                # @name croissant
-                # Opérateur de comparaison pour trier les entier par ordres croissant
-                # @param a int entier a
-                # @param b int entier b
-                # @return true si a &lt; b, false sinon
-                def croissant(a,b) do
-                  a &lt; b
-                end
-
-                def ex_trifusion_cint(l) do
-                  tri_fusion(l)
-                end
-              end 
+            <programlisting langage="ocaml">
+              (**
+                @name devise
+                @ Fonction permettant de diviser une liste
+                @param l 'a list Liste d'élément
+                @return ('a list, 'a list) liste l divisée en 2.
+              *)
+              let rec divise l a1 a2 =
+                match l with
+                |[]  -&gt; (a1,a2)
+                |t::[]  -&gt; (t::a1,a2)
+                |t1::t2::q  -&gt; divise q (t1::a1) (t2::a2)
+              (**
+                @name fusion
+                @ Fonction permettant de fusionner une liste
+                @param l1 'a list Liste d'élément triée selon comp
+                @param l2 'a list Liste d'élément triée selon comp
+                @param comp 'a -&gt;'a -&gt;bool fonction de comparaison
+                @return 'a list Liste l1 &amp;&amp; l2 fusionnée et triée selon comp'
+              *)
+              let rec fusion l1 l2 acc comp =
+                match (l1,l2) with
+                |([],_)  -&gt; acc@l2
+                |(_,[])  -&gt; acc@l1
+                |(t1::q1,t2::q2)  -&gt; if comp t1 t2 then fusion q1 l2 (acc@[t1]) comp else fusion l1 q2  (acc@[t2]) comp;;
+              (**
+                @name order
+                @ Fonction permettant de trier une liste
+                @param l 'a list Liste d'élément
+                @param comp 'a -&gt;'a -&gt;bool fonction de comparaison
+                @return l trié
+              *)
+              let rec order l comp=
+                match l with 
+                |[]  -&gt; l
+                |t::[]  -&gt; l
+                |_  -&gt; let (l1,l2) = divise l [] [] in fusion (order l1 comp) (order l2 comp) [] comp;;
             </programlisting>
           </section>
         </section>
@@ -650,7 +622,7 @@
         <quote>A tous les problèmes une solution, si pas de solution, pas de problème., Sur deux tons, Maxime le Forestier</quote>
       </para>
       <para>
-        Attaquons nous donc à de petits problèmes dont les solutions sont déjà connues et démontrées. Nous allons implémenter les fonctions de résolution de deux problèmes naturellement récursif. La suite de Fibonacci puis le problème des tours de Hanoï. Les deux problèmes sont énoncés, respectivement, en ces termes : Avoir une fonction permettant d'obtenir la valeur de la suite de Fibonacci au rang n (donné en argument), avoir une fonction me permettant d'obtenir tous les mouvements nécessaire à la résolution du problème des tours de Hanoï pour n éléments (donné en argument). Je vous invite à réfléchir par vous même à ces problèmes si vous en avez le courage avant d'en lire la résolution.
+        Attaquons-nous donc à de petits problèmes dont les solutions sont déjà connues et démontrées. Nous allons implémenter les fonctions de résolution de deux problèmes naturellement récursif. La suite de Fibonacci puis le problème des tours de Hanoï. Les deux problèmes sont énoncés, respectivement, en ces termes : Avoir une fonction permettant d'obtenir la valeur de la suite de Fibonacci au rang n (donné en argument), avoir une fonction me permettant d'obtenir tous les mouvements nécessaires à la résolution du problème des tours de Hanoï pour n éléments (donné en argument). Je vous invite à réfléchir par vous-même à ces problèmes si vous en avez le courage avant d'en lire la résolution.
       </para>
       <para/>
       <section>
@@ -665,25 +637,23 @@
         </para>
         <para/>
         <para>
-          Cette suite à été découverte par un mathématicien italien cherchant à modéliser l'évolution d'une population de lapin. Pour plus d'information sur l'histoire de cette suite et les liens entre elle et d'autre concept mathématique (comme le nombre d'or), je vous invite à consulter cet article <ulink href = "http://images.math.cnrs.fr/Mysteres-arithmetiques-de-la-suite-de-Fibonacci.html">http://images.math.cnrs.fr/Mysteres-arithmetiques-de-la-suite-de-Fibonacci.html</ulink> du CNRS et/ou, la vidéo suivante <ulink href="https://www.youtube.com/watch?v=DxmFbdp7v9Q">https://www.youtube.com/watch?v=DxmFbdp7v9Q</ulink> de micmaths. Pour ce que nous allons faire, il suffit de savoir comment se construit la suite. Cette suite est une structure définie récursivement de la façon suivante : le terme n+1 de la suite se calcule en faisant la somme des deux termes précédent. Ce qui donne fibonacci(n+1)= fibonacci(n) + fibonacci(n-1). Et comme il faut commencer quelque part, les termes 0 et 1 sont égaux respectivement à 0 et 1. On a donc : fibonacci(0)=0, fibonacci(1)=1, pout tout n &gt; 1 fibonacci(n+1)=fibonacci(n)+fibonacci(n-1). 
+          Cette suite fut découverte par un mathématicien italien cherchant à modéliser l'évolution d'une population de lapin. Pour plus d'information sur l'histoire de cette suite et les liens entre elle et d'autre concept mathématique (comme le nombre d'or), je vous invite à consulter cet article <ulink href = "http://images.math.cnrs.fr/Mysteres-arithmetiques-de-la-suite-de-Fibonacci.html">http://images.math.cnrs.fr/Mysteres-arithmetiques-de-la-suite-de-Fibonacci.html</ulink> du CNRS et/ou, la vidéo suivante <ulink href="https://www.youtube.com/watch?v=DxmFbdp7v9Q">https://www.youtube.com/watch?v=DxmFbdp7v9Q</ulink> de micmaths. Pour ce que nous allons faire, il suffit de savoir comment se construit la suite. Cette suite est une structure définie récursivement de la façon suivante : le terme n+1 de la suite se calcule en faisant la somme des deux termes précédent. Ce qui donne fibonacci(n+1)= fibonacci(n) + fibonacci(n-1). Et comme il faut commencer quelque part, les termes 0 et 1 sont égaux respectivement à 0 et 1. On a donc : fibonacci(0)=0, fibonacci(1)=1, pout tout n &gt; 1 fibonacci(n+1)=fibonacci(n)+fibonacci(n-1). 
         </para>
         <para/>
         <para>
           Implémentation : 
-          <programlisting langage="exs">
-            defmodule Problemes do
-              # @name fibo
-              # fonction calculant le n-ème terme de la suite de Fibonacci
-              # @param n int n ;)
-              # @return valeur du n eme terme de la suite de Fibonacci
-              def fibo n do
-                cond do
-                  n == 0 -&gt; 0
-                  n == 1 -&gt; 1
-                  true -&gt; fibo(n-1) + fibo(n-2) 
-                end
-              end
-            end
+          <programlisting langage="ocaml">
+            (**
+              @name fibo
+              Fonction that will calculate the Nth term of fibonnacci serie.
+              @param n int Range where you want to calculate
+              @return finbonnacci value @ Nth poosition
+            *)
+            let rec fibo n = 
+              match n with 
+              |0 -&gt; 0
+              |1 -&gt; 1
+              |_ -&gt; fibo (n-1) + fibo (n-2);;
           </programlisting>
         </para>
         <para/>
@@ -695,11 +665,11 @@
         <title>Les tours ... de Hanoï</title>
         <para/>
         <para>
-          Pour ce qui ne connaîtrais pas les tours de Hanoï, il s'agit d'un casse tête français, imaginé par un mathématicien. Il consiste en un support sur le quel sont disposé trois pique. Une tour de disques (de taille croissante) et placé sur l'un des disques extrêmes et le but est  de déplacer la tour sur le pique opposée sachant que l'on ne peut bouger qu'un disque à la fois et qu'un disque ne peut se placer qu'au dessus d'un disque plus petit. Vous pouvez y jouer ici <ulink href="http://matoumatheux.ac-rennes.fr/tous/enigme/tour0.htm">http://matoumatheux.ac-rennes.fr/tous/enigme/tour0.htm</ulink> et en apprendre plus sur wikipédia. 
+          Pour ceux qui ne connaîtraient pas les tours de Hanoï, il s'agit d'un casse-tête français, imaginé par un mathématicien. Il consiste en un support sur lequel sont disposés trois pics. Une tour de disques (de taille croissante) et placé sur l'un des pics extrêmes et le but est  de déplacer la tour sur le pic opposée sachant que l'on ne peut bouger qu'un disque à la fois et qu'un disque ne peut se placer qu'au-dessus d'un disque plus petit. Vous pouvez y jouer ici <ulink href="http://matoumatheux.ac-rennes.fr/tous/enigme/tour0.htm">http://matoumatheux.ac-rennes.fr/tous/enigme/tour0.htm</ulink> et en apprendre plus sur wikipédia. 
         </para>
         <para/>
         <para>
-          Encore une fois, ce problème est naturellement récursif. Une suite d'action répétée permet de résoudre le problème. La question est qu'elle suite d'action. Et pour cela, il nous faut trouver deux choses : les cas simples (les situations dans les qu'elles je sais ce qu'il faut faire), et la condition de récurrence (étant dans la situation N comment puis-je me rapprocher de mes cas simples S). Ici, je sais comment résoudre le problème si je n'ai pas de disque à déplacer (je n'ai alors rien faire), si je n'ai qu'un seul disque (je n'ai qu'a l'amener à l'arrivée), et quand je n'ai plus que deux disques (il faut que je déplace le premier disque sur la part intermédiaire, puis le second sur l'arrivée puis redéplacer le plus petit de l'intermédiaire vers l'arrivée). Ensuite, si je veux résoudre pour le problème pour 3 disques, je connaît la méthode : Déplacer le plus petit sur l'arrivé (cas à un disque), puis déplacer le disque moyen sur le disque intermédiaire (début cas à deux éléments). Après l'enchaînement d'action est un peu différent puisque je déplace le plus petit (qui était sur l'arrivé) vers le moyen, puis le plus grand vers l'arrivée. Il ne me reste donc plus que le cas à deux éléments que je connais met en utilisant le piquet originellement intermédiaire en départ et celui de départ en intermédiaire. La résolution de ce problème est donc une simple succession de rotation sur les statuts des piquets (départ, intermédiaire, arrivée) et le choix entre une des deux actions Simple, ou Double. La condition de simplification peut s'exprimer ainsi : 
+          Encore une fois, ce problème est naturellement récursif. Une suite d'action répétée permet de résoudre le problème. La question est quelle suite d'action. Et pour cela, il nous faut trouver deux choses : les cas simples (les situations dans lesquelles je sais ce qu'il faut faire), et la condition de récurrence (étant dans la situation N comment puis-je me rapprocher de mes cas simples S). Ici, je sais comment résoudre le problème si je n'ai pas de disque à déplacer (je n'ai alors rien faire), si je n'ai qu'un seul disque (je n'ai qu'à l'amener à l'arrivée), et quand je n'ai plus que deux disques (il faut que je déplace le premier disque sur la part intermédiaire, puis le second sur l'arrivée puis re-déplacer le plus petit de l'intermédiaire vers l'arrivée). Ensuite, si je veux résoudre pour le problème pour trois disques, je connais la méthode : Déplacer le plus petit sur l'arrivée (cas à un disque), puis déplacer le disque moyen sur le disque intermédiaire (début cas à deux éléments). Après l'enchaînement d'action est un peu différent puisque je déplace le plus petit (qui était sur l'arrivée) vers le moyen, puis le plus grand vers l'arrivée. Il ne me reste donc plus que le cas à deux éléments que je connais met en utilisant le piquet originellement intermédiaire en départ et celui de départ en intermédiaire. La résolution de ce problème est donc une simple succession de rotation sur les statuts des piquets (départ, intermédiaire, arrivée) et le choix entre une des deux actions - Simple, ou Double. La condition de simplification peut s'exprimer ainsi : 
           <itemizedlist>
             Déplacer N disques de D vers A en passant par I revient à: 
             <listitem>
@@ -716,30 +686,28 @@
         <para/>
         <para>
           Implémentons : 
-          <programlisting langage="elixir">
-            defmodule Problemes do 
-              # @name hanoi
-                # fonction affichant la combinaison d'étape à faire pour résoudre le problème.
-                # @param n int nombre de disque 
-                # @para d string pique de départ
-                # @para a string pique intermédiaire
-                # @para i string pique d'arrivée
-                def hanoi n,d,a,i do
-                  cond do
-                    n == 0 -&gt; ""
-                    n == 1 -&gt; d &lt;&gt; a 
-                    true -&gt; hanoi((n-1),d,i,a) &lt;&gt; "- " &lt;&gt; hanoi(1,d,a,i) &lt;&gt; " - " &lt;&gt; hanoi((n-1),i,a,d) 
-                  end
-                end
-              end
+          <programlisting langage="ocaml">
+            (**
+              @name hanoi
+              fonction affichant la combinaison d'étape à faire pour résoudre le problème.
+              @param n int nombre de disque 
+              @para d string pique de départ
+              @para a string pique intermédiaire
+              @para i string pique d'arrivée $
+            *)
+            let rec hanoi n d a i =
+              match n with
+              |0 -&gt; ""
+              |1 -&gt; d ^ a 
+              |_ -&gt; hanoi (n-1) d i a ^ "- " ^ hanoi 1 d a i ^ " - " ^ hanoi (n-1) i a d;;
           </programlisting>
         </para>
         <para>
-          Cette fonction affichera bien les étapes nécessaire à la résolution du problème, et ces étapes seront optimale (impossible d'en faire moins). Je vous renvoi à wikipédia pour les démonstrations si vous être dubitatifs :). Attention cependant lors de la création de cette fonction à l'ordre des paramètres si vous voulez avoir l'affichage correctement ;).
+          Cette fonction affichera bien les étapes nécessaires à la résolution du problème et ces étapes seront optimale (impossible d'en faire moins). Je vous renvoie à wikipédia pour les démonstrations si vous êtes dubitatifs :). Attention cependant lors de la création de cette fonction à l'ordre des paramètres si vous voulez avoir l'affichage correctement ;).
         </para>
         <para/>
         <para>
-          Je ne vous proposerez pas de problème plus complexe dans cet articles, mais vous pourrez toujours trouver des problèmes amusant à résoudre dans les énigmes impliquant des déplacements. Encore une fois, comme on a pu le voir dans ces deux problèmes, le plus difficile n'est pas de créer le code mais bien de trouver comment résoudre le problème. 
+          Je ne vous proposerai pas de problème plus complexe dans cet article, mais vous pourrez toujours trouver des problèmes amusants à résoudre dans les énigmes impliquant des déplacements. Encore une fois, comme on a pu le voir dans ces deux problèmes, le plus difficile n'est pas de créer le code, mais bien de trouver comment résoudre le problème. 
         </para>
       </section>
     </section>
@@ -751,20 +719,20 @@
       </para>
       <para/>
       <para>
-        Tout d'abord, il faut savoir que contrairement au listes, les structures d'arbres ne sont pas natives dans les langages fonctionnelles. De nombreux langages ont implémenter ces structures dans des modules, parfois ouvert par défaut (ex: OCaml) mais c'est souvent à l'utilisateur de définir ces propres arbres (par exemple, en OCaml encore, les structure d'arbres par défaut sont des arbres binaire (qui n'ont que deux branches possible à chaque nœud) ce qui ne permettrait pas de représenter un arbre généalogique par exemple). Nous allons donc définir une structure globale d'arbre en élixir que vous pourrez adapter à vos besoin puis nous verrons quelque structure d'arbres particulières ayant de nombreuse application en informatiques. 
+        Tout d'abord, il faut savoir que contrairement aux listes, les structures d'arbres ne sont pas natives dans les langages fonctionnels. De nombreux langages ont implémenté ces structures dans des modules, parfois ouvert par défaut (ex: OCaml) mais c'est souvent à l'utilisateur de définir ses propres arbres (par exemple, en OCaml encore, les structures d'arbres par défaut sont des arbres binaires (qui n'ont que deux branches possibles à chaque nœud) ce qui ne permettrait pas de représenter un arbre généalogique par exemple). Nous allons donc définir une structure globale d'arbre en élixir que vous pourrez adapter à vos besoins puis nous verrons quelque structure d'arbres particulières ayant de nombreuse application en informatiques. 
       </para>
       <para/>
       <section>
         <title>Structurons les arbres</title>
         <para>
-          Une structure d'arbre d'arbre est une structure naturellement récursive. Il s'agit d'une succession d'élément qui sont soit des Nœuds, soit des Feuilles, soit du Vide. Un nœud représente un embranchement. En fonction de la définition de l'arbre, un nœud à N fils. Il est possible de décider ce nombre de fils dynamiquement avec une propriété sur les nœuds, ou statiquement. Le fils d'un nœud est par définition un arbre. Une feuille est un élément simple. C'est un élément suivant un nœud mais qui n'a pas lui même de fils. Nous allons définir les arbres de façon statique puis dynamique.
+          Une structure d'arbre d'arbre est une structure naturellement récursive. Il s'agit d'une succession d'élément qui sont soit des Nœuds, soit des Feuilles, soit du Vide. Un nœud représente un embranchement. En fonction de la définition de l'arbre, un nœud à N fils. Il est possible de décider ce nombre de fils dynamiquement avec une propriété sur les nœuds, ou statiquement. Le fils d'un nœud est par définition un arbre. Une feuille est un élément simple. C'est un élément suivant un nœud, mais qui n'a pas lui-même de fils. Nous allons définir les arbres de façon statique puis dynamique.
         </para>
         <para/>
         <para>
           Un arbre avec des nœuds statique.
         </para>
         <para>
-          Ce type de structure est intéressante si l'on veut affirmer certaine propriété sur l'arbre (par exemple, pour un arbre binaire de recherche, il est essentiel que chaque nœud est deux fils, ni plus ni moins). Cette structure sera plus légère à manipuler qu'une structure dynamique car nous n'avons pas besoin de chercher le nombre de fils pour chaque nœud, par contre, elle manque d'intérêt pour la représentation d'un arbre généalogique par exemple ou chaque nœud à un nombre indéterminée de fils et pas de possibilité de prévoir ce nombre. 
+          Ce type de structure est intéressante si l'on veut affirmer certaine propriété sur l'arbre (par exemple, pour un arbre binaire de recherche, il est essentiel que chaque nœud aie deux fils, ni plus ni moins). Cette structure sera plus légère à manipuler qu'une structure dynamique, car nous n'avons pas besoin de chercher le nombre de fils pour chaque nœud, par contre, elle manque d'intérêt pour la représentation d'un arbre généalogique par exemple ou chaque nœud à un nombre indéterminé de fils et pas de possibilité de prévoir ce nombre. 
         </para>
         <para/>
         <para>
