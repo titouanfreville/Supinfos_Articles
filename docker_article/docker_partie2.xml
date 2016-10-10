@@ -8,7 +8,7 @@
   <section>
     <title>Installer Docker</title>
     <para>
-      Tout d'abord, if faut savoir que Docker est disponible pour Windows, MacOS et Linux. Il ne fonctionne pas tout à fait de la même façon sous Mac et Windows que sur Linux (une VM est nécessaire sur Mac et Windows), mais ce que nous allons voir dans cet article est commun à tous les systèmes. Cependant, toutes les commandes qui seront données dans cet article seront à utiliser dans un terminal Linux (soit votre environnement local, soit la VM docker). 
+      Tout d'abord, il faut savoir que Docker est disponible pour Windows, MacOS et Linux. Il ne fonctionne pas tout à fait de la même façon sous Mac et Windows que sur Linux (une VM est nécessaire sur Mac et Windows), mais ce que nous allons voir dans cet article est commun à tous les systèmes. Cependant, toutes les commandes qui seront données dans cet article seront à utiliser dans un terminal Linux (soit votre environnement local, soit la VM docker). 
     </para>
     <para></para>
     <para>
