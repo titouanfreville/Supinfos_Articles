@@ -825,7 +825,7 @@
         </para>
         <para/>
         <para>
-          Je vous laisse le plaisir de créer un module ÉLixir pour ces arbres. Vous pourrez trouver mon implémentation de ce module sur mon répertoire git (lien en fin d'article).
+          Je vous laisse le plaisir de créer un module OCaml pour ces arbres. Vous pourrez trouver mon implémentation de ce module sur mon répertoire git (lien en fin d'article).
         </para>
       </section>
     </section>
@@ -846,7 +846,7 @@
         <ulink href = "http://deptinfo.unice.fr/~roy/progfonc.html">La programmation fonctionnelle, version Paul Graham</ulink>
       </listitem>
       <listitem>
-        <ulink href = "hhttps://github.com/titouanfreville/Supinfos_Articles/tree/master/ocaml_articel/ressources">Les codes de l'article</ulink>
+        <ulink href = "hhttps://github.com/titouanfreville/Supinfos_Articles/tree/master/ocaml_article/ressources">Les codes de l'article</ulink>
       </listitem>
     </itemizedlist>
   </para>
