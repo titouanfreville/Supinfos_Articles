@@ -27,3 +27,17 @@ let rec hanoi n d a i =
   |_ -> hanoi (n-1) d i a ^ "- " ^ hanoi 1 d a i ^ " - " ^ hanoi (n-1) i a d;;
 
 hanoi 10 "D" "A" "I";;
+
+(**
+  @name hanoi_list
+  fonction retournant la liste des couples de mouvements à exécuter pour résoudre le pb des tours de hanoi..
+  @param n int nombre de disque 
+  @para d string pique de départ
+  @para a string pique intermédiaire
+  @para i string pique d'arrivée $
+*)
+let rec hanoi_list n d a i =
+  match n with
+  |0 -> []
+  |1 -> [ (d, a) ] 
+  |_ -> hanoi_list (n-1) d i a @ hanoi_list 1 d a i @ hanoi_list (n-1) i a d;;

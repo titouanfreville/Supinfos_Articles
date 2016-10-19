@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE section PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
 <section>
-  <title>La programmation fonctionnelle et OCaml</title>
+  <title>Créer des applications avec Bash et GetOpt</title>
   <para/>
   <section>
     <title>Introduction</title>
@@ -9,157 +9,81 @@
     <para/>
 
     <para>
-      Cet article a pour but de vous présenter un nouveau langage (Ocaml <ulink url="http://caml.inria.fr/ocaml/index.fr.html">http://caml.inria.fr/ocaml/index.fr.html</ulink>) et le concept de programmation fonctionnelle.</para>
+      Vous aimez les terminaux bash ? Vous aimez automatiser toutes vos tâches récurrentes et voudriez les partager avec d'autres ? Ou tout simplement, vous voulez créer une mini-application en bash ? Cet article est fait pour vous. Il vous expliquera comment créer des applications bash simple avec options commande et arguments. Comme un vrai programme quoi.  
+    </para>
     <para/>
 
     <para>
-      Je vais tout d'abord rappeler ce qu'est la programmation fonctionnelle. Je vous invite à consulter les cours et vidéo à ce sujet si vous avez accès aux ressources de Supinfo pour plus de détails (cf 3AIT notamment) ainsi que les articles suivants :
-      <ulink url="http://www.supinfo.com/articles/single/1572-programmer-elixir"> http://www.supinfo.com/articles/single/1572-programmer-elixir</ulink>, <ulink url="https://fr.wikipedia.org/wiki/Programmation_fonctionnelle">https://fr.wikipedia.org/wiki/Programmation_fonctionnelle</ulink> et <ulink url="http://deptinfo.unice.fr/~roy/progfonc.html">http://deptinfo.unice.fr/~roy/progfonc.html</ulink> 
+      Dans un premier temps, je vais fixer quelque pré-requis pour cet article. Je vous invite également à travailler depuis un environnement Linux avec bash d'installer, et d'ajouter un répertoire `~/bin` ou autre à votre path (`export PATH=$PATH:=REPO_TO_WORKING_SCRIPT`). 
     </para>
 
     <para/>
   </section>
   <section>
-    <title>La programmation fonctionnelle, en bref.</title>
+    <title>Pré-requis</title>
     <para/>
     <para>
-      Il est plus simple de parler de programmation fonctionnelle par opposition à la programmation impérative, plus connues et abordée plus tôt dans les programmes scolaires. Si vous ne savez pas ce qu'est la programmation impérative, je vous invite à ignorer ce paragraphe pour passer directement à l'introduction d’Élixir après avoir lue ou regarder les articles et ressources précédemment cités.
+      A titre personnelle, j'ai utilisé et créer des programmes bash utilisant getopt uniquement pour des terminaux Mac et Linux. Je ne suis pas sur de son support par le shell Windows.
     </para>
     <section>
-      <title>Concept de programmation fonctionnelle.</title>
+      <title>Pré-requis Linux</title>
       <para>
-        La programmation fonctionnelle est un concept de programmation ayant pour but principal de s'affranchir des problèmes d'affectation présent dans la programmation impérative. Ainsi, en programmation fonctionnelle, nous n'utilisons plus des états de la machine (ex : x=1 =&gt; J'ai créé un entier référencer par x dont la valeur est 1 donc ma machine est dans l'état X. x++ -&gt;x vaut maintenant 2, ma machine est dans un nouvel état Y.) mais des fonctions imbriquées. La principale différence étant que : En programmation fonctionnelle, je sais exactement ce que FAIT mon programme et comment il évolue LOGIQUEMENT (essentiellement basée sur les concepts de récursion en mathématiques) tandis qu'en programmation impérative, je sais dans quel état est ma machine, ce qui est présent en mémoire (à qu'elle endroit dans les langages de plus bas niveaux) et quel état je dois atteindre. D'un côté, je sais COMMENT mon programme fonctionne (impératif), de l'autre, je sais POURQUOI et je peux le démontrer (fonctionnel).
-      </para><para>
-        Une autre différence : il est possible, en programmation impérative, de modifier plusieurs Pointeurs dans une même fonction (et donc d'avoir d'une certaine façon, une fonction qui 'retourne' plusieurs valeurs). C'est impossible en programmation fonctionnelle. Une fonction en programmation fonctionnelle prend des ensembles d'arguments (liste, tuples, singleton, etc.) et ne retourne qu'un seul ensemble.
+        Il n'y a pas vraiment de pré-requis sous les systèmes Linux. Théoriquement, getopt devrait être installé par défaut. Je vous recommande tout de même de vérifier sa présence avec un `getopt --version`. Si il n'est pas installé, faite-le. Je vous recommande également de créer un répertoire bin dans votre dossier local et d'éditer votre fichier `.bashrc` pour ajouter au path le répertoire bin et pouvoir l'oublier. Ensuite, pensez à placer tous vos scripts bash dans ce répertoire et à les rendre exécutables. Ceci vous permettra de ne pas avoir à préciser la localisation du fichier pour l'exécuter.
       </para>
     </section>
     <section>
-      <title>Utilisations de la programmation fonctionnelle.</title>
-      <para/>
+      <title>Pré-requis MacOS</title>
       <para>
-        La programmation fonctionnelle est aujourd'hui principalement utilisée dans deux domaines :
-        <itemizedlist>
-          <listitem>
-            <para>
-              Les preuves, démonstrations et calculs dans le domaine scientifique (ex : démontrer la validité d'un concept mathématique)
-            </para>
-          </listitem>
-          <listitem>
-            <para>
-              L'intelligence artificielle (IA). (cf cours 3AIT)
-            </para>
-          </listitem>
-        </itemizedlist>
-        Pourquoi ces deux domaines ? Pour la partie scientifique, les langages de programmation fonctionnelles cherchant à être aussi proche que possible des bases mathématiques, il est logique de les utiliser pour des applications et programmes liés à ce domaine. Pour son utilisation en intelligence artificielle, l'IA est un domaine ou l'algorithmie occupe une place centrale. Or en programmation fonctionnelle, si l'algorithme implémenter fait ce que nous voulons et qu'il est correctement implémenter, nous pouvons être sûr qu'il fera ce qu'il faut.
+        Sous mac, il est impératif d'installer gnu-getopt si vous voulez pouvoir supporter l'utilisation d'argument long. Si vous ne voulez pas ajouter cette dépendances à vos programme, n'utilisez que les arguments court devrait vous permettre d'utiliser le getopt natif. Encore une fois, quelque soit la solution choisie, vérifier les installations. Et encore une fois, vous pouvez ajouter un répertoire à votre PATH pour simplifier l'exécution de vos script. 
       </para>
     </section>
-    <para/>
+    <para></para>
+    <para>Je n'ai pas de recommandation spécifiques au sujet des éditeurs de textes, assurez vous seulement que celui que vous préférez supporte la coloration syntaxique pour bash. Personnellement, j'utilise sublimetext ou atome.</para>
+    <para></para>
     <para>
-      Ceci étant fixé, présentons maintenant OCaml. Vous pouvez commencer par lire les informations et faire les tutoriels du site officiel <ulink url="https://ocaml.org/learn/tutorials/basics.fr.html">https://ocaml.org/learn/tutorials/basics.fr.html</ulink>
-    </para>
-  </section>
-  <section>
-    <title>PRÉREQUIS</title>
-    <para/>
-    <para>
-      Pour la suite du voyage, il vous faudra avoir : 
+      Je vais vous guider à travers différentes étapes : 
       <itemizedlist>
         <listitem>
-          Installer OCmal sur votre local ou avoir une solution pour compiler et exécuter les programmes.
+          Premier pas : Les bases de bash. 
         </listitem>
         <listitem>
-          Avoir un éditeur de texte avec la coloration syntaxique pour OCaml (parce que c'est plus agréables). J'utilise pour ma part Sublime Text 3 avec le package OCaml basique. 
+          GetOpt : le concept et les bases
         </listitem>
         <listitem>
-          Être prêt à souffrir ;)
+          Fonctionnalité avancé et création d'un programme simple. 
         </listitem>
       </itemizedlist>
-    </para>
-
-    <para>
-      Nous allons apprendre Ocaml en suivant les étapes :
-      <itemizedlist>
-        <listitem>
-          Premiers pas : Faire une fonction arithmétique simple
-        </listitem>
-        <listitem>
-          Manipuler les listes 
-        </listitem>
-        <listitem>
-          Fonctions de tri sur les listes
-        </listitem>
-        <listitem>
-          Résolution de problèmes de façon fonctionnelle (ex Tour de Hanoï)
-        </listitem>
-        <listitem>
-          Manipulation simple d'arbre
-        </listitem>
-      </itemizedlist>
-      Les codes seront présentés de façon à être réutilisable via la création de librairie. Tous ce qui va être abordé par la suite sont des concepts et applications basiques de la programmation fonctionnelle.
     </para>
     <para/>
   </section>
   <section>
-    <title>Jouons avec le chameau</title>
+    <title>Découvrons bash</title>
     <para/>
     <section>
       <title>A petits pas</title>
       <para/>
       <para>
-        Pour cette première expérience, nous allons créer deux fonctions mathématiques : Factorielle (!) et Puissance. Ces fonctions seront implémentées de deux façons : avec des boucles (classique en impératif) en C, de façon récursive (idéologie fonctionnelle) en OCaml.
-        Mais tout d'abord, quelques rappels : 
-        <itemizedlist>
-          <listitem>
-            <para>
-              OCaml est un langage principalement fonctionnelle. Il existe des syntaxes et des modules impératifs, mais il ne seront pas abordés dans cet article.
-            </para>
-          </listitem>
-          <listitem>
-            <para>
-              OCaml est un langage dynamiquement typé. C'est à dire que le type de la variable est déterminée après son affectation. Il est cependant possible de forcer le type d'une variable. 
-            </para>
-          </listitem>
-          <listitem>
-            <para>
-              Il faut manipuler les types avec précaution. En effet, chaque fonction attendra un certains type données. Afin d'être le plus réutilisable possible, les fonctions proposées auront toujours une dépendance de type minimal (ex : une fonction d'addition sera typés pour être utilisable par tous floats même si elle utilisé principalement sur des entiers dans notre cas)...
-            </para>
-          </listitem>
-          <listitem>
-            <para>
-              OCaml est très fortement typée. Les opérateurs sont souvent spécifiques à un type donné. Par exemple, si vous travaillez sur des entiers, les opérateurs standards seront +, -, *, /. Mais sur des réels, ces opérateurs seront toujours suivis d'un point : +., -., *., /. . Aussi, 0 +. 1.5 renverra une erreur. Il faudra écrire 0. +3 1.5. Il est possible de supprimer ces vérifications, mais il vaut mieux éviter de le faire tant que l'on n'est pas certains de la justesse du code.
-            </para>
-          </listitem>
-          <listitem>
-            <para>
-              Afin que tous sachent les prérequis de chaque fonction et sont utilités, celles ci seront commenter comme suit :        
-              <programlisting langage="ocaml">
-                (* 
-                  @name: Nom_de_la_fonction
-                  @ Description_de_la_fonction
-                  @parameter: Nom_du_paramètre Type Description
-                  ....
-                  @return: Description (Ce que retourne la fonction, dans quelle situation)
-                  @throw: Erreur Description 
-                *)
-
-              </programlisting>
-            </para>
-          </listitem>
-        </itemizedlist>
+        Tout d'abord, il faut rappeler que la programmation en bash est une programmation de type impérative. Nous savons donc ce que la machine fait, mais pas comment ;). Nous retrouvons bien évidemment toute les structures classiques de la programmation impérative, à savoir les boucles, la création de fonctions et la création de variables. Cependant, bash est avant tout un langage de scripting, c'est à dire que son objectif principal est de lancer d'autre programme permettant de réaliser quelque chose. Si il est possible de réaliser des opérations mathématiques simple, le processus est tout de même assez lourd. Cependant, savoir réaliser ce type d'opération peut s'avérer plus qu'utiles. Ainsi, l'objectif de cette première partie sera de créer un menu simple permettant de lancer une calculatrice ou l'écriture d'une citation quelconque.  
       </para>
-      <para/>
+      <para></para>
       <section>
-        <title>En mode Impératif</title>
-        <section>
-          <title>Théorie</title>
-          <para>
-            Nous avons dit plus haut que l'algorithme était essentiel en programmation fonctionnelle. Bien que ce ne soit pas le cas en programmation impérative, je vous propose de tout de même les écrire en pseudo code afin d'avoir une base de comparaison pour les algorithme donner en fonctionnel.
-          </para>
-          <para>
-            Les algorithmes impératifs permettant d'exécuter nos deux fonctions sont les suivants. 
-          </para>
-          <para>
-            <programlisting>
+        <title>Pré-requis de la partie</title>
+        <para />
+        <para>
+          <itemizedlist>
+            <listitem>Un environnement disposant d'un terminal bash (sous Mac : ouvrir le terminal puis entrer la commande bash).</listitem>
+            <listitem>Installer fortune et figlet (figlet permet de styler les outputs bash et fortune et un générateur de citations). A défaut, nous verrons comment créer une "base" de citation</listitem>
+          </itemizedlist>
+        </para>
+      </section>
+      <section>
+        <title>Le concept</title>
+        <para/>
+        <para>
+          
+        </para>
+      <para>
+          <programlisting>
               puissance :  
               Soit PUISSANCE (a,b) une fonction sur les entiers Naturels. 
               PUISSANCE (a,b) = 
