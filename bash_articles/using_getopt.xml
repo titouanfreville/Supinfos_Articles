@@ -80,558 +80,326 @@
         <title>Le concept</title>
         <para/>
         <para>
-          
+          Nous allons donc d'abord faire un "petit" script bash avec menu. Comme dit précédemment, ce script à pour but de laisser le choix à l'utilisateur entre faire un calcul ou voir une citation. Ce script va donc être composer de 3 parties. La première partie, la plus simple, est celle du générateur de citation. En effet, on utilise pour cela le paquet fortune déjà existant. La deuxième est la partie menu car plus facile à réaliser dans le cadre d'un script bash. Enfin, viendra la partie calcul. Pour chaque partie, nous détaillerons le fonctionnement de la fonctions afin de vous initier au langage. Si vous êtes déjà familier avec bash, vous pouvez passer directement à l'introduction de getopt.
         </para>
-      <para>
-          <programlisting>
-              puissance :  
-              Soit PUISSANCE (a,b) une fonction sur les entiers Naturels. 
-              PUISSANCE (a,b) = 
-              Soit res un entier tel que res = 1 
-              SI b strictement plus petit que 1, Retourner res.  
-              Si non 
-              Pour i allant de 1 à b faire : 
-                res = res * a  
-              Fait;  
-              Retourner res. 
-            </programlisting>
-          </para>
-          
-          <para>
-            <programlisting>
-              factorielle :  
-              Soit FACTORIELLE (a) une fonction sur les entiers Naturels. 
-              PUISSANCE (a,b) = 
-              Soit res un entier tel que res = 1   
-              Pour i allant de 1 à a faire : 
-                res = res * a 
-              Fait; 
-              Retourner res.
-            </programlisting>
-          </para>
-        </section>
-        <section>
-          <title>En C</title>
-          <para>
-            Implémentation en C
-          </para>
-          <para>
-            <programlisting langage="c">
-              int Puissance(int a, int b)  {
-                int res=1;
-                int i;
-                for (i=1; i&gt;b;i++) {
-                  res=res*b;
-                }
-                return res;
-              }
-            </programlisting>
-          </para>
-          <para>
-            <programlisting langage="c">
-              int Factorielle(int a)  {
-                int res=1;
-                int i;
-                for (i=0; i&gt;a;i++) {
-                  res=res*i;
-                }
-                return res;
-              }
-            </programlisting>
-          </para>
-        </section>
       </section>
       <section>
-        <title>En fonctionnel</title>
-        <section>
-          <title>Algorithme</title>
-          <para>
-            Les algorithme fonctionnels sont les suivants :
-          </para>
-          <para>
-            <programlisting>
-              puissance: 
-              Soit PUISSANCE (a,b) une fonction sur les entiers Naturels,  
-              PUISSANCE (a,b) = SELON b   
-              b = 0 -&gt; 1  
-              b -&gt; a*PUISSANCE (a,b-1) 
-            </programlisting>
-          </para>
-          <para>
-            L'idée de cet algorithme récursif est le suivant: à chaque étape, on regarde si b est égale à 0. Si il est égale à 0, on renvoie la valeur 1. Sinon, on renvoie la valeur a multiplié par la valeur renvoyée par Puissance (a, b-1). Comme b diminue à chaque étape, on va nécessairement arriver au cas ou b=0 (que l'on appelle cas simple ou cas de base). Et pour parvenir à cette étape, on aura multiplié a par lui-même b fois puis par 1. Ce qui est la définition de la puissance (la puissance mathématique est naturellement récursive, comme beaucoup d'outils mathématiques).
-          </para>
-          <para>
-            <programlisting>
-              factorielle : 
-              Soit FACTORIELLE (a) une fonction sur les entiers Naturels, 
-              FACTORIELLE (a) = SELON a 
-              a = 0 -&gt; 1 
-              a -&gt; a*FACTORIELLE (a-1)
-            </programlisting>
-          </para>
-          <para>
-            Cet algorithme fonctionne comme le précédent, si ce n'est que l'on a un paramètre unique. On aura donc multiplié a par (a-1) par (a-2) par ... par 1.
-          </para>
-        </section>
-        <section>
-          <title>En OCaml</title>
-          <para>
-            Implémentation en OCaml
-          </para>          
-          <para>
-            <programlisting langage="ocaml">
-             (**
-                @name: Puissance
-                @ Fonction permettant de calculer la valeur a^b sur des réels
-                @parameter: a float Nombre à mettre en puissance.
-                @parameter: b int Puissance entière..
-                @return: a^b 
-              *)
-              let rec pow a b = 
-                match b with
-                |0 -&gt; 1.
-                |_ -&gt; a *. pow a (b-1);;
-
-              (**
-                @name: Puissance
-                @ Fonction permettant de calculer la valeur a^b sur des réels
-                @parameter: a float Nombre à mettre en puissance.
-                @parameter: b int Puissance entière..
-                @return: a^b 
-              *)
-              let rec factorielle a =
-                match a with 
-                |0 -&gt; 1
-                |_ -&gt; a * factorielle (a-1);;
-            </programlisting>
-          </para>
-        </section>
-      </section>
-      <para>
-        Nous venons donc de réaliser deux fonctions mathématiques simples, une fois en fonctionnel, une fois en impératif. On peut dors et déjà pointé quelque différence entre ces deux visions de programmation : 
-        Au niveau de la preuve d'algorithme (ici fait de façon grossière par une explication logique), l'algorithme fonctionnel n'est pas mathématiquement démontrables (il existe des méthodes de preuves pour de tels algorithme, mais elles définissent de nouveau axiomes) contrairement aux algorithme fonctionnel qui sont des algorithme mathématique. C'est l'une des principales différences entre ces deux visions de la programmation et la raison de préférer l'un à l'autre. Si vous avez besoin d'être certains de comment et où sont stockés les éléments dans votre ordinateur, comment est utilisée la mémoire, etc., la programmation impérative est la plus adaptée. Par contre, si vous avez besoin d'être sûr que votre programme va fonctionner comme attendu et être capable de le démontrer simplement, la programmation fonctionnelle est plus adaptée.
-      </para>
-    </section>
-    <section>
-      <title>Listes</title>
-      <para/>
-      <para>
-        La structure de listes est une structure mathématique naturellement récursive. En effet, une liste est un ensemble d'élément tel que l'on ne peut accéder qu'à l'élément en tête de la liste (le dernier entré). Une liste sera donc représentée ainsi : Liste = Tête :: Queue dans les algorithme. Dans un premier temps, nous allons apprendre à manipuler ce type de structure puis nous verrons ce qu'il est possible de faire dessus. 
-      </para>
-      <para/>
-      <section>
-        <title>Manipuler des listes.</title>
+        <title>Afficher une citation</title>
+        <para/>
         <para>
-          Nous avons dit que les listes étaient des structures récursives (ou inductives). Pour construire une liste, on "empile" des éléments les uns au-dessus des autres puis on les dépile. Il convient donc de manipuler principalement via des fonctions récursives. Si il est possible de recréer des listes et leurs opérateurs dans des langages impératifs (tel que C ou JAVA), ce n'est pas une façon "logique" pour stocker des éléments en impératif (on utilisera plutôt des tableaux, permettant d'accéder directement à tous les éléments). Par contre, les listes sont des structures natives en programmation fonctionnelle. La structure est dynamique et sera souvent utilisée pour stocker un ensemble d'élément amené à être régulièrement modifier. Sinon, les tuples (que nous verrons plus tard) seront des structures plus appréciées. 
+          Créons donc notre première fonctions. Tout d'abord, nous allons créer un fichier bash appelé `simple_menu.sh` par exemple. La première de ce menu doit contenir l'instruction <programlisting langage="bash">#!/bin/bash</programlisting> ou <programlisting langage="bash"> #!/env/bash </programlisting>. Tous deux demandant à ce que le script soit utiliser en bash. Si vous ne préciser pas ce commentaire et que vous êtes dans un autre système de shell (eg: la console mac), le script pourrait rencontrer des erreurs. Ensuite, nous allons créer la fonctionnalité de génération de citations. Pour cela, nous allons simplement ajouter <programlisting langage="bash">figlet $(fortune)"</programlisting>. Ce qui nous donnera le fichier suivant : 
+          <programlisting language="bash">
+            #!/bin/bash
+            figlet "$(fortune"
+          </programlisting>
+          Vous pouvez exécuter ce programme, ce qui devrait vous donner quelque chose comme : 
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref='http://freville.iiens.net/images/filget_output.png' />
+            </imageobject>
+          </mediaobject>
         </para>
-        <para/>
-        <section>
-          <title>Premières armes</title>
-          <para/>
-          <para>
-            Commençons par manipuler simplement des listes
-          </para>
-          <section>
-            <title>Affichons tous les éléments d'une liste simple (ne contenant que des singletons)</title>
-            <para>
-              Voyons comment lire une liste et en afficher chaque éléments. 
-            </para>
-            <para>
-              Tout d'abord, l'algorithme : 
-              <programlisting>
-                Soit L une liste. 
-                Soit F une fonction de X Liste dans Vide (ou X est un type quelconque).
-                F (l) = Selon l
-                Vide(l) -&gt; Rien à faire ou afficher Vide selon les envies (On est arrivé au bout de liste puis ce qu'elle est vide).
-                NonVide(l) -&gt; Afficher Tête(l); F (Queue (l)). (On affiche le premier élément de la liste puis on rappelle la fonction avec la suite de la liste).
-              </programlisting>
-            </para>
-            <para>
-              On se contente de prendre le premier élément que l'on trouve pour l'afficher, puis on passe à la suite. Le cas de base est vide car il n'a rien à faire.
-            </para>
-            <para>
-              Le code en caml : 
-              <programlisting langage="ocaml">
-                (** 
-                  @name print_list
-                  @ Fonction affichant les éléments d'une liste 1 à 1 a  -&gt; b  -&gt; x  -&gt; []
-                  @param l string list Liste de chaînes de charactère à afficher
-                  @print List element in the format E  -&gt; E  -&gt; E  -&gt; ...  -&gt; []
-                *)
-                let rec print_list l =
-                  match l with
-                  |[]  -&gt; print_string "[]"
-                  |t::q  -&gt; print_string t; print_string "  -&gt; "; print_list q;;
-            </programlisting>
-            </para>
-            <para>
-              Cette fonction affichera tous les éléments d'une liste. C'est une fonction basique qui permet surtout de voir comment manipuler une liste. Maintenant, travaillons sur des listes.
-            </para>
-          </section>
-          <section>
-            <title>Fonctions de recherche et spécifications</title>
-            <para>
-              Nous allons implémenter les fonctions suivantes : Recherche d'un élément e dans une liste, suppression des doublons dans une liste puis comptage du nombre d'occurrence (nombre de foi où il apparaît) d'un élément placer en paramètre. Mais tout d'abord, les algorithmes :).
-            </para>
-            <section>
-              <title>Les algorithmes</title>
-              <para>
-                Recherche d'un élément : 
-                Le concept est simple. On parcourt la liste jusqu'à ce que l'on trouve l'élément chercher. On a donc : 
-                <programlisting>
-                  Soit Recherche un fonction dans Booléen (Vrai ou Faux). 
-                  Recherche(Élément, Liste) = Selon (Liste) 
-                  Vide(Liste) -&gt; Faux 
-                  NonVide(Liste) -&gt; Tête(Liste) = Éléments ou alors Recherche(Éléments, Queue(Liste)) 
-                </programlisting>
-              </para>
-              <para>
-                Suppression des doublons dans une liste : 
-                Cette fois, on va parcourir la liste et, pour chaque élément, appeler la fonction de recherche. Si l'élément est encore dans la liste, on passe au suivant, sinon, on passe au suivant en ajoutant l'élément courant à la liste de retour. Ce qui donne : 
-                <programlisting>
-                  Soit SupDoublons une fonctions dans X Liste
-                  SupDoublons(l) = Selon l 
-                  Vide(l) -&gt; Vide
-                  NonVide(l) -&gt; Si Recherche(Tête(l),Queue(l)) alors SupDoublons(Queue(l)) ou alors Construire Tête(l) (SupDoublons(Queue(l)))
-                </programlisting>
-              </para>
-              <para>
-                Nombre d'occurrence de E dans L :
-                <programlisting>  
-                  Soit NombreDe une fonction dans int (entiers)
-                  NombreDe(E,L) = Selon (L) 
-                  Vide(L) -&gt; 0
-                  NonVide(L) -&gt; Si Tête(L)=E alors 1 + NombreDe(E,Queue(L)) sinon NombreDe(E,Queue(L))
-                </programlisting>
-              </para>
-              <para/>
-            </section>
-            <para>
-              Place au code.
-            </para>
-            <section>
-              <title>Code OCaml</title>
-              <para>
-                <programlisting langage="ocaml">
-                  (**
-                    @name est_dans
-                    @ Fonction permettant de savoir si un élement E est dans une liste L
-                    @param e 'a Paramètre de type quelconque 
-                    @param l 'a list List d'élément du même type que e
-                    @return true si e in list, false else
-                  *)
-                  let rec est_dans e l = 
-                    match l with
-                    |[] -&gt; false
-                    |t::q -&gt; t = e || est_dans e q;;
-                  (**
-                    @name doublons_sk
-                    @ Fonction retirant les doublons d'une liste
-                    @param l 'a list list d'élément.
-                    @return liste l sans doublons
-                  *)
-                  let rec doublons_sk l =
-                    match l with
-                    |[] -&gt; []
-                    |t::q -&gt; if est_dans t q then doublons_sk q else t :: doublons_sk q;;
-                  (**
-                    @name nb_de
-                    @ Fonction permettant de calculer le nombre d'occurence d'un élément dans une liste
-                    @param e 'a élément de type quelconque
-                    @param l 'a list Liste d'élément du même type
-                    @return nb d'occurence de e dans a
-                  *)
-                  let rec nb_de e l =
-                    match l with
-                    |[] -&gt; 0
-                    |t::q -&gt; if t = e then 1 + nb_de e q else nb_de e q;;
-                </programlisting>
-              </para>
-              <para>
-                Vous voilà désormais armez de quelque fonctions basique sur les listes. Vous pouvez compléter ces fonctions avec des fonctions pour inverser la liste par exemple. Et nous allons tout de suite compléter notre collection avec quelque fonction un peu plus amusantes :)
-              </para>
-            </section>
-          </section>
-        </section>
-        <section>
-          <title>Les fonctions de tri, de l'élèves au maître.</title>
-          <para>
-            Voyons maintenant deux fonctions de tri sur les listes. La première est la fonction basique de trie. Il est déconseillé de l'utiliser, elle est particulièrement peu efficace. Nous allons également profiter de ces fonctions de tri pour voir les deux méthodologies d'implémentation pour les fonctions récursives. Jusqu'à présent, nous avons empiler les opérations dans les algorithmes et programmes au niveau de l'appel récursif. C'est ce que l'on appelle de la récursivité non terminale, car au moment de l'appel récursif, il y a encore des opérations à effectuer. L'avantage de cette façon de faire est qu'elle est logique vis-à-vis de la récursivité mathématique. L'inconvénient, c'est que cela prend vite beaucoup de place dans la mémoire de notre environnement. Aussi, pour éviter cela, une autre façon de faire, la récursivité terminale existe. Dans ce cas, l'objectif est qu'au moment de l'appel récursif, le programme n'est plus d'opération à exécuter. Il va donc être nécessaire d'utiliser des accumulateurs. Nous allons utiliser la première fonction de tri (que l'on va appeler tri_bulles) pour illustrer cette différence. 
-          </para>
-          <para/>
-          <section>
-            <title>Tri Bulle</title>
-            <para/>
-            <para>
-              La fonction tri bulle est la fonction de tri la plus 'instinctive'. Elle se contente de regarder chaque élément puis dans les insérer dans la liste triée. 
-            </para>
-            <para>
-              Nous allons donc avoir l'algorithme suivant en fonctionnel non terminal : 
-              <programlisting>
-                Soit tribulle une fonction dans listes.
-                tribulle(l) = Selon l
-                Vide(l) -&gt; Vide
-                NonVide(l) -&gt; Faire 
-                  Soit ltriée = tribulle(Queue l) dans
-                  Si Tête(l) &lt; Tête(ltriée) alors Construire Tête(l) ltriée sinon Construire Tête(ltriée) tribulle(Construire Tête(l) Queue(ltriée))
-              </programlisting>
-              et celui-ci en récursif terminal :
-              <programlisting>
-                Soit tribulle une fonction dans listes.
-                tribulle(l, acc) = Selon l
-                Vide(l) -&gt; acc
-                NonVide(l) -&gt; Faire 
-                  Si Tête(l) &lt; Tête(acc) 
-                  alors tribulle Queue(l) (Construire Tête(l) acc) 
-                  sinon tribulle Queue(l) (tribulle (Construire Tête(l) Queue(acc)) [Tête (acc)])
-              </programlisting>
-            </para>
-            <para>
-              Nous voyons bien sur cet exemple que les deux façons de procédés on globalement le même fonctionnement. Ici, dans les deux cas, on compare l'élément courant à une liste déjà triée (soit l'accumulateur, soit le tri de la suite de la fonction). On voit aussi, pour cette fonction qu'il n'y a pas de gain de temps quel que soit la solution. Une fonction en récursif terminal et une fonction en récursif non terminal auront, si elles sont bien pensées, le même temps d'exécution. Cependant, l'espace n'est clairement pas occupé de la même façon. Dans la récursivité terminal, on demande au programme de travailler avec un espace mémoire connue représenter par l'accumulateur et c'est ce paramètre que l'on fait varier à chaque étape. En non terminal, on demande à la pile d'exécution (généralement, cela va se traduire par une occupation de la RAM et de la mémoire processeur) de garder en mémoire les actions à effectuer une fois que l'on aura atteint un cas connue. Vous pourrez voir en testant les programmes que nous allons maintenant élaborer qu'en la méthode non terminale finira par échouer si vous lui passez une liste trop grosse. Mais vous pourrez aller beaucoup plus loin en utilisant la méthode terminale. 
-            </para>
-            <para/>
-            <para>
-              Le code :
-              <programlisting langage="ocaml">
-                (**
-                  @name insert_nt
-                  @ Fonction permettant d'insérent un élément dans une liste triée.
-                  @param e 'a Élément du type de la liste
-                  @param l 'a list Liste d'élément triée
-                  @param comp 'a -&gt;'a -&gt;bool fonction de comparaison
-                  @return e inséré dans l triée.
-                *)
-                let rec insert_nt e l comp = 
-                  match l with
-                  |[] -&gt; [e]
-                  |t::q  -&gt; if comp e t then e::l else t::insert_nt e q comp;;
-                (**
-                  @name tri_bulle_nt
-                  @ Fonction permettant de trier une liste
-                  @param l 'a list Liste d'élément
-                  @param comp 'a -&gt;'a -&gt;bool fonction de comparaison
-                  @return l trié
-                *)
-                let rec tri_bulle_nt l comp =
-                  match l with 
-                  |[] -&gt; []
-                  |t::q  -&gt; insert_nt t (tri_bulle_nt q comp) comp;;
-                (**
-                  @name insert
-                  @ Fonction permettant d'insérent un élément dans une liste triée.
-                  @param e 'a Élément du type de la liste
-                  @param l 'a list Liste d'élément triée
-                  @param acc 'a list Accumulateur. '
-                  @param comp 'a -&gt;'a -&gt;bool fonction de comparaison
-                  @return e inséré dans l triée.
-                *)
-                let rec insert e l acc comp =
-                  match l with
-                  |[] -&gt; acc@[e]
-                  |t::q  -&gt; if comp e t then acc@(e::l) else insert e q (acc@[t]) comp;;
-                (**
-                  @name tri_bulle
-                  @ Fonction permettant de trier une liste
-                  @param l 'a list Liste d'élément
-                  @param acc 'a list Accumulateur. '
-                  @param comp 'a -&gt;'a -&gt;bool fonction de comparaison
-                  @return l trié
-                *)
-                let rec tri_bulle l acc comp =
-                  match l with 
-                  |[] -&gt; acc
-                  |t::q  -&gt; tri_bulle q (insert t acc [] comp) comp;;
-              </programlisting>
-            </para>
-            <para>
-              Pour le code, nous avons décomposé la partie terminale en deux fonctions pour plus de clarté. Aussi, la sous-fonction insert est une fonction capable d'ajouter un élément dans une liste déjà triée. On peut aussi voir que l'on a travaillé sur des listes quelconques en passant en argument une fonction de comparaison comp. Ainsi, ces fonctions permettent de trier les listes par ordre croissant ou décroissant quel que soit le type de données dans la liste (et à condition qu'il existe une fonction de comparaison d'ordre).
-            </para>
-            <para/>
-          </section>
-          <section>
-            <title>Tri Fusion</title>
-            <para/>
-            <para>
-              Tout d'abord, présentons le principe de cette fonction.
-            </para>
-            <para>
-              La fonction de tri fusion (appelé quick_sort en anglais) est la fonction de tri optimale, à l'heure actuelle, quand on fait face à un ensemble quelconque de données (exemple général : une liste d'entier aléatoire). Cette fonction sur la méthode dites 'Diviser pour Régner' consistant à 'découper' un grand problème en plusieurs sous tâche que l'on sait effectuer. Ici, notre problème est : Ayant une liste quelconque d'éléments, j'aimerais être capable de la trier dans un certain ordre. Ce que je sais assurément faire : fusionner des listes triées pour obtenir une liste triée (il suffit de comparer les éléments un à un), diviser une liste deux (je prends les deux premiers éléments et les mets chacun dans une liste), compter le nombre d'éléments, etc. ... Savoir compter le nombre d'élément de la liste ne nous aidera pas à la trier. Par contre, sachant couper une liste en 2, je sais transformer une liste en un ensemble de singleton et je sais trier un singleton (c'est un élément seul donc il est naturellement trié). Donc si je coupe ma liste jusqu'à n'avoir que des singletons, j'obtiens plein de petites listes triées. Ensuite, j'ai dit que je savais fusionner deux listes triées de sorte que la liste obtenue soit triée. Donc, il ne me reste qu'à fusionner toutes les listes triées deux à deux, puis fusionné les listes obtenues, etc., etc., jusqu'à n'avoir plus qu'une liste contenant tous les éléments d'origine, mais trié. 
-            </para>
-            <para/>
-            <para>
-              Nous sommes donc face à un processus qui effectue deux actions : l'une consiste à découper la liste, l'autre à fusionner les listes obtenues une fois celles-ci triées. Je vous propose donc de faire trois fonctions, en récursivité terminale, pour résoudre notre problème. Une fonction DIVISE, qui coupe la liste en deux, une fonction FUSIONNE qui prend deux listes triées et renvoie une seule liste triée, et la fonction qui nous intéresse TRI_FUSION qui va prendre une liste et effectué dessus les opérations de fusion et division jusqu'à avoir le résultat attendu. 
-            </para>
-            <para/>
-            <para>
-              Ce qui donne l'algorithme : 
-            </para>
-            <programlisting>
-              Soit DIVISE une fonction dans (liste,liste).
-              DIVISE(l,acc1,acc2) = Selon l
-              Vide(l) -&gt; (acc1,acc2)
-              Vide(Queue(l)) -&gt; (Construire 1 acc1, acc2)
-              NonVide(l) -&gt; DIVISE Queue(Queue(l)) (Construire Tête(l) acc1) (Construire Tête(Queue(l)) acc2)
-
-              Soit FUSIONNE un fonction dans liste.
-              FUSIONNE(l1,l2,acc, comparateur) = Selon l1, l2
-              Vide(l1) -&gt; Construire l2 acc
-              Vide (l2) -&gt; Contruire l1 acc
-              NonVide(l1) et NonVide(l2) -&gt; Si hd(l1) comparateur hd(l2) alors FUSIONNE(Queue(l1),l2, Construire acc l1) sinon FUSIONNE(l1,Queue(l2), Construire acc l2)
-
-              La fonction comparateur est une fonction de X dans Booléen. 
-
-              Soit TRI_FUSION (l,acc, comparateur) = selon l
-              Vide(l) -&gt; []
-              NonVide(l) -&gt; Soit (l1,l2)=DIVISE(l,[],[]) dans
-                FUSIONNE (TRI_FUSION l1 [] comparateur) (TRI_FUSION l2 [] comparateur) [] comparateur
-            </programlisting>
-            <para/>
-            <para>
-              Cet ensemble est un peu plus complexe à écrire et retenir que le tri bulle, mais il est beaucoup plus efficace. Et au final, les trois fonctions réaliser sont vraiment simples à comprendre et réaliser. Cependant, on peut remarquer que la partie TRI_FUSION n'est pas sous forme terminal. En effet, lors du dernier appel, une opération de fusion est mise en attente pendant que l'on tri les listes divisées. Je n'ai pas de solution terminale à vous proposer actuellement. Si quelqu'un à une solution à proposer, j'en serais ravie.
-            </para>
-            <para/>
-            <para>
-              Côté code maintenant : 
-            </para>
-            <programlisting langage="ocaml">
-              (**
-                @name devise
-                @ Fonction permettant de diviser une liste
-                @param l 'a list Liste d'élément
-                @return ('a list, 'a list) liste l divisée en 2.
-              *)
-              let rec divise l a1 a2 =
-                match l with
-                |[]  -&gt; (a1,a2)
-                |t::[]  -&gt; (t::a1,a2)
-                |t1::t2::q  -&gt; divise q (t1::a1) (t2::a2)
-              (**
-                @name fusion
-                @ Fonction permettant de fusionner une liste
-                @param l1 'a list Liste d'élément triée selon comp
-                @param l2 'a list Liste d'élément triée selon comp
-                @param comp 'a -&gt;'a -&gt;bool fonction de comparaison
-                @return 'a list Liste l1 &amp;&amp; l2 fusionnée et triée selon comp'
-              *)
-              let rec fusion l1 l2 acc comp =
-                match (l1,l2) with
-                |([],_)  -&gt; acc@l2
-                |(_,[])  -&gt; acc@l1
-                |(t1::q1,t2::q2)  -&gt; if comp t1 t2 then fusion q1 l2 (acc@[t1]) comp else fusion l1 q2  (acc@[t2]) comp;;
-              (**
-                @name order
-                @ Fonction permettant de trier une liste
-                @param l 'a list Liste d'élément
-                @param comp 'a -&gt;'a -&gt;bool fonction de comparaison
-                @return l trié
-              *)
-              let rec order l comp=
-                match l with 
-                |[]  -&gt; l
-                |t::[]  -&gt; l
-                |_  -&gt; let (l1,l2) = divise l [] [] in fusion (order l1 comp) (order l2 comp) [] comp;;
-            </programlisting>
-          </section>
-        </section>
-      </section>
-      <para/>
-      <para>
-        Ceci termine notre présentation des listes, structures centrale de la programmation fonctionnelle. Nous allons maintenant nous atteler à la résolution de problème récursif.
-      </para>
-    </section>
-    <section>
-      <title>Des problèmes</title>
-      <para/>
-      <para>
-        <quote>A tous les problèmes une solution, si pas de solution, pas de problème., Sur deux tons, Maxime le Forestier</quote>
-      </para>
-      <para>
-        Attaquons-nous donc à de petits problèmes dont les solutions sont déjà connues et démontrées. Nous allons implémenter les fonctions de résolution de deux problèmes naturellement récursif. La suite de Fibonacci puis le problème des tours de Hanoï. Les deux problèmes sont énoncés, respectivement, en ces termes : Avoir une fonction permettant d'obtenir la valeur de la suite de Fibonacci au rang n (donné en argument), avoir une fonction me permettant d'obtenir tous les mouvements nécessaires à la résolution du problème des tours de Hanoï pour n éléments (donné en argument). Je vous invite à réfléchir par vous-même à ces problèmes si vous en avez le courage avant d'en lire la résolution.
-      </para>
-      <para/>
-      <section>
-        <title>Fibonacci, la suite.</title>
-        <para/>
+        <para/> 
         <para>
-          Commençons par un petit rappel.
+          Ce qui se passe :<br/> 
+          Lors de l'appel au script, votre script va se lancer dans un environnement bash (étapes non visibles). Ensuite, il va arriver sur la commande figlet. Figlet est une commande prenant un texte en argument et renvoyant ce même texte mais avec une stylisation particulière. Ici, le texte est représenté par "$(fortune)". Ce "$(fortune)" est une fonction. Les " " sont obligatoire afin de considérer ce qu'il y a à l'intérieur de celle ci comme étant une seule entité. Ensuite le $( XXXX ) représente ce qui est renvoyer par la fonction XXXX (ici fortune). Nous demandons donc de passer à figlet le retour de la fonction fortune. Fortune est une fonction bash qui renvoie une citation quelconque. 
+        </para>
+        <para>
+          Maintenant, que faire si l'utilisateur ne dispose pas de figlet et/ou fortune (ce qui est probablement le cas car ce en sont pas des utilitaires basique). Nous devrions les remplacer par notre propre "système". Pour cela, il nous faut d'abord savoir si les programmes existent. Pour cela, nous allons utiliser le fait que la plus part des programmes bash ont un argument -v permettant de connaître la version installé du programme. Cette fonction va afficher la version actuelle du programme demandé si celui existe (et renvoyer un code 0), sinon, une erreur et un code retour non nulle. Nous allons donc tester l'existence des programmes ainsi : 
+          <programlisting language="bash">
+            figlet -v &gt; /dev/null 2&gt; /dev/null &amp;&amp; FIGLET_INSTALLED=0 || FIGLET_INSTALLED=1
+            fortune -v &gt; /dev/null 2&gt; /dev/null &amp;&amp; FORTUNE_INSTALLED=0 || FORTUNE_INSTALLED=1
+          </programlisting>
+          Ici, nous appelons l'option -v des programmes figlet puis fortune. Afin d'éviter de voir lors de l'exécution du programme la sortie de ces fonctions ou leurs erreurs (qui ne nous intéressent pas ici), nous demandons à ce qu'elles soient rediriger vers /dev/null (le trou noir de bash). Pour cela, nous utilisons l'opérateur &gt; qui dirige la sortie demandé à gauche vers l'argument placer à droite. Appeler sans chiffre, il redirige la sortie global du programme, mais il restent l'affichage des erreurs systèmes (quand le programmes n'existent pas) qui sont sur la sortie d'erreur standard. Cette sortie est numéroté 2. 2&gt; /dev/null redirige donc la sortie standard d'erreur, pendant la duré de la fonction, vers notre trou noir. Ensuite, si la fonction réussi, nous stockons la valeur 0 dans la variable FIGLET_INSTALLED, 1 sinon. Et nous avons récupérer l'information qui nous intéresser (la présence ou non des programmes figlet et fortune).  
         </para>
         <para/>
         <para>
-          Qu'est ce que la suite de Fibonacci ? 
+          Reste à utiliser ce résultat. Nous allons donc dire que si c'est programme sont installés, nous réutilisons le code de tout à l'heure. Et sinon, que fait-on ? 
         </para>
         <para/>
         <para>
-          Cette suite fut découverte par un mathématicien italien cherchant à modéliser l'évolution d'une population de lapin. Pour plus d'information sur l'histoire de cette suite et les liens entre elle et d'autre concept mathématique (comme le nombre d'or), je vous invite à consulter cet article <ulink href = "http://images.math.cnrs.fr/Mysteres-arithmetiques-de-la-suite-de-Fibonacci.html">http://images.math.cnrs.fr/Mysteres-arithmetiques-de-la-suite-de-Fibonacci.html</ulink> du CNRS et/ou, la vidéo suivante <ulink href="https://www.youtube.com/watch?v=DxmFbdp7v9Q">https://www.youtube.com/watch?v=DxmFbdp7v9Q</ulink> de micmaths. Pour ce que nous allons faire, il suffit de savoir comment se construit la suite. Cette suite est une structure définie récursivement de la façon suivante : le terme n+1 de la suite se calcule en faisant la somme des deux termes précédent. Ce qui donne fibonacci(n+1)= fibonacci(n) + fibonacci(n-1). Et comme il faut commencer quelque part, les termes 0 et 1 sont égaux respectivement à 0 et 1. On a donc : fibonacci(0)=0, fibonacci(1)=1, pout tout n &gt; 1 fibonacci(n+1)=fibonacci(n)+fibonacci(n-1). 
+          Dans le cas ou figlet est manquant, il peut être remplacer par la fonction echo, fonction basique de bash pour renvoyer quelque chose dans la sortie standard. Si fortune est manquant, il nous faut trouver une solution pour obtenir des citations aléatoire. 
+        </para>
+        </para>
+        <para>
+          Implémentons donc notre "générateur" de citation. Pour cela, nous allons utiliser la fonction $RANDOM de bash dont nous allons stocker le résultat dans une variable. Puis faire un case sur la valeur de cette variable et dans certains cas, mettre une citation particulière. Ce qui va donner :
+          <programlisting langage="bash">
+            get_citation () {
+              citation_indice=$((RANDOM%4))
+              case $citation_indice in
+                0) echo "Noob, je suis un noob. Un no-life un vrai. Je joue au MMORPG";;
+                1) echo "42";;
+                2) echo "Si l'école sa rendait les hommes libres et égaux, le gouvernement déciderait que c'est pas bon pour les marmots.";;
+                *) echo "Insérer citation ici";;
+              esac
+            }
+          </programlisting>
+          Nous voici donc avec une fonction bash appelée get_citation, renvoyant une citation aléatoire. Un fortune en moins complet en fait ;). Si vous désirez pouvoir mettre plus de citation, il vous faudra modifier la valeur du modulo (%) pour autre chose que 4. Le bloc case VALEUR in ... esac permet d'attribuer à des valeurs de VALEUR une action. L'utilisation des ;; est obligatoire pour signifier la fin d'un cas.  
         </para>
         <para/>
         <para>
-          Implémentation : 
-          <programlisting langage="ocaml">
-            (**
-              @name fibo
-              Fonction that will calculate the Nth term of fibonnacci serie.
-              @param n int Range where you want to calculate
-              @return finbonnacci value @ Nth poosition
-            *)
-            let rec fibo n = 
-              match n with 
-              |0 -&gt; 0
-              |1 -&gt; 1
-              |_ -&gt; fibo (n-1) + fibo (n-2);;
+          Maintenant que nous avons nos fonctions de remplacement, utilisons les et modifions notre simple_menu.sh pour ajouter ces dernières fonctionnalités. 
+          <programlisting langage="bash">
+            #!/bin/bash
+
+            get_citation () {
+              citation_indice=$((RANDOM%4))
+              case $citation_indice in
+                0) echo "Noob, je suis un noob. Un no-life un vrai. Je joue au MMORPG";;
+                1) echo "42";;
+                2) echo "Si l'école sa rendait les hommes libres et égaux, le gouvernement déciderait que c'est pas bon pour les marmots.";;
+                *) echo "Insérer citation ici";;
+              esac
+            }
+
+            figlet -v &gt; /dev/null 2&gt; /dev/null &amp;&amp; FIGLET_INSTALLED=0 || FIGLET_INSTALLED=1
+            fortune -v &gt; /dev/null 2&gt; /dev/null &amp;&amp; FORTUNE_INSTALLED=0 || FORTUNE_INSTALLED=1
+
+            if [[ $FORTUNE_INSTALLED -eq 0 ]]
+              then CITATION="$(fortune)"
+              else CITATION="$(get_citation)"
+            fi
+
+            [ $FIGLET_INSTALLED -eq 0 ] &amp;&amp;  figlet -nt "$CITATION" || echo "$CITATION"
           </programlisting>
         </para>
         <para/>
         <para>
-          Et voila une toute petite fonction pour calculer de très grand nombre ;). Passons à un problème un peu plus tendu. 
+          And know, let's make it as functions only :) 
+          <programlisting langage="bash">
+            #!/bin/bash
+
+              get_citation () {
+                citation_indice=$((RANDOM%4))
+                case $citation_indice in
+                  0) echo "Noob, je suis un noob. Un no-life un vrai. Je joue au MMORPG";;
+                  1) echo "42";;
+                  2) echo "Si l'école sa rendait les hommes libres et égaux, le gouvernement déciderait que c'est pas bon pour les marmots.";;
+                  *) echo "Insérer citation ici";;
+                esac
+              }
+
+              print_citation () { 
+                figlet -v &gt; /dev/null 2&gt; /dev/null &amp;&amp; FIGLET_INSTALLED=0 || FIGLET_INSTALLED=1
+                fortune -v &gt; /dev/null 2&gt; /dev/null &amp;&amp; FORTUNE_INSTALLED=0 || FORTUNE_INSTALLED=1
+
+                if [[ $FORTUNE_INSTALLED -eq 0 ]]
+                  then CITATION="$(fortune)"
+                  else CITATION="$(get_citation)"
+                fi
+
+                [ $FIGLET_INSTALLED -eq 0 ] &amp;&amp; figlet -nt "$CITATION" || echo "$CITATION"
+              }
+
+              print_citation
+          </programlisting>
+          Oui, cela revient juste à déplacer le code qui était hors de la fonction dans une fonction puis à l'appeler pour pouvoir tester bien sur :).
+        </para>
+        <para/>
+      </section>
+      <para>
+        Maintenant que nous avons nos citations, invitons un utilisateur à les essayer :)
+      </para>
+      <section>
+        <title>Le Menu</title>
+        <para/>
+        <para>
+          Donc, pour le menu, nous allons avoir besoin de poser une question à l'utilisateur puis obtenir une réponse. Pour ce faire, il va nous suffire d'afficher la question puis d'attendre la réponse de l'utilisateur. 
+        </para>
+        <para/>
+        <para>
+          Nous allons donc avoir le code : 
+          <programlisting langage="bash">
+            #!/bin/bash
+
+            get_citation () {
+              local citation_indice=$((RANDOM%4))
+              case $citation_indice in
+                0) echo "Noob, je suis un noob. Un no-life un vrai. Je joue au MMORPG";;
+                1) echo "42";;
+                2) echo "Si l'école sa rendait les hommes libres et égaux, le gouvernement déciderait que c'est pas bon pour les marmots.";;
+                *) echo "Insérer citation ici";;
+              esac
+            }
+
+            print_citation () { 
+              figlet -v $gt; /dev/null 2$gt; /dev/null &amp;&amp; FIGLET_INSTALLED=0 || FIGLET_INSTALLED=1
+              fortun -v $gt; /dev/null 2$gt; /dev/null &amp;&amp; FORTUNE_INSTALLED=0 || FORTUNE_INSTALLED=1
+
+              if [[ $FORTUNE_INSTALLED -eq 0 ]]
+                then CITATION="$(fortune)"
+                else CITATION="$(get_citation)"
+              fi
+
+              [ $FIGLET_INSTALLED -eq 0 ] &amp;&amp; figlet -nt "$CITATION" || echo "$CITATION"
+            }
+
+            menu () {
+              local action_choice="1 - Calculer quelque chose ? 
+            2 - Etre éclairer par la sagesse de tes ancêtres ? 
+            3 - Epingle Jésus à sa croix ?"
+              local question="Bonjour, jeune scarabée. Dieu te parle et te propose de trouver la voie. As-tu besoin de"
+              local not_an_option="Désolé, mais je n'ai pas compris le sens profond de ton interrogation ? Veux-tu ?"
+              clean=${1:-0}
+              [ $clean -eq 0 ] &amp;&amp; echo "$question" || echo "$not_an_option"
+              echo "$action_choice"
+              read -r -n 1 -p "" reponse
+              echo
+              case "$reponse" in 
+                "1") echo "Calculer n'est pas encore à ta portée. ";;
+                "2") print_citation;;
+                "3") exit 1;;
+                *) return 2;;
+              esac
+            }
+
+            menu
+          </programlisting>
+        </para>
+        <para/>
+        <para>
+          Nous voila donc capable d'écouter notre utilisateur. Celui-ci peut donc demander à faire un calcul, afficher une citation, quitter le programme (exit 1) ou dire qu'il n'a pas compris la demande (return 2). La différence entre exit et return va nous être utile maintenant, puisque nous allons intégrer ce menu à une boucle d’interaction. Une telle boucle est souvent définie avec un while true, ce qui nous pose la question de comment en sortir. J'ai donc deux cas de sortie forcée de ma fonction menu : exit 1 ou return 2. Le exit 1 va permettre de couper la boucle car nous demandons à bash d'arrêter l'exécution du script. Le return 2 va nous permettre de récupérer un code de sortie non nulle sans quitter la boucle. Ceci va nous permettre de pouvoir donner en argument à l'appel de menu un paramètre permettant de savoir si il doit afficher le message sans erreur ou le message d'erreur.
+        </para>
+        <para/>
+        <para>
+          Avec la boucle d'interaction, nous aurons : 
+          <programlisting language="bash">
+            #!/bin/bash
+
+            get_citation () {
+              local citation_indice=$((RANDOM%4))
+              case $citation_indice in
+                0) echo "Noob, je suis un noob. Un no-life un vrai. Je joue au MMORPG";;
+                1) echo "42";;
+                2) echo "Si l'école sa rendait les hommes libres et égaux, le gouvernement déciderait que c'est pas bon pour les marmots.";;
+                *) echo "Insérer citation ici";;
+              esac
+            }
+
+            print_citation () { 
+              figlet -v &gt; /dev/null 2&gt; /dev/null &amp;&amp; FIGLET_INSTALLED=0 || FIGLET_INSTALLED=1
+              fortun -v &gt; /dev/null 2&gt; /dev/null &amp;&amp; FORTUNE_INSTALLED=0 || FORTUNE_INSTALLED=1
+
+              if [[ $FORTUNE_INSTALLED -eq 0 ]]
+                then CITATION="$(fortune)"
+                else CITATION="$(get_citation)"
+              fi
+
+              [ $FIGLET_INSTALLED -eq 0 ] &amp;&amp; figlet -nt "$CITATION" || echo "$CITATION"
+            }
+
+            menu () {
+              local action_choice="1 - Calculer quelque chose ? 
+            2 - Etre éclairer par la sagesse de tes ancêtres ? 
+            3 - Epingle Jésus à sa croix ?"
+              local question="Bonjour, jeune scarabée. Dieu te parle et te propose de trouver la voie. As-tu besoin de"
+              local not_an_option="Désolé, mais je n'ai pas compris le sens profond de ton interrogation ? Veux-tu ?"
+              clean=${1:-0}
+              [ $clean -eq 0 ] &amp;&amp; echo "$question" || echo "$not_an_option"
+              echo "$action_choice"
+              read -r -n 1 -p "" reponse
+              echo
+              case "$reponse" in 
+                "1") echo "Calculer n'est pas encore à ta portée. ";;
+                "2") print_citation;;
+                "3") exit 1;;
+                *) return 2;;
+              esac
+            }
+
+            while true 
+            do
+              clean=${clean:-0}
+              echo
+              menu $clean
+              clean=$?
+              echo
+            done
+          </programlisting>
+        </para>
+        <para/>
+        <para>
+          Voici donc un petit soft simple déjà. Mais il lui manque encore une légère fonctionnalité... La calculette :)
         </para>
       </section>
       <section>
-        <title>Les tours ... de Hanoï</title>
+        <title>La calculette</title>
         <para/>
         <para>
-          Pour ceux qui ne connaîtraient pas les tours de Hanoï, il s'agit d'un casse-tête français, imaginé par un mathématicien. Il consiste en un support sur lequel sont disposés trois pics. Une tour de disques (de taille croissante) et placé sur l'un des pics extrêmes et le but est  de déplacer la tour sur le pic opposée sachant que l'on ne peut bouger qu'un disque à la fois et qu'un disque ne peut se placer qu'au-dessus d'un disque plus petit. Vous pouvez y jouer ici <ulink href="http://matoumatheux.ac-rennes.fr/tous/enigme/tour0.htm">http://matoumatheux.ac-rennes.fr/tous/enigme/tour0.htm</ulink> et en apprendre plus sur wikipédia. 
+          Pour la calculatrice, nous avons plusieurs options. Soit nous récupérons l'entré utilisateur pour la passer en calcul. Soit nous demandons à l'utilisateur l'opération qu'il veut effectuer puis les opérandes nécessaires. Nous allons choisir la plus simple, à savoir injecter l'entrée utilisateur dans une option de calcul.
         </para>
         <para/>
         <para>
-          Encore une fois, ce problème est naturellement récursif. Une suite d'action répétée permet de résoudre le problème. La question est quelle suite d'action. Et pour cela, il nous faut trouver deux choses : les cas simples (les situations dans lesquelles je sais ce qu'il faut faire), et la condition de récurrence (étant dans la situation N comment puis-je me rapprocher de mes cas simples S). Ici, je sais comment résoudre le problème si je n'ai pas de disque à déplacer (je n'ai alors rien faire), si je n'ai qu'un seul disque (je n'ai qu'à l'amener à l'arrivée), et quand je n'ai plus que deux disques (il faut que je déplace le premier disque sur la part intermédiaire, puis le second sur l'arrivée puis re-déplacer le plus petit de l'intermédiaire vers l'arrivée). Ensuite, si je veux résoudre pour le problème pour trois disques, je connais la méthode : Déplacer le plus petit sur l'arrivée (cas à un disque), puis déplacer le disque moyen sur le disque intermédiaire (début cas à deux éléments). Après l'enchaînement d'action est un peu différent puisque je déplace le plus petit (qui était sur l'arrivée) vers le moyen, puis le plus grand vers l'arrivée. Il ne me reste donc plus que le cas à deux éléments que je connais met en utilisant le piquet originellement intermédiaire en départ et celui de départ en intermédiaire. La résolution de ce problème est donc une simple succession de rotation sur les statuts des piquets (départ, intermédiaire, arrivée) et le choix entre une des deux actions - Simple, ou Double. La condition de simplification peut s'exprimer ainsi : 
-          <itemizedlist>
-            Déplacer N disques de D vers A en passant par I revient à: 
-            <listitem>
-              Déplacer N-1 disques de D vers I en passant par A
-            </listitem> 
-            <listitem>
-              Déplacer 1 disques de D vers A
-            </listitem>
-            <listitem>
-              Déplacer N-1 disques de I vers A en passant par D
-            </listitem>
-          </itemizedlist>
-        </para>
-        <para/>
-        <para>
-          Implémentons : 
-          <programlisting langage="ocaml">
-            (**
-              @name hanoi
-              fonction affichant la combinaison d'étape à faire pour résoudre le problème.
-              @param n int nombre de disque 
-              @para d string pique de départ
-              @para a string pique intermédiaire
-              @para i string pique d'arrivée $
-            *)
-            let rec hanoi n d a i =
-              match n with
-              |0 -&gt; ""
-              |1 -&gt; d ^ a 
-              |_ -&gt; hanoi (n-1) d i a ^ "- " ^ hanoi 1 d a i ^ " - " ^ hanoi (n-1) i a d;;
+          En bash, pour pouvoir effectuer un calcul, il nous faut l'appeler ainsi : $[CALCUL]. Ainsi, pour effectuer l'opération 1+1, il nous faut écrire $[1+1]. Il est possible de mettre n'importe qu'elle chaîne d'opération standard, la priorité est respecté. Ainsi, notre fonction de calcul sera simplement 
+          <programlisting language="bash">
+            calcul () {
+              read -r -p 'Entrez votre calcul : ' response
+              echo $[$response]
+            }
           </programlisting>
-        </para>
-        <para>
-          Cette fonction affichera bien les étapes nécessaires à la résolution du problème et ces étapes seront optimale (impossible d'en faire moins). Je vous renvoie à wikipédia pour les démonstrations si vous êtes dubitatifs :). Attention cependant lors de la création de cette fonction à l'ordre des paramètres si vous voulez avoir l'affichage correctement ;).
+          Et oui, c'est la fonction la plus simple en fait :p 
         </para>
         <para/>
         <para>
-          Je ne vous proposerai pas de problème plus complexe dans cet article, mais vous pourrez toujours trouver des problèmes amusants à résoudre dans les énigmes impliquant des déplacements. Encore une fois, comme on a pu le voir dans ces deux problèmes, le plus difficile n'est pas de créer le code, mais bien de trouver comment résoudre le problème. 
+          Le mini-soft complet donne donc : 
+          <programlisting language="bash">
+            #!/bin/bash
+
+            get_citation () {
+              local citation_indice=$((RANDOM%4))
+              case $citation_indice in
+                0) echo "Noob, je suis un noob. Un no-life un vrai. Je joue au MMORPG";;
+                1) echo "42";;
+                2) echo "Si l'école sa rendait les hommes libres et égaux, le gouvernement déciderait que c'est pas bon pour les marmots.";;
+                *) echo "Insérer citation ici";;
+              esac
+            }
+
+            print_citation () { 
+              figlet -v &gt; /dev/null 2&gt; /dev/null &amp;&amp; FIGLET_INSTALLED=0 || FIGLET_INSTALLED=1
+              fortun -v &gt; /dev/null 2&gt; /dev/null &amp;&amp; FORTUNE_INSTALLED=0 || FORTUNE_INSTALLED=1
+
+              if [[ $FORTUNE_INSTALLED -eq 0 ]]
+                then CITATION="$(fortune)"
+                else CITATION="$(get_citation)"
+              fi
+
+              [ $FIGLET_INSTALLED -eq 0 ] &amp;&amp; figlet -nt "$CITATION" || echo "$CITATION"
+            }
+            
+            calcul () {
+              read -r -p 'Entrez votre calcul : ' response
+              echo $[$response]
+            }
+
+            menu () {
+              local action_choice="1 - Calculer quelque chose ? 
+            2 - Etre éclairer par la sagesse de tes ancêtres ? 
+            3 - Epingle Jésus à sa croix ?"
+              local question="Bonjour, jeune scarabée. Dieu te parle et te propose de trouver la voie. As-tu besoin de"
+              local not_an_option="Désolé, mais je n'ai pas compris le sens profond de ton interrogation ? Veux-tu ?"
+              clean=${1:-0}
+              [ $clean -eq 0 ] &amp;&amp; echo "$question" || echo "$not_an_option"
+              echo "$action_choice"
+              read -r -n 1 -p "" reponse
+              echo
+              case $reponse in 
+                1) calcul;;
+                2) print_citation;;
+                3) exit 1;;
+                *) return 2;;
+              esac
+            }
+
+            while true 
+            do
+              clean=${clean:-0}
+              echo
+              menu $clean
+              clean=$?
+              echo
+            done
+          </programlisting>
         </para>
       </section>
     </section>
@@ -656,7 +424,5 @@
       </listitem>
     </itemizedlist>
   </para>
-  <para>
-    Vous remarquerez sans doute que je n'aie pas relevé toutes les références citées, mais seulement celle qui me semble indispensable pour suivre cet article.
-  </para>
+  <para/>
 </section>
