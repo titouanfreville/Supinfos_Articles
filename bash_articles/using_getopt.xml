@@ -120,7 +120,7 @@
         <para>
           Dans le cas ou figlet est manquant, il peut être remplacé par la fonction echo, fonction basique de bash pour renvoyer quelque chose dans la sortie standard. Si fortune est manquant, il nous faut trouver une solution pour obtenir des citations aléatoire. 
         </para>
-        </para>
+        <para/>
         <para>
           Implémentons donc notre "générateur" de citation. Pour cela, nous allons utiliser la fonction $RANDOM de bash dont nous allons stocker le résultat dans une variable. Puis faire un case sur la valeur de cette variable et dans certains cas, mettre une citation particulière. Ce qui va donner :
           <programlisting langage="bash">
@@ -413,10 +413,170 @@
     <title>Get Opt</title>
     <para/>
     <para>
-      Get Opt est un utilitaire bash (installé par défaut). Cependant, sous Mac OS, la version getopt de base ne supporte pas les longs flags (ex: --help pour -h). Comme dit au début de l'article, il faut installer gnu-getpot pour avoir leur support via getopt. Getopt va nous permettre de définir des arguments court et long ainsi que les s'ils attendent un paramètre ou non. 
-  </section>
+      Get Opt est un utilitaire bash (installé par défaut). Cependant, sous Mac OS, la version getopt de base ne supporte pas les longs flags (ex : --help pour -h). Comme dit au début de l'article, il faut installer gnu-getpot pour avoir leur support via getopt. Getopt va nous permettre de définir des arguments courts et longs ainsi que les s'ils attendent un paramètre ou non.
+    </para>
+    <para/>
+    <para>
+      <section>
+        <title>La syntaxe</title>
+        <para/>
+        <para>
+          Pour utiliser getopt, il faut tout d'abord appeler l'utilitaire getopt. Celui prend plusieurs paramètres. Pour notre part, nous utiliserons les paramètres suivants : -o pour définir les options courtes, -l pour définir les arguments longs et -n pour définir le nom du programme. Pour définir les flags courts, il suffit de lister ceux-ci (les flags courts sont systématiquement une lettre seule). Pour les flags longs, il faut les séparer d'une virgule. Enfin, que ce soit pour les arguments longs ou courts, un argument suivi de : attends une option.
+        </para>
+        <para/>
+        <para>
+          Un exemple de getop (regroupant les options "classiques") serait : 
+          <programlisting language="bash">
+            getopt -o hv --long help,version -n 'Exemple' -- "$@"
+          </programlisting>
+          Qui va définir les flags h et v pour help et version. Le -- avant "$@" permet d'introduire un élément pour savoir ou se termine l'entrée des flags. Par la suite, nous allons lire les entrées une à une jusqu'à arriver sur le cas --.
+        </para>
+      </section>
+      <section>
+        <title>Utilisation</title>
+        <para/>
+        <para>
+          Reprenons notre programme précédent. Celui-ci était interactif par défaut et permettait de choisir entre afficher une citation ou réaliser un calcul. Maintenant, supposons que l'on veille exécuter un calcul en utilisant ce script, mais de façon automatisée. Il nous est impossible actuellement de donner au programme le calcul à effectuer sans le saisir par nous-mêmes. Ajoutons donc quelque fonctionnalité via getopt pour permettre une utilisation non interactive du script.
+        </para>
+        <para/>
+        <section>
+          <title>Avec des flags</title>
+        <para>
+          Tout d'abord, quelles options allons-nous rajouter. Nous devons déterminer une option ou plusieurs pour pouvoir lancer le programme en mode non interactif. Nous avons alors deux options : utiliser un flag (ex : -i pour le mode interactif) et des commandes ou utiliser deux flags (ex : --calc et --surprise-me pour calculer ou avoir une citation). Nous implémenterons ces deux solutions en commençant par l'option deux flags. Nous allons également ajouter les tags de versions et help (parce que c'est la base non ? ).
+        </para>
+        <para/>
+        <para>
+          Nous pouvons intégralement récupérer le code précédemment réaliser. Une seule fonction doit être modifiée : la fonction de calcul. En effet, afin de pouvoir la lancer en mode non interactif, il nous faut pouvoir gérer un argument. Ensuite, il suffit de tester l'argument : si celui-ci vide, nous demandons à l'utilisateur de saisir un calcul. Sinon, nous utilisons l'argument. 
+        </para>
+        <para>
+          Ce qui donne : 
+          <programlisting language="bash">
+            #!/bin/bash
+
+            get_citation () {
+              local citation_indice=$((RANDOM%4))
+              case $citation_indice in
+                0) echo "Noob, je suis un noob. Un no-life un vrai. Je joue au MMORPG";;
+                1) echo "42";;
+                2) echo "Si l'école sa rendait les hommes libres et égaux, le gouvernement déciderait que c'est pas bon pour les marmots.";;
+                *) echo "Insérer citation ici";;
+              esac
+            }
+
+            print_citation () { 
+              figlet -v &gt; /dev/null 2&gt; /dev/null  &amp;&amp; FIGLET_INSTALLED=0 || FIGLET_INSTALLED=1
+              fortun -v &gt; /dev/null 2&gt; /dev/null  &amp;&amp; FORTUNE_INSTALLED=0 || FORTUNE_INSTALLED=1
+
+              if [[ $FORTUNE_INSTALLED -eq 0 ]]
+                then CITATION="$(fortune)"
+                else CITATION="$(get_citation)"
+              fi
+
+              [ $FIGLET_INSTALLED -eq 0 ]  &amp;&amp; figlet -nt "$CITATION" || echo "$CITATION"
+            }
+
+            menu () {
+              local action_choice="1 - Calculer quelque chose ? 
+            2 - Etre éclairer par la sagesse de tes ancêtres ? 
+            3 - Epingle Jésus à sa croix ?"
+              local question="Bonjour, jeune scarabée. Dieu te parle et te propose de trouver la voie. As-tu besoin de"
+              local not_an_option="Désolé, mais je n'ai pas compris le sens profond de ton interrogation ? Veux-tu ?"
+              clean=${1:-0}
+              [ $clean -eq 0 ]  &amp;&amp; echo "$question" || echo "$not_an_option"
+              echo "$action_choice"
+              read -r -n 1 -p "" reponse
+              echo
+              case $reponse in 
+                1) calcul;;
+                2) print_citation;;
+                3) exit 1;;
+                *) return 2;;
+              esac
+            }
+
+            calcul () {
+              if [ -z $1 ]
+              then
+                read -r -p 'Entrez votre calcul : ' response
+                echo $[$response]
+              else
+                echo $[$1]
+              fi
+            }
+
+            # Two flags implémentation
+            # Text Variables
+            GET_OPT=`getopt -o hsvc: --long help,surprise-me,version,calculate: -n 'Simple Menu Supinfo Bash article using 2 flags' -- "$@"`
+            VERSION="Simple Menu using Getopt version: 0.0.1"
+            HELP_MESSAGE="Usage: simple_menu_getopt.sh [OPTIONS]
+
+            Simple menu script used to present bash and getop in a school article.
+            This script require getopt to run correctly. (Install gnu-getopt to run from mac).
+            By default, process in interactive. Running it with -c or -s option make it non interactive.
+
+            Options:
+
+            -c, --calculate     Run a calcul with the provided argument (ex: -c \"1+2\")
+            -h, --help          Print this message
+            -s, --surprise-me   Surprise
+            -v, --version       Print soft version
+
+            "
+            # Exec variable
+            c=1; s=1; interactive=0;
+            eval set -- "$GET_OPT"
+            while true
+            do
+              case "${1}" in
+                -h|--help)
+                  echo "$HELP_MESSAGE"; exit 0;;
+                -v|--version)
+                  echo "$VERSION"; exit 0;;
+                -c|--calculate)
+                  c=0; expression=$2; interactive=1; shift 2;;
+                -s|--surprise-me)
+                  s=0; interactive=1; shift 1;;
+                --) shift; break;;
+                *) echo "Options ${1} is not a known option."; echo "$HELP_MESSAGE" exit 1;;
+              esac
+            done
+
+            # Proceding 
+            if [ $interactive -eq 0 ]
+            then
+              while true 
+              do
+                clean=${clean:-0}
+                echo
+                menu $clean
+                clean=$?
+                echo
+              done
+            else
+              [ $c -eq 0 ]  &amp;&amp; calcul $expression
+              [ $s -eq 0 ]  &amp;&amp; print_citation
+            fi
+          </programlisting>
+        </para>
+        <para/>
+        <para>
+          Le retour de la commande getopt est ici stocké dans une variable. Par la suite, cette variable est évaluée dans une boucle d'interaction. A chaque étape de la boucle, on regarde l'argument actuellement passé à la fonction puis on le gère avant de le consommer. Dans le cas ou l'argument est terminal, un exit est appelé pour stopper l'exécution de la fonction.
+        </para>
+        <para/>
+      </section>
+        <para>
+          Voici donc une façon d'utiliser et traité les flags. Maintenant, voyons comment gérer l'interaction via des fonctions et non plus des tags.
+        </para>
+        <section>
+          <title>Avec des flags et des fonctions</title>
+        </section>
+        </para>
+      </section>
+    </para>
   </section>
   <para/>
+  <para>
+  </para>
   <para>
     Voici donc pour cet article. J'espère que vous aurez appris de nouvelles choses :) Je vous laisse les liens vers les sources utilisées pour faire cet article et mon répertoire git où vous pourrez retrouver tous les fichiers de codes présenter ici. 
   </para>
