@@ -75,6 +75,7 @@ Check your that your git installation is ready. If not, install it.
 Options:
 
 -h, --help 		Print this message.
+-i, --init 		Init your git to use ssh if not setted.
 -s, --ssh     Also check for git ssh corectness.
 "
 # ---------------------------
@@ -184,8 +185,10 @@ check_ssh_func () {
 	if [ $? -eq 0]
 	then
 		echo -e "$bold$green Git is ready to use ssh clone. $basic"
+		return 0
 	else
 		echo -e "$bold$red Git is not correctly setted to support ssh. $basic"
+		return 1
 	fi
 }
 # ### ### #
@@ -315,7 +318,7 @@ update_check_repo () {
 		fi
 	done
 }
-# ### COMMIT ### #
+# ### COMMIT ### #
 commit_action_func () {
 	local message
 	local commit="git commit -a"
@@ -376,7 +379,7 @@ commit_check_repo () {
 		fi
 	done
 }
-# ### PUSH ### #
+# ### PUSH ### #
 push_func () {
 	for repo in $1/*
 	do
@@ -390,9 +393,71 @@ push_func () {
 		fi
 	done
 }
-# ### ### #
+# ### ### #
 # -------------------------------------------------------------------------
 # -------------------- Commands Functions ---------------------------------
+# ### CHECK INSTALL ### #
+check_install () {
+	local get_opt=`getopt -o his -l help,init,ssh -n 'Funny git script Check Install' -- "$@"`
+	local init=1
+	local ssh=1
+	eval set -- "$get_opt"
+	while true
+	do
+		case "$1" in
+			-h|--help)
+				echo "$CHECK_INSTALL_HELP_MESSAGE"; exit 0;;
+			-s|--ssh)
+				ssh=0; shift 1;;
+			-i|--init)
+				init=0; shift 1;;
+			--) shift; break;;
+			*) echo "Options ${1} is not a known option."; echo "$CHECK_INSTALL_HELP_MESSAGE" exit 1;;
+		esac
+	done
+	check_install_func
+	[ $ssh -eq 0 ] && check_ssh_func
+	[ $init -eq 0 ] && { check_ssh_func || init_ssh_func ; }
+}
 # ### ### #
-
-# ### ### #
+# ### CHECK SSH ### #
+check_ssh () {
+	local get_opt=`getopt -o hi -l help,init-n 'Funny git script Check Check SSH' -- "$@"`
+	local init=1
+	eval set -- "$get_opt"
+	while true
+	do
+		case "$1" in
+			-h|--help)
+				echo "$CHECK_SSH_HELP_MESSAGE"; exit 0;;
+			-i|--init)
+				init=0; shift 1;;
+			--) shift; break;;
+			*) echo "Options ${1} is not a known option."; echo "$CHECK_SSH_HELP_MESSAGE" exit 1;;
+		esac
+	done
+	check_install_func
+	[ $init -eq 0 ] && { check_ssh_func || init_ssh_func ; } || check_ssh_func
+}
+# ### ### #
+# ### SSH INIT ### #
+ssh_init () {
+	local get_opt=`getopt -o dhn: -l detached,help,name: -n 'Funny git script Init SSH' -- "$@"`
+	local name
+	local detached=1
+	eval set -- "$get_opt"
+	while true
+	do
+		case "$1" in
+			-h|--help)
+				echo "$CHECK_SSH_HELP_MESSAGE"; exit 0;;
+			-d|--detached)
+				detached=0; shift 1;;
+			-n|--name)
+				name=$2; shift 2;;
+			--) shift; break;;
+			*) echo "Options ${1} is not a known option."; echo "$CHECK_SSH_HELP_MESSAGE" exit 1;;
+		esac
+	done
+}
+# ### ### #
