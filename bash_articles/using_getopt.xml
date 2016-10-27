@@ -9,12 +9,12 @@
     <para/>
 
     <para>
-      Vous aimez les terminaux bash ? Vous aimez automatiser toutes vos tâches récurrentes et voudriez les partager avec d'autres ? Ou tout simplement, vous voulez créer une mini-application en bash ? Cet article est fait pour vous. Il vous expliquera comment créer des applications bash simple avec options commande et arguments. Comme un vrai programme quoi.  
+      Vous aimez les terminaux bash ? Vous aimez automatiser toutes vos tâches récurrentes et voudriez les partager avec d'autres ? Ou tout simplement, vous voulez créer une mini-application en bash ? Cet article est fait pour vous. Il vous expliquera comment créer des applications bash simple avec options commande et arguments. Comme un vrai programme quoi.
     </para>
     <para/>
 
     <para>
-      Dans un premier temps, je vais fixer quelque pré-requis pour cet article. Je vous invite également à travailler depuis un environnement Linux avec bash d'installer, et d'ajouter un répertoire `~/bin` ou autre à votre path (`export PATH=$PATH:=REPO_TO_WORKING_SCRIPT`). 
+      Dans un premier temps, je vais fixer quelque pré-requis pour cet article. Je vous invite également à travailler depuis un environnement Linux avec bash d'installer, et d'ajouter un répertoire `~/bin` ou autre à votre path (`export PATH=$PATH:=REPO_TO_WORKING_SCRIPT`).
     </para>
 
     <para/>
@@ -34,23 +34,23 @@
     <section>
       <title>Pré-requis MacOS</title>
       <para>
-        Sous mac, il est impératif d'installer gnu-getopt si vous voulez pouvoir supporter l'utilisation d'argument long. Si vous ne voulez pas ajouter cette dépendance à vos programmes, n'utilisez que les arguments courts devrait vous permettre d'utiliser le getopt natif. Encore une fois, quelle que soit la solution choisie, vérifier les installations. Et encore une fois, vous pouvez ajouter un répertoire à votre PATH pour simplifier l'exécution de vos scrips. 
+        Sous mac, il est impératif d'installer gnu-getopt si vous voulez pouvoir supporter l'utilisation d'argument long. Si vous ne voulez pas ajouter cette dépendance à vos programmes, n'utilisez que les arguments courts devrait vous permettre d'utiliser le getopt natif. Encore une fois, quelle que soit la solution choisie, vérifier les installations. Et encore une fois, vous pouvez ajouter un répertoire à votre PATH pour simplifier l'exécution de vos scrips.
       </para>
     </section>
     <para></para>
     <para>Je n'ai pas de recommandations spécifiques au sujet des éditeurs de textes, assurez-vous seulement que celui que vous préférez supporte la coloration syntaxique pour bash. Personnellement, j'utilise sublimetext ou atome.</para>
     <para></para>
     <para>
-      Je vais vous guider à travers différentes étapes : 
+      Je vais vous guider à travers différentes étapes :
       <itemizedlist>
         <listitem>
-          Premier pas : Les bases de bash. 
+          Premier pas : Les bases de bash.
         </listitem>
         <listitem>
           GetOpt : le concept et les bases
         </listitem>
         <listitem>
-          Fonctionnalités avancées et création d'un programme simple. 
+          Fonctionnalités avancées et création d'un programme simple.
         </listitem>
       </itemizedlist>
     </para>
@@ -63,7 +63,7 @@
       <title>A petits pas</title>
       <para/>
       <para>
-        Tout d'abord, il faut rappeler que la programmation en bash est une programmation de type impérative. Nous savons donc ce que la machine fait, mais pas comment ;). Nous retrouvons bien évidemment toutes les structures classiques de la programmation impérative, à savoir les boucles, la création de fonctions et la création de variables. Cependant, bash est avant tout un langage de scripting, c'est-à-dire que son objectif principal est de lancer d'autre programme permettant de réaliser quelque chose. Si il est possible de réaliser des opérations mathématiques simples, le processus est tout de même assez lourd. Cependant, savoir réaliser ce type d'opération peut s'avérer plus qu'utiles. Ainsi, l'objectif de cette première partie sera de créer un menu simple permettant de lancer une calculatrice ou l'écriture d'une citation quelconque.  
+        Tout d'abord, il faut rappeler que la programmation en bash est une programmation de type impérative. Nous savons donc ce que la machine fait, mais pas comment ;). Nous retrouvons bien évidemment toutes les structures classiques de la programmation impérative, à savoir les boucles, la création de fonctions et la création de variables. Cependant, bash est avant tout un langage de scripting, c'est-à-dire que son objectif principal est de lancer d'autre programme permettant de réaliser quelque chose. Si il est possible de réaliser des opérations mathématiques simples, le processus est tout de même assez lourd. Cependant, savoir réaliser ce type d'opération peut s'avérer plus qu'utiles. Ainsi, l'objectif de cette première partie sera de créer un menu simple permettant de lancer une calculatrice ou l'écriture d'une citation quelconque.
       </para>
       <para></para>
       <section>
@@ -87,38 +87,38 @@
         <title>Afficher une citation</title>
         <para/>
         <para>
-          Créons donc notre première fonction. Tout d'abord, nous allons créer un fichier bash appelé `simple_menu.sh` par exemple. La première de ce menu doit contenir l'instruction <programlisting langage="bash">#!/bin/bash</programlisting> ou <programlisting langage="bash"> #!/env/bash </programlisting>. Tous deux demandant à ce que le script soit utilisé en bash. Si vous ne précisez pas ce commentaire et que vous êtes dans un autre système de shell (eg: la console mac), le script pourrait rencontrer des erreurs. Ensuite, nous allons créer la fonctionnalité de génération de citations. Pour cela, nous allons simplement ajouter <programlisting langage="bash">figlet $(fortune)"</programlisting>. Ce qui nous donnera le fichier suivant : 
+          Créons donc notre première fonction. Tout d'abord, nous allons créer un fichier bash appelé `simple_menu.sh` par exemple. La première de ce menu doit contenir l'instruction <programlisting langage="bash">#!/bin/bash</programlisting> ou <programlisting langage="bash"> #!/env/bash </programlisting>. Tous deux demandant à ce que le script soit utilisé en bash. Si vous ne précisez pas ce commentaire et que vous êtes dans un autre système de shell (eg: la console mac), le script pourrait rencontrer des erreurs. Ensuite, nous allons créer la fonctionnalité de génération de citations. Pour cela, nous allons simplement ajouter <programlisting langage="bash">figlet $(fortune)"</programlisting>. Ce qui nous donnera le fichier suivant :
           <programlisting language="bash">
             #!/bin/bash
             figlet "$(fortune"
           </programlisting>
-          Vous pouvez exécuter ce programme, ce qui devrait vous donner quelque chose comme : 
+          Vous pouvez exécuter ce programme, ce qui devrait vous donner quelque chose comme :
           <mediaobject>
             <imageobject>
               <imagedata fileref='http://freville.iiens.net/images/filget_output.png' />
             </imageobject>
           </mediaobject>
         </para>
-        <para/> 
+        <para/>
         <para>
-          Ce qui se passe :<br/> 
-          Lors de l'appel au script, votre script va se lancer dans un environnement bash (étapes non visibles). Ensuite, il va arriver sur la commande figlet. Figlet est une commande prenant un texte en argument et renvoyant ce même texte mais avec une stylisation particulière. Ici, le texte est représenté par "$(fortune)". Ce "$(fortune)" est une fonction. Les " " sont obligatoires afin de considérer ce qu'il y a à l'intérieur de celle ci comme étant une seule entité. Ensuite, le $( XXXX ) représente ce qui est renvoyé par la fonction XXXX (ici fortune). Nous demandons donc de passer à figlet le retour de la fonction fortune. Fortune est une fonction bash qui renvoie une citation quelconque. 
+          Ce qui se passe :<br/>
+          Lors de l'appel au script, votre script va se lancer dans un environnement bash (étapes non visibles). Ensuite, il va arriver sur la commande figlet. Figlet est une commande prenant un texte en argument et renvoyant ce même texte mais avec une stylisation particulière. Ici, le texte est représenté par "$(fortune)". Ce "$(fortune)" est une fonction. Les " " sont obligatoires afin de considérer ce qu'il y a à l'intérieur de celle ci comme étant une seule entité. Ensuite, le $( XXXX ) représente ce qui est renvoyé par la fonction XXXX (ici fortune). Nous demandons donc de passer à figlet le retour de la fonction fortune. Fortune est une fonction bash qui renvoie une citation quelconque.
         </para>
         <para>
-          Maintenant, que faire si l'utilisateur ne dispose pas de figlet et/ou fortune (ce qui est probablement le cas car ce ne sont pas des utilitaires basiques). Nous devrions les remplacer par notre propre "système". Pour cela, il nous faut d'abord savoir si les programmes existent. Pour cela, nous allons utiliser le fait que la plupart des programmes bash ont un argument -v permettant de connaître la version installée du programme. Cette fonction va afficher la version actuelle du programme demandé si celui existe (et renvoyer un code 0), sinon, une erreur et un code retour non nulle. Nous allons donc tester l'existence des programmes ainsi : 
+          Maintenant, que faire si l'utilisateur ne dispose pas de figlet et/ou fortune (ce qui est probablement le cas car ce ne sont pas des utilitaires basiques). Nous devrions les remplacer par notre propre "système". Pour cela, il nous faut d'abord savoir si les programmes existent. Pour cela, nous allons utiliser le fait que la plupart des programmes bash ont un argument -v permettant de connaître la version installée du programme. Cette fonction va afficher la version actuelle du programme demandé si celui existe (et renvoyer un code 0), sinon, une erreur et un code retour non nulle. Nous allons donc tester l'existence des programmes ainsi :
           <programlisting language="bash">
             figlet -v &gt; /dev/null 2&gt; /dev/null &amp;&amp; FIGLET_INSTALLED=0 || FIGLET_INSTALLED=1
             fortune -v &gt; /dev/null 2&gt; /dev/null &amp;&amp; FORTUNE_INSTALLED=0 || FORTUNE_INSTALLED=1
           </programlisting>
-          Ici, nous appelons l'option -v des programmes figlet puis fortune. Afin d'éviter de voir lors de l'exécution du programme la sortie de ces fonctions ou leurs erreurs (qui ne nous intéressent pas ici), nous demandons à ce qu'elles soient re-dirigées vers /dev/null (le trou noir de bash). Pour cela, nous utilisons l'opérateur &gt; qui dirige la sortie demandée à gauche vers l'argument placer à droite. Appeler sans chiffre, il re-dirige la sortie global du programme, mais il reste l'affichage des erreurs systèmes (quand le programme n'existe pas) qui sont sur la sortie d'erreur standard. Cette sortie est numérotée 2. 2&gt; /dev/null redirige donc la sortie standard d'erreur, pendant la durée de la fonction, vers notre trou noir. Ensuite, si la fonction réussit, nous stockons la valeur 0 dans la variable FIGLET_INSTALLED, 1 sinon. Et nous avons récupéré l'information qui nous intéressait (la présence ou non des programmes figlet et fortune).  
+          Ici, nous appelons l'option -v des programmes figlet puis fortune. Afin d'éviter de voir lors de l'exécution du programme la sortie de ces fonctions ou leurs erreurs (qui ne nous intéressent pas ici), nous demandons à ce qu'elles soient re-dirigées vers /dev/null (le trou noir de bash). Pour cela, nous utilisons l'opérateur &gt; qui dirige la sortie demandée à gauche vers l'argument placer à droite. Appeler sans chiffre, il re-dirige la sortie global du programme, mais il reste l'affichage des erreurs systèmes (quand le programme n'existe pas) qui sont sur la sortie d'erreur standard. Cette sortie est numérotée 2. 2&gt; /dev/null redirige donc la sortie standard d'erreur, pendant la durée de la fonction, vers notre trou noir. Ensuite, si la fonction réussit, nous stockons la valeur 0 dans la variable FIGLET_INSTALLED, 1 sinon. Et nous avons récupéré l'information qui nous intéressait (la présence ou non des programmes figlet et fortune).
         </para>
         <para/>
         <para>
-          Reste à utiliser ce résultat. Nous allons donc dire que si c'est programme sont installés, nous réutilisons le code de tout à l'heure. Et sinon, que fait-on ? 
+          Reste à utiliser ce résultat. Nous allons donc dire que si c'est programme sont installés, nous réutilisons le code de tout à l'heure. Et sinon, que fait-on ?
         </para>
         <para/>
         <para>
-          Dans le cas ou figlet est manquant, il peut être remplacé par la fonction echo, fonction basique de bash pour renvoyer quelque chose dans la sortie standard. Si fortune est manquant, il nous faut trouver une solution pour obtenir des citations aléatoire. 
+          Dans le cas ou figlet est manquant, il peut être remplacé par la fonction echo, fonction basique de bash pour renvoyer quelque chose dans la sortie standard. Si fortune est manquant, il nous faut trouver une solution pour obtenir des citations aléatoire.
         </para>
         <para/>
         <para>
@@ -134,11 +134,11 @@
               esac
             }
           </programlisting>
-          Nous voici donc avec une fonction bash appelée get_citation, renvoyant une citation aléatoire. Un fortune en moins complet en fait ;). Si vous désirez pouvoir mettre plus de citation, il vous faudra modifier la valeur du modulo (%) pour autre chose que 4. Le bloc case VALEUR in ... esac permet d'attribuer à des valeurs de VALEUR une action. L'utilisation des ;; est obligatoire pour signifier la fin d'un cas.  
+          Nous voici donc avec une fonction bash appelée get_citation, renvoyant une citation aléatoire. Un fortune en moins complet en fait ;). Si vous désirez pouvoir mettre plus de citation, il vous faudra modifier la valeur du modulo (%) pour autre chose que 4. Le bloc case VALEUR in ... esac permet d'attribuer à des valeurs de VALEUR une action. L'utilisation des ;; est obligatoire pour signifier la fin d'un cas.
         </para>
         <para/>
         <para>
-          Maintenant que nous avons nos fonctions de remplacement, utilisons les et modifions notre simple_menu.sh pour ajouter ces dernières fonctionnalités. 
+          Maintenant que nous avons nos fonctions de remplacement, utilisons les et modifions notre simple_menu.sh pour ajouter ces dernières fonctionnalités.
           <programlisting langage="bash">
             #!/bin/bash
 
@@ -179,7 +179,7 @@
                 esac
               }
 
-              print_citation () { 
+              print_citation () {
                 figlet -v &gt; /dev/null 2&gt; /dev/null &amp;&amp; FIGLET_INSTALLED=0 || FIGLET_INSTALLED=1
                 fortune -v &gt; /dev/null 2&gt; /dev/null &amp;&amp; FORTUNE_INSTALLED=0 || FORTUNE_INSTALLED=1
 
@@ -204,11 +204,11 @@
         <title>Le Menu</title>
         <para/>
         <para>
-          Donc, pour le menu, nous allons avoir besoin de poser une question à l'utilisateur puis obtenir une réponse. Pour ce faire, il va nous suffire d'afficher la question puis d'attendre la réponse de l'utilisateur. 
+          Donc, pour le menu, nous allons avoir besoin de poser une question à l'utilisateur puis obtenir une réponse. Pour ce faire, il va nous suffire d'afficher la question puis d'attendre la réponse de l'utilisateur.
         </para>
         <para/>
         <para>
-          Nous allons donc avoir le code : 
+          Nous allons donc avoir le code :
           <programlisting langage="bash">
             #!/bin/bash
 
@@ -222,7 +222,7 @@
               esac
             }
 
-            print_citation () { 
+            print_citation () {
               figlet -v $gt; /dev/null 2$gt; /dev/null &amp;&amp; FIGLET_INSTALLED=0 || FIGLET_INSTALLED=1
               fortun -v $gt; /dev/null 2$gt; /dev/null &amp;&amp; FORTUNE_INSTALLED=0 || FORTUNE_INSTALLED=1
 
@@ -235,8 +235,8 @@
             }
 
             menu () {
-              local action_choice="1 - Calculer quelque chose ? 
-            2 - Etre éclairer par la sagesse de tes ancêtres ? 
+              local action_choice="1 - Calculer quelque chose ?
+            2 - Etre éclairer par la sagesse de tes ancêtres ?
             3 - Epingle Jésus à sa croix ?"
               local question="Bonjour, jeune scarabée. Dieu te parle et te propose de trouver la voie. As-tu besoin de"
               local not_an_option="Désolé, mais je n'ai pas compris le sens profond de ton interrogation ? Veux-tu ?"
@@ -245,7 +245,7 @@
               echo "$action_choice"
               read -r -n 1 -p "" reponse
               echo
-              case "$reponse" in 
+              case "$reponse" in
                 "1") echo "Calculer n'est pas encore à ta portée. ";;
                 "2") print_citation;;
                 "3") exit 1;;
@@ -262,7 +262,7 @@
         </para>
         <para/>
         <para>
-          Avec la boucle d'interaction, nous aurons : 
+          Avec la boucle d'interaction, nous aurons :
           <programlisting language="bash">
             #!/bin/bash
 
@@ -276,7 +276,7 @@
               esac
             }
 
-            print_citation () { 
+            print_citation () {
               figlet -v &gt; /dev/null 2&gt; /dev/null &amp;&amp; FIGLET_INSTALLED=0 || FIGLET_INSTALLED=1
               fortun -v &gt; /dev/null 2&gt; /dev/null &amp;&amp; FORTUNE_INSTALLED=0 || FORTUNE_INSTALLED=1
 
@@ -289,8 +289,8 @@
             }
 
             menu () {
-              local action_choice="1 - Calculer quelque chose ? 
-            2 - Etre éclairer par la sagesse de tes ancêtres ? 
+              local action_choice="1 - Calculer quelque chose ?
+            2 - Etre éclairer par la sagesse de tes ancêtres ?
             3 - Epingle Jésus à sa croix ?"
               local question="Bonjour, jeune scarabée. Dieu te parle et te propose de trouver la voie. As-tu besoin de"
               local not_an_option="Désolé, mais je n'ai pas compris le sens profond de ton interrogation ? Veux-tu ?"
@@ -299,7 +299,7 @@
               echo "$action_choice"
               read -r -n 1 -p "" reponse
               echo
-              case "$reponse" in 
+              case "$reponse" in
                 "1") echo "Calculer n'est pas encore à ta portée. ";;
                 "2") print_citation;;
                 "3") exit 1;;
@@ -307,7 +307,7 @@
               esac
             }
 
-            while true 
+            while true
             do
               clean=${clean:-0}
               echo
@@ -330,18 +330,18 @@
         </para>
         <para/>
         <para>
-          En bash, pour pouvoir effectuer un calcul, il nous faut l'appeler ainsi : $[CALCUL]. Ainsi, pour effectuer l'opération 1+1, il nous faut écrire $[1+1]. Il est possible de mettre n'importe quelle chaîne d'opération standard, la priorité est respectée. Ainsi, notre fonction de calcul sera simplement 
+          En bash, pour pouvoir effectuer un calcul, il nous faut l'appeler ainsi : $[CALCUL]. Ainsi, pour effectuer l'opération 1+1, il nous faut écrire $[1+1]. Il est possible de mettre n'importe quelle chaîne d'opération standard, la priorité est respectée. Ainsi, notre fonction de calcul sera simplement
           <programlisting language="bash">
             calcul () {
               read -r -p 'Entrez votre calcul : ' response
               echo $[$response]
             }
           </programlisting>
-          Et oui, c'est la fonction la plus simple en fait :p 
+          Et oui, c'est la fonction la plus simple en fait :p
         </para>
         <para/>
         <para>
-          Le mini-soft complet donne donc : 
+          Le mini-soft complet donne donc :
           <programlisting language="bash">
             #!/bin/bash
 
@@ -355,7 +355,7 @@
               esac
             }
 
-            print_citation () { 
+            print_citation () {
               figlet -v &gt; /dev/null 2&gt; /dev/null &amp;&amp; FIGLET_INSTALLED=0 || FIGLET_INSTALLED=1
               fortun -v &gt; /dev/null 2&gt; /dev/null &amp;&amp; FORTUNE_INSTALLED=0 || FORTUNE_INSTALLED=1
 
@@ -366,15 +366,15 @@
 
               [ $FIGLET_INSTALLED -eq 0 ] &amp;&amp; figlet -nt "$CITATION" || echo "$CITATION"
             }
-            
+
             calcul () {
               read -r -p 'Entrez votre calcul : ' response
               echo $[$response]
             }
 
             menu () {
-              local action_choice="1 - Calculer quelque chose ? 
-            2 - Etre éclairer par la sagesse de tes ancêtres ? 
+              local action_choice="1 - Calculer quelque chose ?
+            2 - Etre éclairer par la sagesse de tes ancêtres ?
             3 - Epingle Jésus à sa croix ?"
               local question="Bonjour, jeune scarabée. Dieu te parle et te propose de trouver la voie. As-tu besoin de"
               local not_an_option="Désolé, mais je n'ai pas compris le sens profond de ton interrogation ? Veux-tu ?"
@@ -383,7 +383,7 @@
               echo "$action_choice"
               read -r -n 1 -p "" reponse
               echo
-              case $reponse in 
+              case $reponse in
                 1) calcul;;
                 2) print_citation;;
                 3) exit 1;;
@@ -391,7 +391,7 @@
               esac
             }
 
-            while true 
+            while true
             do
               clean=${clean:-0}
               echo
@@ -425,7 +425,7 @@
         </para>
         <para/>
         <para>
-          Un exemple de getop (regroupant les options "classiques") serait : 
+          Un exemple de getop (regroupant les options "classiques") serait :
           <programlisting language="bash">
             getopt -o hv --long help,version -n 'Exemple' -- "$@"
           </programlisting>
@@ -446,10 +446,10 @@
         </para>
         <para/>
         <para>
-          Nous pouvons intégralement récupérer le code précédemment réaliser. Une seule fonction doit être modifiée : la fonction de calcul. En effet, afin de pouvoir la lancer en mode non interactif, il nous faut pouvoir gérer un argument. Ensuite, il suffit de tester l'argument : si celui-ci vide, nous demandons à l'utilisateur de saisir un calcul. Sinon, nous utilisons l'argument. 
+          Nous pouvons intégralement récupérer le code précédemment réaliser. Une seule fonction doit être modifiée : la fonction de calcul. En effet, afin de pouvoir la lancer en mode non interactif, il nous faut pouvoir gérer un argument. Ensuite, il suffit de tester l'argument : si celui-ci vide, nous demandons à l'utilisateur de saisir un calcul. Sinon, nous utilisons l'argument.
         </para>
         <para>
-          Ce qui donne : 
+          Ce qui donne :
           <programlisting language="bash">
             #!/bin/bash
 
@@ -463,7 +463,7 @@
               esac
             }
 
-            print_citation () { 
+            print_citation () {
               figlet -v &gt; /dev/null 2&gt; /dev/null  &amp;&amp; FIGLET_INSTALLED=0 || FIGLET_INSTALLED=1
               fortun -v &gt; /dev/null 2&gt; /dev/null  &amp;&amp; FORTUNE_INSTALLED=0 || FORTUNE_INSTALLED=1
 
@@ -476,8 +476,8 @@
             }
 
             menu () {
-              local action_choice="1 - Calculer quelque chose ? 
-            2 - Etre éclairer par la sagesse de tes ancêtres ? 
+              local action_choice="1 - Calculer quelque chose ?
+            2 - Etre éclairer par la sagesse de tes ancêtres ?
             3 - Epingle Jésus à sa croix ?"
               local question="Bonjour, jeune scarabée. Dieu te parle et te propose de trouver la voie. As-tu besoin de"
               local not_an_option="Désolé, mais je n'ai pas compris le sens profond de ton interrogation ? Veux-tu ?"
@@ -486,7 +486,7 @@
               echo "$action_choice"
               read -r -n 1 -p "" reponse
               echo
-              case $reponse in 
+              case $reponse in
                 1) calcul;;
                 2) print_citation;;
                 3) exit 1;;
@@ -541,10 +541,10 @@
               esac
             done
 
-            # Proceding 
+            # Proceding
             if [ $interactive -eq 0 ]
             then
-              while true 
+              while true
               do
                 clean=${clean:-0}
                 echo
@@ -565,10 +565,135 @@
         <para/>
       </section>
         <para>
-          Voici donc une façon d'utiliser et traité les flags. Maintenant, voyons comment gérer l'interaction via des fonctions et non plus des tags.
+          Voici donc une façon d'utiliser et traiter les flags. Maintenant, voyons comment gérer l'interaction via des fonctions et non plus des flags.
         </para>
         <section>
           <title>Avec des flags et des fonctions</title>
+          <para/>
+          <para>
+            Cette fois, nous allons utiliser un flag -i pour lancer le programme en mode interactif. Par défaut, celui-ci sera donc non interactif et demandera des commandes à lancer. Aussi, pour le programme de calcul, nous allons réutiliser la version modifiée et acceptant un argument. Les fonctions ne pourront plus être cumulé (avec le système de flag, je pouvais effectuer un calcul et afficher une citation en mode non interactif).
+          </para>
+          <para>
+            Précédemment, avec les flags, nous avions une variable pour décider de l'exécution de tel ou tel processus. Ici, nous allons supprimer ces variables et, à la place, définir un format à respecter. Nous lirons ensuite les arguments pour savoir quelle commande l'utilisateur désire exécuter.
+          </para>
+          <para>
+            Ce qui donne :
+            <programlisting language="bash">
+              #!/bin/bash
+
+              get_citation () {
+                local citation_indice=$((RANDOM%4))
+                case $citation_indice in
+                  0) echo "Noob, je suis un noob. Un no-life un vrai. Je joue au MMORPG";;
+                  1) echo "42";;
+                  2) echo "Si l'école sa rendait les hommes libres et égaux, le gouvernement déciderait que c'est pas bon pour les marmots.";;
+                  *) echo "Insérer citation ici";;
+                esac
+              }
+
+              print_citation () {
+                figlet -v &gt; /dev/null 2&gt; /dev/null &amp;&amp; FIGLET_INSTALLED=0 || FIGLET_INSTALLED=1
+                fortune -v &gt; /dev/null 2&gt; /dev/null &amp;&amp; FORTUNE_INSTALLED=0 || FORTUNE_INSTALLED=1
+
+                if [[ $FORTUNE_INSTALLED -eq 0 ]]
+                  then CITATION="$(fortune)"
+                  else CITATION="$(get_citation)"
+                fi
+
+                [ $FIGLET_INSTALLED -eq 0 ] &amp;&amp; figlet -nt "$CITATION" || echo "$CITATION"
+              }
+
+              menu () {
+                local action_choice="1 - Calculer quelque chose ?
+              2 - Etre éclairer par la sagesse de tes ancêtres ?
+              3 - Epingle Jésus à sa croix ?"
+                local question="Bonjour, jeune scarabée. Dieu te parle et te propose de trouver la voie. As-tu besoin de"
+                local not_an_option="Désolé, mais je n'ai pas compris le sens profond de ton interrogation ? Veux-tu ?"
+                clean=${1:-0}
+                [ $clean -eq 0 ] &amp;&amp; echo "$question" || echo "$not_an_option"
+                echo "$action_choice"
+                read -r -n 1 -p "" reponse
+                echo
+                case $reponse in
+                  1) calcul;;
+                  2) print_citation;;
+                  3) exit 1;;
+                  *) return 2;;
+                esac
+              }
+
+              calcul () {
+                if [ -z $1 ]
+                then
+                  read -r -p 'Entrez votre calcul : ' response
+                  echo $[$response]
+                else
+                  echo $[$1]
+                fi
+              }
+              # Avec fonctions
+              # Text Variables
+              GET_OPT=`getopt -o hiv --long help,interactive,version -n 'Simple Menu Supinfo Bash article using functions' -- "$@"`
+              VERSION="Simple Menu using Getopt and Functions version: 0.0.1"
+              HELP_MESSAGE="Usage: simple_menu_getopt.sh [OPTIONS] [COMMAND] [ARGUMENTS]
+
+              Simple menu script used to present bash and getop in a school article.
+              This script require getopt to run correctly. (Install gnu-getopt to run from mac).
+              By default, process in interactive. Running it with -c or -s option make it non interactive.
+
+              Options:
+
+              -i, --interactive   Run the process interactively.
+              -h, --help          Print this message.
+              -v, --version       Print soft version.
+
+              Command:
+
+              calcul              Make a calcul. If no argument provided, will ask for the user to enter the calcul.
+              print_citation      Affiche une citation.
+              "
+
+              # Exec variables
+              interactive=1;
+
+              # Programm
+              eval set -- "$GET_OPT"
+              while true
+              do
+                case "${1}" in
+                  -h|--help)
+                    echo "$HELP_MESSAGE"; exit 0;;
+                  -v|--version)
+                    echo "$VERSION"; exit 0;;
+                  -i|--interactive)
+                    interactive=0; shift 1;;
+                  --) shift; break;;
+                  *) echo "Options ${1} is not a known option."; echo "$HELP_MESSAGE" exit 1;;
+                esac
+              done
+
+              if [ $interactive -eq 0 ]
+              then
+                while true
+                do
+                  clean=${clean:-0}
+                  echo
+                  menu $clean
+                  clean=$?
+                  echo
+                done
+              else
+                case "${1}" in
+                  calcul) calcul $2; exit $?;;
+                  print_citation) print_citation; exit $?;;
+                  *) echo "${1} is not a valid command."; echo "$HELP_MESSAGE"; exit 1;;
+                esac
+              fi
+            </programlisting>
+          </para>
+          <para>
+            Et voilà pour les bases de bash en utilisant getopt. Nous allons maintenant pouvoir faire des choses un peu plus complètes.
+          </para>
         </section>
         </para>
       </section>
@@ -576,9 +701,43 @@
   </section>
   <para/>
   <para>
+    Pour finir cet article, je vais donc vous proposer de faire un mini soft pour permettre de gérer des commandes git. Celui-ci doit permettre :
+    <itemizedlist>
+      <listitem>De vérifier l'installation correcte de git et la présence (optionnelle) d'une clé ssh fonctionnelle.</listitem>
+      <listitem>
+        De cloner un ou plusieurs répertoire(s) git depuis une url ou le chemin du repo (Nom_Createur/Repo ou Nom_Organisation/Repo) dans le dossier git configurer par l'utilisateur.
+      </listitem>
+      <listitem>De générer une clé utilisable dans git et mettre la référence publique de cette clé dans le presse papier</listitem>
+      <listitem>De mettre à jour tous les répertoires git depuis un dossier (si celui-ci n'est pas fourni en arguments, un fichier de setup doit le contenir)</listitem>
+      <listitem>De commit toutes les modifications apportées aux fichiers suivis par les répertoires</listitem>
+      <listitem>De commit toutes les modifications apportées aux répertoires</listitem>
+      <listitem>De push toutes les modifications possibles depuis un dossier (le même que celui de mise à jour par défaut)</listitem>
+      <listitem>De mettre à jour la configuration du programme</listitem>
+      <listitem>Protégées des branches afin d'éviter les mises à jour indésirables (via fichier de config et variables). Par défaut la branche master doit être protégée</listitem>
+      <listitem>De gérer les branches de base pour les mises à jour (par défaut, master).</listitem>
+    </itemizedlist>
+    Pour ceux qui ne connaitrait pas git, je vous invite à consulter l'article de Nicolas Bergeron sur le sujet (dans les articles supinfo).
+  </para>
+  <section>
+    <title>Workplace : git manager</title>
+    <para/>
+    <para>
+      Afin de profiter pleinement de cette partie, je vous invite à essayer de coder le système par vous même avant de regarder les solutions proposées.
+    </para>
+    <para/>
+    <para>
+      Le code :
+
+    </para>
+    <para/>
+    <para>
+      Explications :
+    </para>
+  </section>
+  <para>
   </para>
   <para>
-    Voici donc pour cet article. J'espère que vous aurez appris de nouvelles choses :) Je vous laisse les liens vers les sources utilisées pour faire cet article et mon répertoire git où vous pourrez retrouver tous les fichiers de codes présenter ici. 
+    Voici donc pour cet article. J'espère que vous aurez appris de nouvelles choses :) Je vous laisse les liens vers les sources utilisées pour faire cet article et mon répertoire git où vous pourrez retrouver tous les fichiers de codes présenter ici.
   </para>
   <para>
     <itemizedlist>

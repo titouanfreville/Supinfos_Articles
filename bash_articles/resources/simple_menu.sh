@@ -10,9 +10,9 @@ get_citation () {
   esac
 }
 
-print_citation () {	
+print_citation () {
 	figlet -v > /dev/null 2> /dev/null && FIGLET_INSTALLED=0 || FIGLET_INSTALLED=1
-	fortun -v > /dev/null 2> /dev/null && FORTUNE_INSTALLED=0 || FORTUNE_INSTALLED=1
+	fortune -v > /dev/null 2> /dev/null && FORTUNE_INSTALLED=0 || FORTUNE_INSTALLED=1
 
 	if [[ $FORTUNE_INSTALLED -eq 0 ]]
 		then CITATION="$(fortune)"
@@ -23,8 +23,8 @@ print_citation () {
 }
 
 menu () {
-	local action_choice="1 - Calculer quelque chose ? 
-2 - Etre éclairer par la sagesse de tes ancêtres ? 
+	local action_choice="1 - Calculer quelque chose ?
+2 - Etre éclairer par la sagesse de tes ancêtres ?
 3 - Epingle Jésus à sa croix ?"
 	local question="Bonjour, jeune scarabée. Dieu te parle et te propose de trouver la voie. As-tu besoin de"
 	local not_an_option="Désolé, mais je n'ai pas compris le sens profond de ton interrogation ? Veux-tu ?"
@@ -33,7 +33,7 @@ menu () {
 	echo "$action_choice"
 	read -r -n 1 -p "" reponse
 	echo
-	case $reponse in 
+	case $reponse in
 		1) calcul;;
 		2) print_citation;;
 		3) exit 1;;
@@ -46,7 +46,7 @@ calcul () {
 	echo $[$response]
 }
 
-while true 
+while true
 do
 	clean=${clean:-0}
 	echo
