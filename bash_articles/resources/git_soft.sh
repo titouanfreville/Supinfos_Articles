@@ -412,7 +412,7 @@ check_install () {
 			-i|--init)
 				init=0; shift 1;;
 			--) shift; break;;
-			*) echo "Options ${1} is not a known option."; echo "$CHECK_INSTALL_HELP_MESSAGE" exit 1;;
+			*) echo "Options ${1} is not a known option."; echo "$CHECK_INSTALL_HELP_MESSAGE"; exit 1;;
 		esac
 	done
 	check_install_func
@@ -433,7 +433,7 @@ check_ssh () {
 			-i|--init)
 				init=0; shift 1;;
 			--) shift; break;;
-			*) echo "Options ${1} is not a known option."; echo "$CHECK_SSH_HELP_MESSAGE" exit 1;;
+			*) echo "Options ${1} is not a known option."; echo "$CHECK_SSH_HELP_MESSAGE"; exit 1;;
 		esac
 	done
 	check_install_func
@@ -444,20 +444,42 @@ check_ssh () {
 ssh_init () {
 	local get_opt=`getopt -o dhn: -l detached,help,name: -n 'Funny git script Init SSH' -- "$@"`
 	local name
-	local detached=1
+	local interactive=0
 	eval set -- "$get_opt"
 	while true
 	do
 		case "$1" in
 			-h|--help)
-				echo "$CHECK_SSH_HELP_MESSAGE"; exit 0;;
+				echo "$SSH_INIT_HELP_MESSAGE"; exit 0;;
 			-d|--detached)
-				detached=0; shift 1;;
+				interactive=1; shift 1;;
 			-n|--name)
 				name=$2; shift 2;;
 			--) shift; break;;
-			*) echo "Options ${1} is not a known option."; echo "$CHECK_SSH_HELP_MESSAGE" exit 1;;
+			*) echo "Options ${1} is not a known option."; echo "$SSH_INIT_HELP_MESSAGE"; exit 1;;
 		esac
 	done
+	init_ssh_func $1 $interactive $name
 }
 # ### ### #
+# ### CLONE ### #
+clone () {
+	local get_opt=`getopt -o fh -l forced,help -n 'Funny git script Clone' -- "$@"`
+	local name
+	local forced=1
+	eval set -- "$get_opt"
+	while true
+	do
+		case "$1" in
+			-h|--help)
+				echo "$CLONE_HELP_MESSAGE"; exit 0;;
+			-f|--forced)
+				detached=0; shift 1;;
+			--) shift; break;;
+			*) echo "Options ${1} is not a known option."; echo "$CLONE_HELP_MESSAGE"; exit 1;;
+		esac
+	done
+
+	clone_func
+}
+# ### ### #
