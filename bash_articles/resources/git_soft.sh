@@ -118,8 +118,9 @@ the path of the repository (Creator/Repository_Name or Organisation/Repository_N
 
 Options:
 
--f, --force   Force clone type using full url.
--h, --help 		Print this message
+-p, --local-path  Where you want the clone file to be. (Default : GIT_HOME :: ~/git if not changed).
+-f, --force   	  Force clone type using full url.
+-h, --help 		  Print this message.
 "
 # ---------------------------
 # UPDATE --------------------
@@ -136,7 +137,7 @@ Options:
 -l, --locked  Add locked branch for specific repository. (-l REPOSITORY_NAME:BRANCH_TO_LOCK)
 "
 # ---------------------------
-# COMMIT KNOWN --------------
+# COMMIT --------------------
 COMMIT_HELP_MESSAGE="Usage : ./git_soft.sh [OPTIONS] commit [COMMAND_OPTIONS]
 
 Commit function :
@@ -147,7 +148,7 @@ Options:
 
 -a, --all
 -h, --help 		Print this message.
--m 						Use message for repo. (-m REPO:MESSAGE)
+-m, --message	Use message for repo. (-m REPO:MESSAGE)
 "
 # ---------------------------
 # PUSH ----------------------
@@ -454,18 +455,18 @@ ssh_init () {
 			-d|--detached)
 				interactive=1; shift 1;;
 			-n|--name)
-				name=$2; shift 2;;
+				name="$2"; shift 2;;
 			--) shift; break;;
 			*) echo "Options ${1} is not a known option."; echo "$SSH_INIT_HELP_MESSAGE"; exit 1;;
 		esac
 	done
-	init_ssh_func $1 $interactive $name
+	init_ssh_func $1 $interactive "$name"
 }
 # ### ### #
 # ### CLONE ### #
 clone () {
-	local get_opt=`getopt -o fh -l forced,help -n 'Funny git script Clone' -- "$@"`
-	local name
+	local get_opt=`getopt -o fhp: -l forced,help,local-path: -n 'Funny git script Clone' -- "$@"`
+	local path
 	local forced=1
 	eval set -- "$get_opt"
 	while true
@@ -474,12 +475,57 @@ clone () {
 			-h|--help)
 				echo "$CLONE_HELP_MESSAGE"; exit 0;;
 			-f|--forced)
-				detached=0; shift 1;;
+				forced=0; shift 1;;
+			-p|--local-path)
+				path="$2"; shift 2;;
 			--) shift; break;;
 			*) echo "Options ${1} is not a known option."; echo "$CLONE_HELP_MESSAGE"; exit 1;;
 		esac
 	done
+	clone_func $forced "$path"
+}
+# ### ### #
+# ### UPDATE ### #
+update () {
+	local get_opt=`getopt -o hl:b: -l help,locked:,branch: -n 'Funny git script Update' -- "$@"`
+	local branches_stack
+	local locked_stack
+	while true
+	do
+	  case "${1}" in
+	    -h|--help)
+	      echo "$HELP_MESSAGE"; exit 0;;
+	    -b|--default-branch)
+	      branches_stack+=($2)
+	      shift 2;;
+	    -l|--locked)
+			LOCKED_BRANCHES+=($2)
+			shift 2;;
+	    --) shift; break;;
+	    *) echo "You provided a wrong option"; echo $HELP_MESSAGE; exit 1;;
+	  esac
+	done
 
-	clone_func
+
+	if [ ! -z branches_stack ]
+	then
+		for el in "${branches_stack[@]}"
+		do
+			if [ ! -z $el ]
+			then 
+				el_array=(${el//=/ })
+				key_array+=(${el_array[0]})
+				tab_length=$[tab_length+1]
+				SPECIFIC_BRANCH_CHECK[${el_array[0]}]=${el_array[1]}
+			fi
+		done
+	fi
+
+	update_check_repo $GIT_HOME 
+}
+# ### ### #
+# ### COMMIT ### #
+commit () {
+	
 }
 # ### ### #
