@@ -3,9 +3,9 @@
 ############################## FUNY GIT SOFT ##############################
 ###########################################################################
 ## Small bash script to help managing multiple git repository store in a ##
-## unique known folder (ex : ~/git).																		 ##
+## unique known folder (ex : ~/git).									 ##
 ###########################################################################
-## AUTHOR : Titouan FREVILLE <titouanfreville@gmail.com> 								 ##
+## AUTHOR : Titouan FREVILLE <titouanfreville@gmail.com> 				 ##
 ###########################################################################
 # -------------------- VARIABLES ------------------------------------------
 # ### STYLES ### #
@@ -28,6 +28,19 @@ GIT_CLONE_ROOT_HTTP="github.com/"
 HTTP="http://"
 HTTPS="https://"
 # ### ### #
+# ### RUNNER VARIABLE ### #
+run=""
+base_config="# Associative array declaration
+declare -A SPECIFIC_BRANCH_CHECK
+declare -A COMMIT_MESSAGE_TABLE
+
+# Locked branches default
+LOCKED_BRANCHES=(master develop __PLACE_TO_ADD_BRANCHES__)
+
+# GIT HOME DEFAULT
+GIT_HOME=~/git
+"
+# ### ### #
 # ### HELP MESSAGES ### #
 # GENERAL -------------------
 # ---------------------------
@@ -44,14 +57,14 @@ WARNINGS:
 
 Options:
 
--c, --config  Print current configuration if nor arguments provided.
-							If arguments provided, update configuration to add the provided config.
-							Configurations :
-							* branch safety : to add a branch as locked, use -c ADD_LOCK=BRANCH_NAME
-							* base branch to look : to add a base branch for repositories,
-								use -c ADD_BASE=\"FOLDER_PATERN=BRANCH_NAME\"
+-c, --config    Update configuration to add the provided config.
+				Configurations :
+				* branch safety : to add a branch as locked, use -c ADD_LOCK=BRANCH_NAME
+				* base branch to look : to add a base branch for repositories,
+					use -c ADD_BASE=\"FOLDER_PATERN=BRANCH_NAME\"
+				Use any other argument to show current config (eg: \"\")
 -h, --help 		Print this message
--v, --version Print tool version
+-v, --version   Print tool version
 
 
 Commands:
@@ -161,7 +174,7 @@ Go through all the git repositories to push.
 Options:
 
 -h, --help 		Print this message.
--l, --locked  Add locked branch for specific repository. (-l REPOSITORY_NAME:BRANCH_TO_LOCK)
+-l, --locked    Add locked branch for specific repository. (-l REPOSITORY_NAME:BRANCH_TO_LOCK)
 "
 # ---------------------------
 # ### ### #
@@ -169,7 +182,7 @@ Options:
 # -------------------- Functionalities ------------------------------------
 # ### GIT INSTALLED ### #
 check_install_func () {
-	echo -e "$thin$bule Checking if git is correctly installed $basic"
+	echo -e "$thin$ blue Checking if git is correctly installed $basic"
 	git --version > /dev/null 2> /dev/null
 	if [ $? -eq 0 ]
 	then
@@ -181,9 +194,9 @@ check_install_func () {
 # ### ### #
 # ### SSH ENABLED ### #
 check_ssh_func () {
-	echo -e "$thin$bule Checking if git is setted up to support ssh $basic"
+	echo -e "$thin$blue Checking if git is setted up to support ssh $basic"
 	ssh -T git@github.com > /dev/null 2> /dev/null
-	if [ $? -eq 0]
+	if [ $? -eq 1 ]
 	then
 		echo -e "$bold$green Git is ready to use ssh clone. $basic"
 		return 0
@@ -260,6 +273,7 @@ clone_func () {
 					multi_way_cloning "$clone_path"
 					;;
 				*/*) multi_way_cloning "$arg"
+					;;
 				*) echo -e "$bold$red $arg is not well formated. Please provide a repo path (User/Repo or Organisation/Repo) or the clone url. $basic"
 			esac
 		done
@@ -311,7 +325,6 @@ update_check_repo () {
 				update_check_specific $repo
 				if [ $? -ne 0 ]
 				then
-				else
 					update_action_func 'master'
 				fi
 			fi
@@ -332,6 +345,7 @@ commit_action_func () {
 	else
 		case "$1" in
 			0) commit="git commit";;
+			1) commit="git commit -a";;
 			*) message="$1";;
 		esac
 	fi
@@ -372,7 +386,6 @@ commit_check_repo () {
 				commit_check_specific $repo $1
 				if [ $? -ne 0 ]
 				then
-				else
 					commit_action_func $1
 				fi
 			fi
@@ -440,8 +453,8 @@ check_ssh () {
 	check_install_func
 	[ $init -eq 0 ] && { check_ssh_func || init_ssh_func ; } || check_ssh_func
 }
-# ### ### #
-# ### SSH INIT ### #
+# ### ### #
+# ### SSH INIT ### #
 ssh_init () {
 	local get_opt=`getopt -o dhn: -l detached,help,name: -n 'Funny git script Init SSH' -- "$@"`
 	local name
@@ -462,8 +475,8 @@ ssh_init () {
 	done
 	init_ssh_func $1 $interactive "$name"
 }
-# ### ### #
-# ### CLONE ### #
+# ### ### #
+# ### CLONE ### #
 clone () {
 	local get_opt=`getopt -o fhp: -l forced,help,local-path: -n 'Funny git script Clone' -- "$@"`
 	local path
@@ -484,17 +497,18 @@ clone () {
 	done
 	clone_func $forced "$path"
 }
-# ### ### #
-# ### UPDATE ### #
+# ### ### #
+# ### UPDATE ### #
 update () {
 	local get_opt=`getopt -o hl:b: -l help,locked:,branch: -n 'Funny git script Update' -- "$@"`
 	local branches_stack
 	local locked_stack
+	eval set -- "$get_opt"
 	while true
 	do
 	  case "${1}" in
 	    -h|--help)
-	      echo "$HELP_MESSAGE"; exit 0;;
+	      echo "$UPDATE_HELP_MESSAGE"; exit 0;;
 	    -b|--default-branch)
 	      branches_stack+=($2)
 	      shift 2;;
@@ -502,7 +516,7 @@ update () {
 			LOCKED_BRANCHES+=($2)
 			shift 2;;
 	    --) shift; break;;
-	    *) echo "You provided a wrong option"; echo $HELP_MESSAGE; exit 1;;
+		*) echo "Options ${1} is not a known option."; echo "$UPDATE_HELP_MESSAGE"; exit 1;;
 	  esac
 	done
 
@@ -523,9 +537,107 @@ update () {
 
 	update_check_repo $GIT_HOME 
 }
-# ### ### #
-# ### COMMIT ### #
+# ### ### #
+# ### COMMIT ### #
 commit () {
-	
+	declare -A COMMIT_MESSAGE_TABLE
+	local get_opt=`getopt -o ham: -l help,all,message: -n 'Funny git script Commit' -- "$@"`
+	local all
+	local commit_stack
+	eval set -- "$get_opt"
+	while true
+	do
+	  case "${1}" in
+	    -h|--help)
+	      echo "$COMMIT_HELP_MESSAGE"; exit 0;;
+	    -a|--all)
+	      all=0
+	      shift 1;;
+	    -m|--message)
+			commit_stack+=($2)
+			shift 2;;
+	    --) shift; break;;
+		*) echo "Options ${1} is not a known option."; echo "$COMMIT_HELP_MESSAGE"; exit 1;;
+	  esac
+	done
+
+	if [ ! -z commit_stack ]
+	then
+		for el in "${branches_stack[@]}"
+		do
+			if [ ! -z $el ]
+			then 
+				el_array=(${el//=/ })
+				key_array+=(${el_array[0]})
+				tab_length=$[tab_length+1]
+				COMMIT_MESSAGE_TABLE[${el_array[0]}]=${el_array[1]}
+			fi
+		done
+	fi
+	commit_check_repo $GIT_HOME $all
 }
-# ### ### #
+# ### ### #
+# ### PUSH ### #
+push () {
+	local get_opt=`getopt -o hl: -l help,locked: -n 'Funny git script Push' -- "$@"`
+	local branches_stack
+	local locked_stack
+	eval set -- "$get_opt"
+	while true
+	do
+	  case "${1}" in
+	    -h|--help)
+	      echo "$PUSH_HELP_MESSAGE"
+	      exit 0;;
+	    -l|--locked)
+			LOCKED_BRANCHES+=($2)
+			shift 2;;
+	    --) shift; break;;
+		*) echo "Options ${1} is not a known option."; echo "$PUSH_HELP_MESSAGE"; exit 1;;
+	  esac
+	done
+	push_func $GIT_HOME
+}
+# ### ### #
+# -------------------------------------------------------------------------
+# -------------------- Runner ---------------------------------------------
+GET_OPT=`getopt -o hvc: -l help,version,config: -n "Git management helper." -- "$@" 2> /dev/null`
+if [ ! -f ~/.git_helper_config ]
+then
+	echo "$base_config" > ~/.git_helper_config
+fi
+
+source ~/.git_helper_config
+
+# cat ~/.git_helper_config
+echo
+eval set -- "$GET_OPT" 2> /dev/null
+while true
+do
+  case "${1}" in
+    -h|--help)
+     	echo "$GENERAL_HELP_MESSAGE"; exit 0;;
+    -v|--version)
+		echo "$TOOL_VERSION"; exit 0;;
+    -c|--config)
+		config_state="new"
+		config_stack=(${2//=/ })
+		case "${config_stack[0]}" in 
+			ADD_LOCK) sed -i "s/__PLACE_TO_ADD_BRANCHES__/${config_stack[1]} __PLACE_TO_ADD_BRANCHES__/g" ~/.git_helper_config;;
+			ADD_BASE) 
+				echo "SPECIFIC_BRANCH_CHECK[${config_stack[1]}]=${config_stack[2]}" >> ~/.git_helper_config
+				;;
+			*) config_state="current";;
+		esac ;
+
+		echo "$config_state config is :
+		"
+		cat ~/.git_helper_config
+		exit 0;;
+    --)run="$2"; shift 2; break;;
+	*) echo "Options ${1} is not a known option."; echo "$PUSH_HELP_MESSAGE"; exit 1;;
+  esac
+done
+
+$run $@
+# -------------------------------------------------------------------------
