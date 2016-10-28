@@ -52,7 +52,7 @@ calcul () {
 }
 # Avec fonctions
 # Text Variables
-GET_OPT=`getopt -o hiv --long help,interactive,version -n 'Simple Menu Supinfo Bash article using functions' -- "$@"`
+GET_OPT=`getopt -o hiv -l help,interactive,version -n 'Simple Menu Supinfo Bash article using functions' -- "$@"`
 VERSION="Simple Menu using Getopt and Functions version: 0.0.1"
 HELP_MESSAGE="Usage: simple_menu_getopt.sh [OPTIONS] [COMMAND] [ARGUMENTS]
 
