@@ -716,13 +716,13 @@
       <listitem>Protégées des branches afin d'éviter les mises à jour indésirables (via fichier de config et variables). Par défaut la branche master doit être protégée</listitem>
       <listitem>De gérer les branches de base pour les mises à jour (par défaut, master).</listitem>
     </itemizedlist>
-    Pour ceux qui ne connaitrait pas git, je vous invite à consulter l'article de Nicolas Bergeron sur le sujet (dans les articles supinfo).
+    Pour ceux qui ne connaîtraient pas git, je vous invite à consulter l'article de Nicolas Bergeron sur le sujet (dans les articles Supinfo).
   </para>
   <section>
     <title>Workplace : git manager</title>
     <para/>
     <para>
-      Afin de profiter pleinement de cette partie, je vous invite à essayer de coder le système par vous même avant de regarder les solutions proposées.
+      Afin de profiter pleinement de cette partie, je vous invite à essayer de coder le système par vous-même avant de regarder les solutions proposées.
     </para>
     <para/>
     <para>
@@ -1378,12 +1378,12 @@ $run $@
   <para>
   </para>
   <para>
-    Voici donc pour cet article. J'espère que vous aurez appris de nouvelles choses :) Je vous laisse le lien vers mon répertoire git où vous pourrez retrouver tous les fichiers de codes présenter ici.
+    Voici donc pour cet article. J'espère que vous aurez appris de nouvelles choses :) Je vous laisse le lien vers mon répertoire git où vous pourrez retrouver tous les fichiers de codes présentés ici.
   </para>
   <para>
     <itemizedlist>
       <listitem>
-        <ulink href = "http://github.com/titouanfreville/Supinfos_Articles/tree/master/ocaml_article/ressources">Les codes de l'article</ulink>
+        <ulink href="https://github.com/titouanfreville/Supinfos_Articles/tree/master/bash_articles/resources">Les codes de l'article</ulink>
       </listitem>
     </itemizedlist>
   </para>
