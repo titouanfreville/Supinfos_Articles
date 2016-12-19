@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE section PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<section>
+  <title>Votre première Stack docker-compose [Docker - Créer des environnements de développement ou de production facilement partageable.]</title>
+
+  <para>Cet article présente la technologie Docker et son utilisation pour la création d'outils et d'espaces de développement uniformiser. Docker a pour objectif la création d'image de programme (d'unité complète et légère permettant de faire tourner un programme particulier) et son déploiement en cloud. Afin d'aborder cet article dans les meilleures conditions, je vous invite à lire l'article précédent: Votre premier container Docker [Docker - Créer des environnements de développement ou de production facilement partageable].</para>
+  <!-- Pré-requis Session -->
+  <section>
+    <title>Pré-requis</title>
+    <para>
+      Pour suivre cet article, abordant la création de stack de container via docker-compose, il est nécessaire d'avoir installer docker et de savoir créer des images. Si vous n'avez pas ces bases, je vous renvoie à l'article précédemment cité : Votre premier container Docker [Docker - Créer des environnements de développement ou de production facilement partageable]. 
+    </para>
+    <para></para>
+  </section>
+  <!-- Create first image -->
+  <section>
+    <title>Créer une image Docker</title>
+    <para>
+      Les images Docker sont créées à l'aide d'un fichier de configuration nommé Dockerfile. Dans ce fichier, vous allez devoir renseigner toutes les informations utiles à la création de l'image qui servira à lancer les containers Docker. La base de tout Dockerfile est l'entrée FROM. Cette entrée sert à indiquer l'image de base de l'image que vous voulez créer (imageception). La base de la plupart des images officielles sont des images de système d'exploitation (ex : FROM ubuntu:16.04 pour avoir une image basée sur Ubuntu version 16.04). Vous devrez partir du principe que tout ce qui n'est pas explicitement installer n'existe pas dans les images système officielles fournie par Docker. Ces images ne contiennent que ce qui est nécessaire à faire tourner le système d'exploitation et un invité de commande. Par exemple, lancer la commande : 'docker run --rm -it ubuntu:16.04 /bin/bash' pour rentrer dans un container Ubuntu. Essayer de faire un 'nano test' puis essayer d'installer la commande nano. Cela devrait donner : 
+      <imageobject>
+        <imagedata fileref="http://freville.iiens.net/images/docker_nonano.png" />
+      </imageobject>
+      En effet, même les commandes en apparence les plus basiques ne sont pas disponibles par défaut afin de rendre l'image aussi légère que possible.
+    </para>
+    <para></para>
+    <para>
+      Créons maintenant notre première image. Nous allons créer une image simple qui va se contenter de nous dire bonjour. Nous allons nous baser pour cela sur une image fournie par Docker pour ce genre de jeux : docker/whalesay. C'est une petite image amusante utilisé dans le tutoriel officiel de docker. Elle se contente d'afficher un message transmis par une baleine. 
+    </para>
+    <para>
+      Commencer par créer un nouveau fichier dans votre éditeur de texte préféré appelé Dockerfile. Ajoutez-y, en première ligne : 'FROM docker/whalesay'. Vous voilà avec une copie local de l'image créer par docker. Installons le paquet Figlet afin d'ajouter un texte un peu stylisé et fortune, pour que notre baleine nous transmette une phrase aléatoire. Pour cela, entrer la ligne 'RUN apt-get update  &amp;&amp; apt-get install -y figlet fortune  &amp;&amp; rm /var/apt/*'. Enfin, il nous faut dire à l'image la commande qu'elle doît lancer lorsqu'on l'appelle. Pour cela, ajoutons une dernière ligne : 'CMD figlet "Hy SUPINFO" | cowsay -n &amp;&amp; /usr/games/fortune -a | cowsay'. Vous aurez donc un fichier : 
+      <imageobject>
+        <imagedata fileref="http://freville.iiens.net/images/docker_whalesay.png" />
+      </imageobject>
+      contenant uniquement trois lignes. 
+    </para>
+    <para></para>
+    <para>
+      Maintenant, découvrons ce que fait notre container ! Commencez par créer l'image Docker à partir du Dockerfile : 'docker build -t whalesupinfo .'. Puis lançon le 'docker run --rm whalesupinfo'. Vous devriez obtenir :
+      <imageobject>
+        <imagedata fileref="http://freville.iiens.net/images/docker_whalesay_output.png" />
+      </imageobject>
+    </para>
+    <para> Et vous voilà avec une jolie baleine :).</para>
+  </section>
+  <section>
+    <title>Une image utile : Nginx</title>
+    <para></para>
+    <para>
+      Nous venons de créer une image "inutile". Avoir un container pour afficher quelque chose peut servir (tester l'installation de docker ou la disponibilité d'un serveur d'image par ex.) mais n'est pas utile pour créer des projets. Voyons donc comment créer une image simple permettant de configurer un serveur Nginx.
+    </para>
+    <para></para>
+    <para>
+      Premièrement, il est fort probable que quelqu'un est déjà fait une image docker pour Nginx. Pour vérifier cela, nous allons nous rendre sur le système de partage de base pour les images docker : docker hub. Vous pouvez le trouver à cette adresse: https://hub.docker.com/. Ensuite, chercher l'image Nginx en utilisant la fonction de recherche. La première image que vous verrez est indiquée comme Officielle. Il est fortement recommandé de n'utiliser que des images officielles comme image de base. Cela assure la stabilité de l'image. En cliquant sur l'image qui vous intéresse, vous pourrez trouver des informations complémentaires sur l'image, généralement un guide d'utilisation de l'image et la liste des TAGs disponibles. Dans l'image que nous avons précédemment créée, nous n'avons pas mis de tag après dans le FROM (un appel à une image est marquée par IMAGE:TAG). Par défaut, le tag utilisé est 'latest' pour le dernier build. Lors de la création d'une image, si vous avez besoin qu'elle soit stable dans le temps, il est très fortement recommandé de préciser le tag de l'image que vous voulez utiliser. En effet, chaque tag est une version différente de l'image. Rester sur le tag latest peut poser des problèmes lors de la mise à jour de l'image par son créateur. Pour notre exemple, nous allons utiliser l'image de base : nginx avec le tag 1.11. Ce qui va donner : 'FROM nginx:1.11'. 
+    </para>
+    <para>
+      Ensuite, nous allons juste créer une page web hello world (en html) dans le même dossier que le Dockerfile. Puis un fichier de configuration simple pour nginx.
+      <imageobject>
+        <imagedata fileref="http://freville.iiens.net/images/docker_helloworld_html.png" />
+      </imageobject>
+      <imageobject>
+        <imagedata fileref="http://freville.iiens.net/images/docker_helloworld_config.png" />
+      </imageobject>
+      Puis les ajouter à l'image. Pour cela, nous allons utiliser la commande : COPY. Cette commande prend en argument votre fichier local et sa destination dans le container. Ici, on va avoir : 'COPY helloworld.html /home/nginx_demo' et 'COPY helloworld.config /etc/nginx/sites-enabled/'.
+    </para>
+    <para>
+      Enfin, il ne nous est pas utile de lancer une commande dans ce container car elle existe déjà dans l'image sur laquelle nous nous basons. Nous allons donc avoir le Dockerfile : 
+      <imageobject>
+        <imagedata fileref="http://freville.iiens.net/images/dockerfile_nginx.png" />
+      </imageobject>
+    </para>
+    <para></para>
+    <para>
+      Enfin, il nous reste à tester ce container. Pour cela, nous allons d'abord le build ('docker build -t nginx_demo .'), puis le lancer. Pour le lancer, nous allons faire appel à un flag particulier : -p. Ce flag permet de lier les ports du container au port locaux. Il s'utilise dans la commande run et est de la forme '-p PORT_LOCAL[:PORT_CONTAINER]'. Si le port container n'est pas précisé, il sera lié au même port que le port local. Ici, nous allons lancer le container sur le port 8080 qui est généralement libre. Nous allons donc faire un : 'docker run --rm -it -p 8080:80 nginx_test'. Le port 8080 sur mon environnement local correspond désormais au port 80 dans le container. Si tout a bien été réalisé, vous devriez obtenir le résultat suivant. 
+      <imageobject>
+        <imagedata fileref="http://freville.iiens.net/images/docker_nginx_done.png" />
+      </imageobject>
+    </para>
+  </section>
+</section>
