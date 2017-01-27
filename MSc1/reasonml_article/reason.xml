@@ -105,9 +105,9 @@
     <title>Installer Reason</title>
     <para/>
     <para>
-      Reason est un langage créer par Facebook. Il est très fortement basé sur Ocaml (cf : https://www.supinfo.com/articles/single/2710-programmation-fonctionnelle-ocaml), et 
+      Reason est un langage créer par Facebook. Il est très fortement basé sur Reason (cf : https://www.supinfo.com/articles/single/2710-programmation-fonctionnelle-Reason), et 
       en reprend l'idéologie, a savoir, un typage fort et une gestion agréable des fonctions ;). Il y ajoute la facilité d'intégration dans les projets web récent en utilisant des 
-      modules node JS et en étant lui même un. L'objectif de Reason est donc d'accorder Ocaml et la programmation d'application web de façon plus harmonieuse. 
+      modules node JS et en étant lui même un. L'objectif de Reason est donc d'accorder Reason et la programmation d'application web de façon plus harmonieuse. 
     </para>
     <para/>
     <para>
@@ -115,8 +115,8 @@
       <itemizedlist>
         <listitem>NPM (version 3.10 min)</listitem>
         <listitem>NodeJS</listitem>
-        <listitem>Ocaml</listitem>
-        <listitem>Ocaml-libs</listitem>
+        <listitem>Reason</listitem>
+        <listitem>Reason-libs</listitem>
       </itemizedlist>
     </para>
     <para/>
@@ -139,7 +139,7 @@
       <para/>
       <para>
         Pour cette première expérience, nous allons créer deux fonctions mathématiques : Factorielle (!) et Puissance. Ces fonctions seront implémentées de deux façons : 
-        avec des boucles (classique en impératif) en C, de façon récursive (idéologie fonctionnelle) en OCaml. Mais tout d'abord, quelques rappels : 
+        avec des boucles (classique en impératif) en C, de façon récursive (idéologie fonctionnelle) en Reason. Mais tout d'abord, quelques rappels : 
         <itemizedlist>
           <listitem>
             <para>
@@ -275,12 +275,12 @@
           </para>
         </section>
         <section>
-          <title>En OCaml</title>
+          <title>En Reason</title>
           <para>
-            Implémentation en OCaml
+            Implémentation avec Reason
           </para>          
           <para>
-            <programlisting langage="ocaml">
+            <programlisting langage="reason">
 /** 
  * @pow
  * Small function to calculate pow of an integer.
@@ -415,7 +415,7 @@ let rec printList = fun
               Place au code.
             </para>
             <section>
-              <title>Code OCaml</title>
+              <title>Code Reason</title>
               <para>
                 <programlisting langage="reason">
 /**
@@ -496,55 +496,57 @@ let rec nbDe e =&gt; fun
             <para/>
             <para>
               Le code :
-              <programlisting langage="ocaml">
-                (**
-                  @name insert_nt
-                  @ Fonction permettant d'insérent un élément dans une liste triée.
-                  @param e 'a Élément du type de la liste
-                  @param l 'a list Liste d'élément triée
-                  @param comp 'a -&gt;'a -&gt;bool fonction de comparaison
-                  @return e inséré dans l triée.
-                *)
-                let rec insert_nt e l comp = 
-                  match l with
-                  |[] -&gt; [e]
-                  |t::q  -&gt; if comp e t then e::l else t::insert_nt e q comp;;
-                (**
-                  @name tri_bulle_nt
-                  @ Fonction permettant de trier une liste
-                  @param l 'a list Liste d'élément
-                  @param comp 'a -&gt;'a -&gt;bool fonction de comparaison
-                  @return l trié
-                *)
-                let rec tri_bulle_nt l comp =
-                  match l with 
-                  |[] -&gt; []
-                  |t::q  -&gt; insert_nt t (tri_bulle_nt q comp) comp;;
-                (**
-                  @name insert
-                  @ Fonction permettant d'insérent un élément dans une liste triée.
-                  @param e 'a Élément du type de la liste
-                  @param l 'a list Liste d'élément triée
-                  @param acc 'a list Accumulateur. '
-                  @param comp 'a -&gt;'a -&gt;bool fonction de comparaison
-                  @return e inséré dans l triée.
-                *)
-                let rec insert e l acc comp =
-                  match l with
-                  |[] -&gt; acc@[e]
-                  |t::q  -&gt; if comp e t then acc@(e::l) else insert e q (acc@[t]) comp;;
-                (**
-                  @name tri_bulle
-                  @ Fonction permettant de trier une liste
-                  @param l 'a list Liste d'élément
-                  @param acc 'a list Accumulateur. '
-                  @param comp 'a -&gt;'a -&gt;bool fonction de comparaison
-                  @return l trié
-                *)
-                let rec tri_bulle l acc comp =
-                  match l with 
-                  |[] -&gt; acc
-                  |t::q  -&gt; tri_bulle q (insert t acc [] comp) comp;;
+              <programlisting langage="reason">
+/** 
+ * Some basic sort functions
+*/
+
+/**
+ * @name insert_nt
+ * @ Fonction permettant d'insérent un élément dans une liste triée.
+ * @param e 'a Élément du type de la liste
+ * @param comp 'a -&gt;'a -&gt; bool fonction de comparaison
+ * @param l 'a list Liste d'élément triée
+ * @return e inséré dans l triée.
+ */
+let rec insert_nt e comp =&gt; fun
+  |[] =&gt; [e]
+  |[t, ...q]  =&gt; comp e t ? [e, t, ...q] : [t, ...insert_nt e comp q];
+
+/**
+ * @name tri_bulle_nt
+ * @ Fonction permettant de trier une liste
+ * @param comp 'a -&gt; 'a -&gt; bool fonction de comparaison
+ * @param l 'a list Liste d'élément
+ * @return l trié
+ */
+let rec tri_bulle_nt comp =&gt; fun
+  |[] =&gt; []
+  |[t, ...q]  =&gt; insert_nt t comp (tri_bulle_nt comp q);
+
+/**
+ * @name insert
+ * @ Fonction permettant d'insérent un élément dans une liste triée.
+ * @param e 'a Élément du type de la liste
+ * @param acc 'a list Accumulateur. '
+ * @param comp 'a -&gt; 'a -&gt; bool fonction de comparaison
+ * @param l 'a list Liste d'élément triée
+ * @return e inséré dans l triée.
+*/
+let rec insert e acc comp =&gt; fun
+  |[] =&gt; List.append acc [e]
+  |[t, ...q]  =&gt; comp e t ? List.append acc [e, t, ...q] : insert e q comp (List.append acc [t]);
+/**
+ * @name tri_bulle
+ * @ Fonction permettant de trier une liste
+ * @param l 'a list Liste d'élément
+ * @param acc 'a list Accumulateur. '
+ * @param comp 'a -&gt; 'a -&gt; bool fonction de comparaison
+ * @return l trié
+*/
+let rec tri_bulle acc comp =&gt; fun
+  |[] =&gt; acc
+  |[t, ...q]  =&gt; tri_bulle q comp (insert t acc comp []);
               </programlisting>
             </para>
             <para>
@@ -597,7 +599,7 @@ let rec nbDe e =&gt; fun
             <para>
               Côté code maintenant : 
             </para>
-            <programlisting langage="ocaml">
+            <programlisting langage="Reason">
               (**
                 @name devise
                 @ Fonction permettant de diviser une liste
@@ -670,7 +672,7 @@ let rec nbDe e =&gt; fun
         <para/>
         <para>
           Implémentation : 
-          <programlisting langage="ocaml">
+          <programlisting langage="Reason">
             (**
               @name fibo
               Fonction that will calculate the Nth term of fibonnacci serie.
@@ -714,7 +716,7 @@ let rec nbDe e =&gt; fun
         <para/>
         <para>
           Implémentons : 
-          <programlisting langage="ocaml">
+          <programlisting langage="Reason">
             (**
               @name hanoi
               fonction affichant la combinaison d'étape à faire pour résoudre le problème.
@@ -747,7 +749,7 @@ let rec nbDe e =&gt; fun
   <para>
     <itemizedlist>
       <listitem>
-         <ulink href = "http://caml.inria.fr/ocaml/index.fr.html">Élixir, page officielle</ulink>
+         <ulink href = "http://caml.inria.fr/Reason/index.fr.html">Élixir, page officielle</ulink>
       </listitem>
       <listitem>
         <ulink href = "https://fr.wikipedia.org/wiki/Programmation_fonctionnelle">La programmation fonctionnelle, version wikipédia</ulink>
@@ -756,7 +758,7 @@ let rec nbDe e =&gt; fun
         <ulink href = "http://deptinfo.unice.fr/~roy/progfonc.html">La programmation fonctionnelle, version Paul Graham</ulink>
       </listitem>
       <listitem>
-        <ulink href = "http://github.com/titouanfreville/Supinfos_Articles/tree/master/ocaml_article/ressources">Les codes de l'article</ulink>
+        <ulink href = "http://github.com/titouanfreville/Supinfos_Articles/tree/master/Reason_article/ressources">Les codes de l'article</ulink>
       </listitem>
     </itemizedlist>
   </para>
