@@ -55,7 +55,7 @@
     </section>
     <para/>
     <para>
-      Ceci étant fixé, présentons maintenant OCaml. Vous pouvez commencer par lire les informations et faire les tutoriels du site officiel <ulink url="https://ocaml.org/learn/tutorials/basics.fr.html">https://ocaml.org/learn/tutorials/basics.fr.html</ulink>
+      Ceci étant fixé, présentons maintenant Reason.
     </para>
   </section>
   <section>
@@ -65,10 +65,7 @@
       Pour la suite du voyage, il vous faudra avoir : 
       <itemizedlist>
         <listitem>
-          Installer OCmal sur votre local ou avoir une solution pour compiler et exécuter les programmes.
-        </listitem>
-        <listitem>
-          Avoir un éditeur de texte avec la coloration syntaxique pour OCaml (parce que c'est plus agréables). J'utilise pour ma part Sublime Text 3 avec le package OCaml basique. 
+          Avoir un éditeur de texte avec la coloration syntaxique pour Reason (parce que c'est plus agréables). J'utilise pour ma part Visual Studio Code. 
         </listitem>
         <listitem>
           Être prêt à souffrir ;)
@@ -77,7 +74,7 @@
     </para>
 
     <para>
-      Nous allons apprendre Ocaml en suivant les étapes :
+      Nous allons apprendre Reason en suivant les étapes :
       <itemizedlist>
         <listitem>
           Premiers pas : Faire une fonction arithmétique simple
@@ -95,28 +92,58 @@
           Manipulation simple d'arbre
         </listitem>
       </itemizedlist>
-      Les codes seront présentés de façon à être réutilisable via la création de librairie. Tous ce qui va être abordé par la suite sont des concepts et applications basiques de la programmation fonctionnelle.
+      Les codes seront présentés de façon à être réutilisable via la création de librairie. 
+      Tous ce qui va être abordé par la suite sont des concepts et applications basiques de la programmation fonctionnelle.
+    </para>
+    <para/>
+    <para>
+      Mais tout d'abord, préparer votre environnement pour pouvoir travailler avec Reason. 
     </para>
     <para/>
   </section>
   <section>
-    <title>Jouons avec le chameau</title>
+    <title>Installer Reason</title>
+    <para/>
+    <para>
+      Reason est un langage créer par Facebook. Il est très fortement basé sur Ocaml (cf : https://www.supinfo.com/articles/single/2710-programmation-fonctionnelle-ocaml), et 
+      en reprend l'idéologie, a savoir, un typage fort et une gestion agréable des fonctions ;). Il y ajoute la facilité d'intégration dans les projets web récent en utilisant des 
+      modules node JS et en étant lui même un. L'objectif de Reason est donc d'accorder Ocaml et la programmation d'application web de façon plus harmonieuse. 
+    </para>
+    <para/>
+    <para>
+      Pour faire fonctioner Reason, vous allez donc devoir installer : 
+      <itemizedlist>
+        <listitem>NPM (version 3.10 min)</listitem>
+        <listitem>NodeJS</listitem>
+        <listitem>Ocaml</listitem>
+        <listitem>Ocaml-libs</listitem>
+      </itemizedlist>
+    </para>
+    <para/>
+    <para>
+      Une fois cela fait, je vous invite à récupérer le contenu suivant : 
+      <ulink url="https://github.com/titouanfreville/reasonmldiscovery">
+        base pour projet reason
+      </ulink>, puis lancer un npm install.
+    </para>
+    <para/>
+    <para>
+      Nous voila prêt à découvrir la raison. 
+    </para>
+  </section>
+  <section>
+    <title>Jouons avec Raison</title>
     <para/>
     <section>
       <title>A petits pas</title>
       <para/>
       <para>
-        Pour cette première expérience, nous allons créer deux fonctions mathématiques : Factorielle (!) et Puissance. Ces fonctions seront implémentées de deux façons : avec des boucles (classique en impératif) en C, de façon récursive (idéologie fonctionnelle) en OCaml.
-        Mais tout d'abord, quelques rappels : 
+        Pour cette première expérience, nous allons créer deux fonctions mathématiques : Factorielle (!) et Puissance. Ces fonctions seront implémentées de deux façons : 
+        avec des boucles (classique en impératif) en C, de façon récursive (idéologie fonctionnelle) en OCaml. Mais tout d'abord, quelques rappels : 
         <itemizedlist>
           <listitem>
             <para>
-              OCaml est un langage principalement fonctionnelle. Il existe des syntaxes et des modules impératifs, mais il ne seront pas abordés dans cet article.
-            </para>
-          </listitem>
-          <listitem>
-            <para>
-              OCaml est un langage dynamiquement typé. C'est à dire que le type de la variable est déterminée après son affectation. Il est cependant possible de forcer le type d'une variable. 
+              Reason est un langage dynamiquement typé. C'est à dire que le type de la variable est déterminée après son affectation. Il est cependant possible de forcer le type d'une variable. 
             </para>
           </listitem>
           <listitem>
@@ -126,22 +153,20 @@
           </listitem>
           <listitem>
             <para>
-              OCaml est très fortement typée. Les opérateurs sont souvent spécifiques à un type donné. Par exemple, si vous travaillez sur des entiers, les opérateurs standards seront +, -, *, /. Mais sur des réels, ces opérateurs seront toujours suivis d'un point : +., -., *., /. . Aussi, 0 +. 1.5 renverra une erreur. Il faudra écrire 0. +3 1.5. Il est possible de supprimer ces vérifications, mais il vaut mieux éviter de le faire tant que l'on n'est pas certains de la justesse du code.
+              Reason est très fortement typée. Les opérateurs sont souvent spécifiques à un type donné. Par exemple, si vous travaillez sur des entiers, les opérateurs standards seront +, -, *, /. Mais sur des réels, ces opérateurs seront toujours suivis d'un point : +., -., *., /. . Aussi, 0 +. 1.5 renverra une erreur. Il faudra écrire 0. +3 1.5. 
             </para>
           </listitem>
           <listitem>
             <para>
               Afin que tous sachent les prérequis de chaque fonction et sont utilités, celles ci seront commenter comme suit :        
-              <programlisting langage="ocaml">
-                (* 
-                  @name: Nom_de_la_fonction
-                  @ Description_de_la_fonction
-                  @parameter: Nom_du_paramètre Type Description
-                  ....
-                  @return: Description (Ce que retourne la fonction, dans quelle situation)
-                  @throw: Erreur Description 
-                *)
-
+              <programlisting langage="reason">
+              /** @name: Nom_de_la_fonction
+               *  @ Description_de_la_fonction
+               * @parameter: Nom_du_paramètre Type Description
+               * ....
+               * @return: Description (Ce que retourne la fonction, dans quelle situation)
+               * @throw: Erreur Description
+               */
               </programlisting>
             </para>
           </listitem>
@@ -256,29 +281,34 @@
           </para>          
           <para>
             <programlisting langage="ocaml">
-             (**
-                @name: Puissance
-                @ Fonction permettant de calculer la valeur a^b sur des réels
-                @parameter: a float Nombre à mettre en puissance.
-                @parameter: b int Puissance entière..
-                @return: a^b 
-              *)
-              let rec pow a b = 
-                match b with
-                |0 -&gt; 1.
-                |_ -&gt; a *. pow a (b-1);;
+/** 
+ * @pow
+ * Small function to calculate pow of an integer.
+ * @param a int integer to get pow from
+ * @param b int>0 power wanted
+ * @return a^b
+*/
+let rec pow a b =&gt; {
+    /** 
+      * Equivalent to : 
+      * if (b == 0) {
+      *   1
+      * } else {
+      *     a * pow a (b - 1)
+      * };
+      */
+    b == 0 ? 1 : a * pow a (b - 1);
+};
 
-              (**
-                @name: Puissance
-                @ Fonction permettant de calculer la valeur a^b sur des réels
-                @parameter: a float Nombre à mettre en puissance.
-                @parameter: b int Puissance entière..
-                @return: a^b 
-              *)
-              let rec factorielle a =
-                match a with 
-                |0 -&gt; 1
-                |_ -&gt; a * factorielle (a-1);;
+/** 
+ * @factorielle
+ * Small function to calculate factorielle of an integer.
+ * @param a int>0 integer to get factorielle from
+ * @return !a
+*/
+let rec factorielle a =&gt; {
+    a == 0 ? 1 : a * factorielle (a - 1);
+};
             </programlisting>
           </para>
         </section>
@@ -326,18 +356,17 @@
               On se contente de prendre le premier élément que l'on trouve pour l'afficher, puis on passe à la suite. Le cas de base est vide car il n'a rien à faire.
             </para>
             <para>
-              Le code en caml : 
-              <programlisting langage="ocaml">
-                (** 
-                  @name print_list
-                  @ Fonction affichant les éléments d'une liste 1 à 1 a  -&gt; b  -&gt; x  -&gt; []
-                  @param l string list Liste de chaînes de charactère à afficher
-                  @print List element in the format E  -&gt; E  -&gt; E  -&gt; ...  -&gt; []
-                *)
-                let rec print_list l =
-                  match l with
-                  |[]  -&gt; print_string "[]"
-                  |t::q  -&gt; print_string t; print_string "  -&gt; "; print_list q;;
+              Le code en reason : 
+              <programlisting langage="reason">
+/**
+ * @name printList
+ * @ Fonction affichant les éléments d'une liste 1 à 1 a  -&gt; b  -&gt; x  -&gt; []
+ * @param l string list Liste de chaînes de charactère à afficher
+ * @print List element in the format E  -&gt; E  -&gt; E  -&gt; ...  -&gt; []
+ */
+let rec printList = fun 
+    | [] =&gt; print_string "[]"
+    | [t, ...q] =&gt; print_string (t ^ " -&gt; "); printList q;
             </programlisting>
             </para>
             <para>
@@ -388,39 +417,38 @@
             <section>
               <title>Code OCaml</title>
               <para>
-                <programlisting langage="ocaml">
-                  (**
-                    @name est_dans
-                    @ Fonction permettant de savoir si un élement E est dans une liste L
-                    @param e 'a Paramètre de type quelconque 
-                    @param l 'a list List d'élément du même type que e
-                    @return true si e in list, false else
-                  *)
-                  let rec est_dans e l = 
-                    match l with
-                    |[] -&gt; false
-                    |t::q -&gt; t = e || est_dans e q;;
-                  (**
-                    @name doublons_sk
-                    @ Fonction retirant les doublons d'une liste
-                    @param l 'a list list d'élément.
-                    @return liste l sans doublons
-                  *)
-                  let rec doublons_sk l =
-                    match l with
-                    |[] -&gt; []
-                    |t::q -&gt; if est_dans t q then doublons_sk q else t :: doublons_sk q;;
-                  (**
-                    @name nb_de
-                    @ Fonction permettant de calculer le nombre d'occurence d'un élément dans une liste
-                    @param e 'a élément de type quelconque
-                    @param l 'a list Liste d'élément du même type
-                    @return nb d'occurence de e dans a
-                  *)
-                  let rec nb_de e l =
-                    match l with
-                    |[] -&gt; 0
-                    |t::q -&gt; if t = e then 1 + nb_de e q else nb_de e q;;
+                <programlisting langage="reason">
+/**
+ * @name estDans
+ * @ Fonction permettant de savoir si un élement E est dans une liste L
+ * @param e 'a Paramètre de type quelconque 
+ * @param l 'a list List d'élément du même type que e
+ * @return true si e in list, false else
+ */
+let rec estDans e =&gt; fun
+    |[] =&gt; false
+    |[t, ...q] =&gt; t == e || estDans e q;
+
+/**
+ * @name doublonsSk
+ * @ Fonction retirant les doublons d'une liste
+ * @param l 'a list list d'élément.
+ * @return liste l sans doublons
+ */
+let rec doublonsSk = fun
+    |[] =&gt; []
+    |[t, ...q] =&gt; estDans t q ? doublonsSk q : [t, ...(doublonsSk q)];
+
+/**
+ * @name nbDe
+ * @ Fonction permettant de calculer le nombre d'occurence d'un élément dans une liste
+ * @param e 'a élément de type quelconque
+ * @param l 'a list Liste d'élément du même type
+ * @return nb d'occurence de e dans a
+ */
+let rec nbDe e =&gt; fun
+    |[] =&gt; 0
+    |[t, ...q] =&gt; t == e ? 1 + nbDe e q : nbDe e q;
                 </programlisting>
               </para>
               <para>
