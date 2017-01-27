@@ -600,42 +600,42 @@ let rec tri_bulle acc comp =&gt; fun
               Côté code maintenant : 
             </para>
             <programlisting langage="Reason">
-              (**
-                @name devise
-                @ Fonction permettant de diviser une liste
-                @param l 'a list Liste d'élément
-                @return ('a list, 'a list) liste l divisée en 2.
-              *)
-              let rec divise l a1 a2 =
-                match l with
-                |[]  -&gt; (a1,a2)
-                |t::[]  -&gt; (t::a1,a2)
-                |t1::t2::q  -&gt; divise q (t1::a1) (t2::a2)
-              (**
-                @name fusion
-                @ Fonction permettant de fusionner une liste
-                @param l1 'a list Liste d'élément triée selon comp
-                @param l2 'a list Liste d'élément triée selon comp
-                @param comp 'a -&gt;'a -&gt;bool fonction de comparaison
-                @return 'a list Liste l1 &amp;&amp; l2 fusionnée et triée selon comp'
-              *)
-              let rec fusion l1 l2 acc comp =
-                match (l1,l2) with
-                |([],_)  -&gt; acc@l2
-                |(_,[])  -&gt; acc@l1
-                |(t1::q1,t2::q2)  -&gt; if comp t1 t2 then fusion q1 l2 (acc@[t1]) comp else fusion l1 q2  (acc@[t2]) comp;;
-              (**
-                @name order
-                @ Fonction permettant de trier une liste
-                @param l 'a list Liste d'élément
-                @param comp 'a -&gt;'a -&gt;bool fonction de comparaison
-                @return l trié
-              *)
-              let rec order l comp=
-                match l with 
-                |[]  -&gt; l
-                |t::[]  -&gt; l
-                |_  -&gt; let (l1,l2) = divise l [] [] in fusion (order l1 comp) (order l2 comp) [] comp;;
+             /**
+ * @name divise
+ * @ Fonction permettant de diviser une liste
+ * @param l 'a list Liste d'élément
+ * @return ('a list, 'a list) liste l divisée en 2.
+ */
+let rec divise a1 a2 =&gt; fun
+  |[]  =&gt; (a1, a2)
+  |[t, ...[]]  =&gt; ([t, ...a1], a2)
+  |[t1,t2, ...q]  =&gt; divise [t1, ...a1] [t2, ...a2] q;
+/**
+ * @name fusion
+ * @ Fonction permettant de fusionner une liste
+ * @param comp 'a -&gt;'a -&gt;bool fonction de comparaison
+ * @param l1 'a list Liste d'élément triée selon comp
+ * @param l2 'a list Liste d'élément triée selon comp
+ * @return 'a list Liste l1 &amp;&amp; l2 fusionnée et triée selon comp'
+*/
+let rec fusion acc comp =&gt; fun
+  |([], l2)  =&gt; List.append acc l2
+  |(l1 ,[])  =&gt; List.append acc l1
+  |([t1, ...q1], [t2, ...q2])  =&gt; comp t1 t2 ? fusion(List.append acc [t1]) comp  (q1,[t2, ...q2]) : fusion (List.append acc [t2]) comp  ([t1, ...q1],q2);
+/**
+ * @name order
+ * @ Fonction permettant de trier une liste
+ * @param comp 'a -&gt;'a -&gt;bool fonction de comparaison
+ * @param l 'a list Liste d'élément
+ * @return l trié
+*/
+let rec order comp =&gt; fun
+  |[]  =&gt; []
+  |[t, ...[]]  =&gt; [t]
+  |l  =&gt; {
+    let (l1,l2) = divise [] [] l; 
+    fusion [] comp ((order comp l1), (order comp l2))
+  };
             </programlisting>
           </section>
         </section>
@@ -672,7 +672,7 @@ let rec tri_bulle acc comp =&gt; fun
         <para/>
         <para>
           Implémentation : 
-          <programlisting langage="Reason">
+          <programlisting langage="reason">
             (**
               @name fibo
               Fonction that will calculate the Nth term of fibonnacci serie.
