@@ -52,24 +52,28 @@ let resetGraph = clear_graph;;
     @param y int initial height position in px
     @param h int height of step in px
     @param w int width of step in px
-    @param f_print 'a -> unit function to print element
+    @param printer 'a -> unit function to print element
+    @param textColor color text color
+    @param lineColor color line color
     @effect Draw correctly the tree.
 *)
-let rec treeDrawing t x y h w g_print =
-  let hw = w / 2 and hh = h / 2 in
+let rec treeDrawing t x y h w printer textColor lineColor=
+  let drawingZoneWidth = w / 2 and drawingZoneHeight = h / 2 in
   match t with
-  | F(l) -> moveto (x + hw) y; set_color green; g_print l; set_color black;
+  | F(l) -> moveto (x + drawingZoneWidth) y; set_color textColor; printer l; set_color black;
   | N(fg,r,fd) -> begin
-                    moveto (x + hw) (y + 12); set_color cyan; lineto (x + hw / 2) (y + h - 5); moveto (x + hw) (y + 12); lineto (x+ hw + hw / 2) (y + h - 5);
-                    set_color green; moveto (x + hw) y; g_print r; set_color black;
-                    treeDrawing fg x (y+h) hh hw g_print;
-                    treeDrawing fd (x+hw) (y+h) hh hw g_print;
+                    moveto (x + drawingZoneWidth) (y + 12); 
+                    set_color lineColor; lineto (x + drawingZoneWidth / 2) (y + h - 5); 
+                    moveto (x + drawingZoneWidth) (y + 12); lineto (x+ drawingZoneWidth + drawingZoneWidth / 2) (y + h - 5);
+                    set_color textColor; moveto (x + drawingZoneWidth) y; printer r; set_color black;
+                    treeDrawing fg x (y+h) drawingZoneHeight drawingZoneWidth printer textColor lineColor;
+                    treeDrawing fd (x+drawingZoneWidth) (y+h) drawingZoneHeight drawingZoneWidth printer textColor lineColor;
                   end
-  | _ -> ();;
+  | _ -> moveto (x + drawingZoneWidth) y; set_color textColor; draw_string "X"; set_color black;;
 
-let magicDrawing t g_print =
+let magicDrawing t printer =
 resetGraph();
-treeDrawing t 0 0 200 1800 g_print;;
+treeDrawing t 0 0 200 1800 printer red blue;;
 
 let soi i = string_of_int i;;
 
