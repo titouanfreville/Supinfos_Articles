@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE section PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<section>
+  <title>Les structures d'arbres en OCaml</title>
+  <para/>
+  <section>
+    <title>Introduction</title>
+    <para/>
+    <para>
+        Suite à l'article de découverte du langage Ocaml (<ulink url="https://www.supinfo.com/articles/single/2710-programmation-fonctionnelle-ocaml">https://www.supinfo.com/articles/single/2710-programmation-fonctionnelle-ocaml</ulink>), je vous proposes d'aller plus loin en découvrant les structures d'arbres en Ocaml. Je vous invites très fortement à lire cet article d'initiation à OCaml si vous ne connaissez pas le langage et n'avais pas de notion en programmation fonctionnelle. 
+    </para>
+    <para>
+        Pour vous guider à la découverte des arbres, je vais tout d'abord présenter la structure d'arbre, ses avantages et ses inconvénients dans le domaine de l'intelligence artificielle (IA). Ensuite, nous implémenterons des structures types et fonctions de base avant de résoudre des problèmes simples.
+    </para>
+    <para/>
+  </section>
+  <section>
+    <title>PRÉREQUIS</title>
+    <para/>
+    <para>
+      Pour la suite du voyage, il vous faudra avoir : 
+      <itemizedlist>
+        <listitem>
+          Installer OCmal sur votre local ou avoir une solution pour compiler et exécuter les programmes.
+        </listitem>
+        <listitem>
+          Avoir un éditeur de texte avec la coloration syntaxique pour OCaml (parce que c'est plus agréables). J'utilise pour ma part Sublime Text 3 avec le package OCaml basique. 
+        </listitem>
+        <listitem>
+          Connaitre les bases de la programmation fonctionnelle et d'Ocaml
+        </listitem>
+      </itemizedlist>
+    </para>
+    <para/>
+  </section>
+  <section>
+    <title>Les structures d'arbre</title>
+    <para/>
+    <section>
+      <title>Qu'est-ce qu'un arbre en programmation fonctionnelle.</title>
+      <para/>
+      <para>
+        Les arbres, en programmation, sont des structures de classement de données récursives. Ils sont représenter par la composition de deux éléments : des racines, et des feuilles. Un noeud est un arbre contenant n arbres, appeler fils, et un élément du type de l'arbre appelé racine. Une feuille est un élément du type de l'arbre pouvant être vide. Ils ont pour objectif de stocker un grand nombre de donné organisée afin d'avoir un accés rapide à celles-ci. A l'instar des listes, le parcours d'un abre se fait de la tête vers la fin. Cependant, si les listes permettent un ajout rapide de valeur et la restitution rapide des dernières valeurs entrées, la structure d'arbre sera plus lente pour ajouter un élément mais permettra de retrouver plus rapidement une valeur particulière. En effet, les règles d'organisation de l'arbre ralentissent l'ajout d'une valeur dans un gros ensemble de données mais permettent d'avoir une meilleur idée de sa localisation. Aussi, l'arbre est une structure spaciale. Une racine peut avoir plusieurs feuille, la où la liste est une ligne. On peut voir la liste comme un particulier d'arbre (qui serait alors appeler un arbre unaire car chaque racine à une feuille). 
+      </para>
+      <para/>
+      <para>
+        Une représentation graphique d'un arbre sera donc :
+        <mediaobject>
+          <imageobject>
+              <imagedata fileref='http://freville.iiens.net/images/arbre1.png' />
+          </imageobject>
+        </mediaobject>
+      </para>
+      <para/>
+      <para>
+        Nous venons donc de décrire la structure général d'un arbre. J'ai présenter comme nécessaire la condition de rangement car elle est présente dans la majorité des implémentation de structure d'arbre, mais n'est pas nécessaire a la structure en tant que telle. Elle est nécessaire pour son utilisation. Sans condition de rangement, il est difficile de savoir où trouver un élément car il n'y a pas règles pour le parcours de l'arbre. Nous travaillons donc uniquement avec des arbres ordonnées. Aussi, nous n'avons pas définis de règles quand au nombres de fils nécessaire dans un noeud. Cela dépend du type d'arbre dans le quel nous somme. Par exmple, dans le graphique précédent, chaque noeud à trois fils. Dans le cadre d'un arbre binaire (première structure que nous aborderons ici), chaque noeud à deux fils. De cette propriété découle une propriété d'équilabrage d'un arbre, et deux façons d'utiliser les arbres. Il nous est en effet possible d'éxiger que l'arbre soit équilibré, c'est à dire, qu'il n'y ait pas trop d'élement dans un fils plutôt qu'un autre. Au quel cas, on dira, d'une façon générale, que la différence de hauteur (distance la plus courte entre la racine et sa feuille la plus lointaine) ne doit pas exéder une certaine valeur (le plus souvent 1 ou 2). Nous travaillerons avec les deux structures, chacune ayant ses avantages et inconvénients.
+      </para>
+      <para/>
+      <para>
+        Voyons maintenant les avantages et inconvénients globeaux aux arbres par raport aux strucutres de listes (les tableaux n'étant pas une structure fonctionelle, je ne les inclus pas dans la comparaison). 
+      </para>
+      <section>
+        <title>Listes VS Arbres</title>
+        <para/>
+        <para>
+          Tout d'abord, nous somme en présence de deux structures inductive. C'est à dire, des structures qui se définissent récursivement (en s'appellant elle même), et construite a partir d'un élément unique associé à une multiplicité d'élément. La tête d'une liste est un élément simple quand ça queue est une liste, la racine d'un arbre est un élément simple associé à deux arbres. Les deux structures sont donc très proches. Mais elle n'ont absolument pas la même utilisation.
+        </para>
+        <para/>
+        <para>
+          La structure de liste est une strucutre efficace dans utilisation de tampon. Si j'ai besoin de faire beaucoup d'opération d'entrée et sortie avec des sorties proches des derniers éléments entrées, la structure de liste sera plus efficace que la structure d'arbre. En effet, l'ajout d'un élément dans une liste est "instantané" car on prend la liste existante et on la place dans une nouvelle liste ayant pour tête l'élement voulue. Pour ajouter un élément dans un arbre, même si l'on décidait arbitrairement d'ajouter les éléments uniquement à la racine, il faudra d'abord séparer l'arbre actuelle en deux moitiées. Et dans la plus part des cas, nous définissons une règles d'ajout afin de conservé les élements de façon ordonées. Ce qui implique de prendre du temps pour parcourir l'arbre jusqu'a la positon de l'élément. Il en va de même pour la sortie d'un élément. Si l'objectif est de sortir le 3ème élement rentré, la structure de liste est la plus adapté. 
+        </para>
+        <para/>
+        <para>
+          Par contre, si l'on a besoin d'une structure permettant de retouver un élément spécique et que l'on a une strucutre de données stables et avec peu d'entrée, un arbre sera beaucoup plus puissant qu'une liste. En effet, la complexité de la recherche dans un arbre est liée à sa hauteur et à la complexité de la méthode de tri, comme pour la liste, mais la hauteur d'un arbre de 1000 éléments sera nécessairement plus petite que la taille d'une liste de 1000 élément. La recherche d'un élément spécifique sera donc bien plus rapide dans un arbre, au détriment de l'ajout d'un élément.
+        </para>
+        <para/>
+        <para>
+          Pour plus de détails sur les arbres, je vous invites à consulter l'artice suivant :
+          <ulink url="http://rperrot.developpez.com/articles/algo/structures/arbres/">http://rperrot.developpez.com/articles/algo/structures/arbres/</ulink>
+        </para>
+      </section>
+    </section>
+  </section>
+  <para/>
+  <para>
+    Voyons maintenant nos premiers arbres. 
+  </para>
+  <section>
+    <title>Plantons nos premiers arbres.</title>
+    <para/>
+    <para>
+      Pour ce premier arbre, je vais vous proposer de faire un arbre binaire simple contenant des entiers. La règles de rangement sera simple : l'élément présent à la racine d'un arbre doit toujours être plus grand que celui de la racine de son fils gauche et plus petit que la racine du fils droit. Nous allons donc créer une structure puis une fonction permettant d'ajouter les élément dans l'arbres. Nous nous cherchons pas avoir un arbre équilibré (ce qui implique que si le premier élément que j'ajoute est 0, les éléments du sous arbres gauche seront tous négatif, et ceux du sous arbres droit positif. Je vais également une fonction pour représenter graphiquement un arbre en OCaml (cette fonction fait appel aux module gaphique de Caml et n'est donc pas réellement de la programmation fonctionnelle, mais elle a l'avantage de bien voir ce qui ce passe quand on travaille sur les arbres). 
+    </para>
+    <para/>
+    <para>
+      Commençons donc par créer la strucutre.
+    </para>
+    <para/>
+    <para>
+      Tout d'abord, notre abre ne travaille que sur des entiers. Les racines et les feuilles seront donc des entiers. Ce qui va donner la structure suivante :
+      <programlisting langage="ocaml">
+        type myTree = V | F of int | N of (myTree * int * myTree)
+      <programlisting>
+    </para>
+    <para>
+      Ensuite, il nous faut une fonction pour créer un arbre puis une fonction pour y ajouter des éléments. Ce qui va donner :
+      <programlisting langage="ocaml">
+        let newEmptyTree ()= V
+      </programlisting>
+    </para>
+  </section>
+</section>
+
+
+        <!--En OCaml, nous pouvons facilement des structures tels que les arbres en utilisant les constructueurs de types. La syntaxe pour construire un élément est la suivante:
+        <programlisting langage="ocaml">
+          struct structName = E1 of Type1 | E2 of Type2 | ...
+        </programlisting>-->
+
+        <!--<itemizedlist>
+          <listitem>
+            <para>
+              OCaml est un langage principalement fonctionnelle. Il existe des syntaxes et des modules impératifs, mais il ne seront pas abordés dans cet article.
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              OCaml est un langage dynamiquement typé. C'est à dire que le type de la variable est déterminée après son affectation. Il est cependant possible de forcer le type d'une variable. 
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              Il faut manipuler les types avec précaution. En effet, chaque fonction attendra un certains type données. Afin d'être le plus réutilisable possible, les fonctions proposées auront toujours une dépendance de type minimal (ex : une fonction d'addition sera typés pour être utilisable par tous floats même si elle utilisé principalement sur des entiers dans notre cas)...
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              OCaml est très fortement typée. Les opérateurs sont souvent spécifiques à un type donné. Par exemple, si vous travaillez sur des entiers, les opérateurs standards seront +, -, *, /. Mais sur des réels, ces opérateurs seront toujours suivis d'un point : +., -., *., /. . Aussi, 0 +. 1.5 renverra une erreur. Il faudra écrire 0. +3 1.5. Il est possible de supprimer ces vérifications, mais il vaut mieux éviter de le faire tant que l'on n'est pas certains de la justesse du code.
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              Afin que tous sachent les prérequis de chaque fonction et sont utilités, celles ci seront commenter comme suit :        
+              <programlisting langage="ocaml">
+                (* 
+                  @name: Nom_de_la_fonction
+                  @ Description_de_la_fonction
+                  @parameter: Nom_du_paramètre Type Description
+                  ....
+                  @return: Description (Ce que retourne la fonction, dans quelle situation)
+                  @throw: Erreur Description 
+                *)
+
+              </programlisting>
+            </para>
+          </listitem>
+        </itemizedlist>
+      </para>
+      <para/>-->
