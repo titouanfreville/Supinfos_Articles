@@ -34,21 +34,49 @@ let newEmptyTree ()= V;;
  *)
 let rec rightRotate tree =
     match tree with
-    | V -> V
-    | F(_) -> F(_)
-    | N(V,_,_) -> tree
     | N(F(a),r,V) -> N(V, a, F(r))
-    | N(F(a),r,F(b)) -> N(V, a, N(V, r, F(b)))
-    | N(
-        N(
-            N(fgg1, rg1, fgd1),
-            rg,
-            fgd
-        ),
-        r,
-        fd) -> N(
-                    N()
-                )
+    | N(
+        N(fgg, rg, fgd),
+        r, fd
+      ) -> N(fgg, rg, N(fgd, r, fd))
+    | _ -> tree;;
+
+(*
+    @leftRotate
+    Swap tree element to left
+    @param tree myTree tree to rotate
+    @return tree rotated
+ *)
+let rec leftRotate tree =
+    match tree with
+    | N(V,r,F(a)) -> N(F(r), a, V)
+    | N(
+        fg, r,
+        N(fdg, rd, fdd)
+      ) -> N(N(fg, r, fdg), rd, fdd)
+    | _ -> tree;;
+
+(*
+    @balance
+    Balance a tree to avoid having a big useless tree
+    @param tree myTree tree to balance
+    @return tree balanced
+ *)
+let rec balance tree =
+    match tree with
+    | V -> V
+    | F (_) -> tree
+    | N (fg, _, fd) -> 
+        begin
+            let h1 = getHeight (balance fg) and h2 = getHeight (balance fd) in
+            let diff = h1 - h2 in
+            if (diff > 1) 
+            then rightRotate tree
+            else 
+                if (diff < -1)
+                then leftRotate tree
+                else tree
+        end;;
 
 (*
     @add
@@ -61,7 +89,7 @@ let rec add i tree =
     match tree with
     | V -> F (i)
     | F (a) -> if a < i then N (V, a, F(i)) else N (F(i), a, V)
-    | N(fg, r, fd) -> if i < r then N (add i fg, r, fd) else N(fg, r, add i fd);;
+    | N(fg, r, fd) -> if i < r then balance (N (add i fg, r, fd)) else balance (N(fg, r, add i fd));;
 
 (*
     @addTreeInTree
@@ -174,6 +202,8 @@ let drawInt i = draw_string (soi i);;
 
 openGraph "1900" "1000";;
 
+#trace balance;;
+
 resetGraph;;
 let testTree = newEmptyTree ();;
 let testTree = add 0 testTree;;
@@ -252,10 +282,10 @@ print_newline();;
 let newTestTree = addTreeInTree newTree testTree;;
 magicDrawing  newTestTree drawInt;;
 
-let tranform a = a * 2 +1;;
+(* let tranform a = a * 2 +1;;
 
 let testTransformedTree = myMapEasy testTree tranform;;
 magicDrawing testTransformedTree drawInt;;
 
 let testTransformedTree = myMap testTree tranform;;
-magicDrawing testTransformedTree drawInt;;
+magicDrawing testTransformedTree drawInt;; *)

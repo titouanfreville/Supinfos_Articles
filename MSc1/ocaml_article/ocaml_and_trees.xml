@@ -107,7 +107,7 @@
     N (ln * r * rn) -&gt; Tree with a left node, a root and a right node
 *)
 type myTree = V | F of int | N of (myTree * int * myTree)
-      <programlisting>
+      </programlisting>
     </para>
     <para>
       Ensuite, il nous faut une fonction pour créer un arbre puis une fonction pour y ajouter des éléments. Ce qui va donner :
@@ -330,7 +330,96 @@ let rec myMap tree f =
     <para>
       Côté code :
       <programlisting langage="ocaml">
+(*
+    @rightRotate
+    Swap tree element to right
+    @param tree myTree tree to rotate
+    @return tree rotated
+ *)
+let rec rightRotate tree =
+    match tree with
+    | N(F(a),r,V) -&gt; N(V, a, F(r))
+    | N(F(a),r,F(b)) -&gt; N(V, a, N(V, r, F(b)))
+    | N(
+        N(fgg, rg, fgd),
+        r, fd
+      ) -&gt; N(fgg, rg, N(fgd, r, fd))
+    | _ -&gt; tree;;
+
+(*
+    @leftRotate
+    Swap tree element to left
+    @param tree myTree tree to rotate
+    @return tree rotated
+ *)
+let rec leftRotate tree =
+    match tree with
+    | N(V,r,F(a)) -&gt; N(F(r), a, V)
+    | N(F(a),r,F(b)) -&gt; N(N(F(a),r,V), b, V)
+    | N(
+        fg, r,
+        N(fdg, rd, fdd)
+      ) -&gt; N(N(fg, r, fdg), rd, fdd)
+    | _ -&gt; tree;;
       </programlisting>
+    </para>
+    <para>
+      Puis une fonction utilisant nos rotations afin d'équilibrer un arbre.
+    </para>
+    <para>
+      <programlisting langage="ocaml">
+(*
+    @balance
+    Balance a tree to avoid having a big useless tree
+    @param tree myTree tree to balance
+    @return tree balanced
+ *)
+let rec balance tree =
+    match tree with
+    | V -&gt; V
+    | F (_) -&gt; tree
+    | N (fg, _, fd) -&gt; begin
+        let h1 = getHeight (balance fg) and h2 = getHeight (balance fd) in
+        let diff = h1 - h2 in
+        if (diff &gt; 1) 
+        then balance (rightRotate tree)
+        else 
+            if (diff &lt; -1)
+            then balance (leftRotate tree)
+            else tree
+    end  
+      </programlisting>
+    </para>
+    <para>
+      Enfin, il nous faut ausser l'équilibre de l'arbre lors d'ajout d'élément ou d'arbre.
+      <programlisting langage="ocaml">
+        (*
+    @add
+    Simple function to add an element into a myTree tree.
+    @param i int element to add
+    @param tree myTree tree in whom we which to add the element
+    @return new tree with i added into old tree
+*)
+let rec add i tree =
+    match tree with
+    | V -&gt; F (i)
+    | F (a) -&gt; if a &lt; i then N (V, a, F(i)) else N (F(i), a, V)
+    | N(fg, r, fd) -&gt; if i &lt; r then balance (N (add i fg, r, fd)) else balance (N(fg, r, add i fd));;
+      </programlisting>
+    </para>
+    <para>
+      Vous pouvez maintenant utilisé n'importe la qu'elle des fonctions crée dans la partie précédente. L'arbre sera équilibré tant que l'ajout d'élément n'est réaliser que par la fonction add.
+    </para>
+    <para/>
+  </section>
+  <para/>
+  <para>
+    Voyons maitenant comment abstraire nos arbres afin de pouvoir utiliser autre chose que des entiers.
+  </para>
+  <section>
+    <title>Arbre binaire non typé</title>
+    <para/>
+    <para>
     </para>
   </section>
 </section>
