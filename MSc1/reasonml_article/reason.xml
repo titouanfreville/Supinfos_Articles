@@ -5,18 +5,13 @@
   <para/>
   <section>
     <title>Introduction</title>
-
     <para/>
-
     <para>
       Cet article a pour but de vous présenter un nouveau langage (Reason <ulink url="https://facebook.github.io/reason/">https://facebook.github.io/reason/-</ulink>) et le concept de programmation fonctionnelle.
-    <para/>
-
-    <para>
+    </para><para>
       Je vais tout d'abord rappeler ce qu'est la programmation fonctionnelle. Je vous invite à consulter les cours et vidéos à ce sujet si vous avez accès aux ressources de Supinfo pour plus de détails (cf 3AIT notamment) ainsi que les articles suivants :
       <ulink url="https://fr.wikipedia.org/wiki/Programmation_fonctionnelle">https://fr.wikipedia.org/wiki/Programmation_fonctionnelle</ulink> et <ulink url="http://deptinfo.unice.fr/~roy/progfonc.html">http://deptinfo.unice.fr/~roy/progfonc.html</ulink> 
     </para>
-
     <para/>
   </section>
   <section>
@@ -28,7 +23,7 @@
     <section>
       <title>Concept de programmation fonctionnelle.</title>
       <para>
-        La programmation fonctionnelle est un concept de programmation ayant pour but principal de s'affranchir des problèmes d'affectation présent dans la programmation impérative. Ainsi, en programmation fonctionnelle, nous n'utilisons plus des états de la machine (ex&nbsp;: x=1 =&gt; J'ai créé un entier référencé par x dont la valeur est 1 donc ma machine est dans l'état X. x++ -&gt;x vaut maintenant 2, ma machine est dans un nouvel état Y) mais des fonctions imbriquées. La principale différence étant que&nbsp;: En programmation fonctionnelle, je sais exactement ce que FAIT mon programme et comment il évolue LOGIQUEMENT (essentiellement basée sur les concepts de récursion en mathématique) tandis qu'en programmation impérative, je sais dans quel état est ma machine, ce qui est présent en mémoire (à quel endroit dans les langages de plus bas niveaux) et quel état je dois atteindre. D'un côté, je sais COMMENT mon programme fonctionne (impératif), de l'autre, je sais POURQUOI et je peux le démontrer (fonctionnel).
+        La programmation fonctionnelle est un concept de programmation ayant pour but principal de s'affranchir des problèmes d'affectation présent dans la programmation impérative. Ainsi, en programmation fonctionnelle, nous n'utilisons plus des états de la machine (ex : x=1 =&gt; J'ai créé un entier référencé par x dont la valeur est 1 donc ma machine est dans l'état X. x++ -&gt;x vaut maintenant 2, ma machine est dans un nouvel état Y) mais des fonctions imbriquées. La principale différence étant que : En programmation fonctionnelle, je sais exactement ce que FAIT mon programme et comment il évolue LOGIQUEMENT (essentiellement basée sur les concepts de récursion en mathématique) tandis qu'en programmation impérative, je sais dans quel état est ma machine, ce qui est présent en mémoire (à quel endroit dans les langages de plus bas niveaux) et quel état je dois atteindre. D'un côté, je sais COMMENT mon programme fonctionne (impératif), de l'autre, je sais POURQUOI et je peux le démontrer (fonctionnel).
       </para><para>
         Une autre différence : il est possible, en programmation impérative, de modifier plusieurs Pointeurs dans une même fonction (et donc d'avoir d'une certaine façon, une fonction qui 'retourne' plusieurs valeurs). C'est impossible en programmation fonctionnelle. Une fonction en programmation fonctionnelle prend des ensembles d'arguments (liste, tuples, singleton, etc.) et ne retourne qu'un seul ensemble.
       </para>
@@ -310,6 +305,7 @@ let rec factorielle a =&gt; {
           </para>
         </section>
       </section>
+      <para>
         Nous venons donc de réaliser deux fonctions mathématiques simples, une fois en fonctionnel, une fois en impératif. On peut d'ores et déjà pointer quelques différences entre ces deux visions de programmation : au niveau de la preuve d'algorithmes (ici fait de façon grossière par une explication logique), l'algorithme fonctionnel n'est pas mathématiquement démontrable (il existe des méthodes de preuve pour de tels algorithmes, mais elles définissent de nouveaux axiomes) contrairement aux algorithmes fonctionnels qui sont des algorithmes mathématiques. C'est l'une des principales différences entre ces deux visions de la programmation et la raison de préférer l'un à l'autre. Si vous avez besoin d'être certains de comment et où sont stockés les éléments dans votre ordinateur, comment est utilisée la mémoire, etc., la programmation impérative est la plus adaptée. Par contre, si vous avez besoin d'être sûr que votre programme va fonctionner comme attendu et être capable de le démontrer simplement
       </para>
     </section>

@@ -15,6 +15,42 @@ type myTree = V | F of int | N of (myTree * int * myTree)
 let newEmptyTree ()= V;;
 
 (*
+    @getHeight
+    Get tree heigh
+    @param tree myTree tree we want to get hight from.
+    @return tree height
+ *)
+ let rec getHeight tree =
+    match tree with
+    | V -> 0
+    | F(_) -> 1
+    | N(fg,_,fd) -> max (getHeight fg) (getHeight fd) + 1;;
+
+(*
+    @rightRotate
+    Swap tree element to right
+    @param tree myTree tree to rotate
+    @return tree rotated
+ *)
+let rec rightRotate tree =
+    match tree with
+    | V -> V
+    | F(_) -> F(_)
+    | N(V,_,_) -> tree
+    | N(F(a),r,V) -> N(V, a, F(r))
+    | N(F(a),r,F(b)) -> N(V, a, N(V, r, F(b)))
+    | N(
+        N(
+            N(fgg1, rg1, fgd1),
+            rg,
+            fgd
+        ),
+        r,
+        fd) -> N(
+                    N()
+                )
+
+(*
     @add
     Simple function to add an element into a myTree tree.
     @param i int element to add
@@ -44,17 +80,6 @@ let rec addTreeInTree tree1 tree2 =
             let newTree = addTreeInTree fg newTree in
             addTreeInTree fd newTree
         end;;
-(*
-    @getHeight
-    Get tree heigh
-    @param tree myTree tree we want to get hight from.
-    @return tree height
- *)
- let rec getHeight tree =
-    match tree with
-    | V -> 0
-    | F(_) -> 1
-    | N(fg,_,fd) -> max (getHeight fg) (getHeight fd) + 1;;
 
 (*
     @isIn

@@ -7,7 +7,7 @@
     <title>Introduction</title>
     <para/>
     <para>
-        Suite à l'article de découverte du langage Ocaml (<ulink url="https://www.supinfo.com/articles/single/2710-programmation-fonctionnelle-ocaml">https://www.supinfo.com/articles/single/2710-programmation-fonctionnelle-ocaml</ulink>), je vous proposes d'aller plus loin en découvrant les structures d'arbres en Ocaml. Je vous invites très fortement à lire cet article d'initiation à OCaml si vous ne connaissez pas le langage et n'avais pas de notion en programmation fonctionnelle. 
+        Suite à l'article de découverte du langage Ocaml (<ulink url="https://www.supinfo.com/articles/single/2710-programmation-fonctionnelle-ocaml">https://www.supinfo.com/articles/single/2710-programmation-fonctionnelle-ocaml</ulink>), je vous proposes d'aller plus loin en découvrant les structures d'arbres en Ocaml. Je vous invites très fortement à lire cet article d'initiation à OCaml si vous ne connaissez pas le langage et n'avais pas de notion en programmation fonctionnelle.
     </para>
     <para>
         Pour vous guider à la découverte des arbres, je vais tout d'abord présenter la structure d'arbre, ses avantages et ses inconvénients dans le domaine de l'intelligence artificielle (IA). Ensuite, nous implémenterons des structures types et fonctions de base avant de résoudre des problèmes simples.
@@ -18,13 +18,13 @@
     <title>PRÉREQUIS</title>
     <para/>
     <para>
-      Pour la suite du voyage, il vous faudra avoir : 
+      Pour la suite du voyage, il vous faudra avoir :
       <itemizedlist>
         <listitem>
           Installer OCmal sur votre local ou avoir une solution pour compiler et exécuter les programmes.
         </listitem>
         <listitem>
-          Avoir un éditeur de texte avec la coloration syntaxique pour OCaml (parce que c'est plus agréables). J'utilise pour ma part Sublime Text 3 avec le package OCaml basique. 
+          Avoir un éditeur de texte avec la coloration syntaxique pour OCaml (parce que c'est plus agréables). J'utilise pour ma part Sublime Text 3 avec le package OCaml basique.
         </listitem>
         <listitem>
           Connaitre les bases de la programmation fonctionnelle et d'Ocaml
@@ -40,7 +40,7 @@
       <title>Qu'est-ce qu'un arbre en programmation fonctionnelle.</title>
       <para/>
       <para>
-        Les arbres, en programmation, sont des structures de classement de données récursives. Ils sont représenter par la composition de deux éléments : des racines, et des feuilles. Un noeud est un arbre contenant n arbres, appeler fils, et un élément du type de l'arbre appelé racine. Une feuille est un élément du type de l'arbre pouvant être vide. Ils ont pour objectif de stocker un grand nombre de donné organisée afin d'avoir un accés rapide à celles-ci. A l'instar des listes, le parcours d'un abre se fait de la tête vers la fin. Cependant, si les listes permettent un ajout rapide de valeur et la restitution rapide des dernières valeurs entrées, la structure d'arbre sera plus lente pour ajouter un élément mais permettra de retrouver plus rapidement une valeur particulière. En effet, les règles d'organisation de l'arbre ralentissent l'ajout d'une valeur dans un gros ensemble de données mais permettent d'avoir une meilleur idée de sa localisation. Aussi, l'arbre est une structure spaciale. Une racine peut avoir plusieurs feuille, la où la liste est une ligne. On peut voir la liste comme un particulier d'arbre (qui serait alors appeler un arbre unaire car chaque racine à une feuille). 
+        Les arbres, en programmation, sont des structures de classement de données récursives. Ils sont représenter par la composition de deux éléments : des racines, et des feuilles. Un noeud est un arbre contenant n arbres, appeler fils, et un élément du type de l'arbre appelé racine. Une feuille est un élément du type de l'arbre pouvant être vide. Ils ont pour objectif de stocker un grand nombre de donné organisée afin d'avoir un accés rapide à celles-ci. A l'instar des listes, le parcours d'un abre se fait de la tête vers la fin. Cependant, si les listes permettent un ajout rapide de valeur et la restitution rapide des dernières valeurs entrées, la structure d'arbre sera plus lente pour ajouter un élément mais permettra de retrouver plus rapidement une valeur particulière. En effet, les règles d'organisation de l'arbre ralentissent l'ajout d'une valeur dans un gros ensemble de données mais permettent d'avoir une meilleur idée de sa localisation. Aussi, l'arbre est une structure spaciale. Une racine peut avoir plusieurs feuille, la où la liste est une ligne. On peut voir la liste comme un particulier d'arbre (qui serait alors appeler un arbre unaire car chaque racine à une feuille).
       </para>
       <para/>
       <para>
@@ -57,7 +57,7 @@
       </para>
       <para/>
       <para>
-        Voyons maintenant les avantages et inconvénients globeaux aux arbres par raport aux strucutres de listes (les tableaux n'étant pas une structure fonctionelle, je ne les inclus pas dans la comparaison). 
+        Voyons maintenant les avantages et inconvénients globeaux aux arbres par raport aux strucutres de listes (les tableaux n'étant pas une structure fonctionelle, je ne les inclus pas dans la comparaison).
       </para>
       <section>
         <title>Listes VS Arbres</title>
@@ -67,7 +67,7 @@
         </para>
         <para/>
         <para>
-          La structure de liste est une strucutre efficace dans utilisation de tampon. Si j'ai besoin de faire beaucoup d'opération d'entrée et sortie avec des sorties proches des derniers éléments entrées, la structure de liste sera plus efficace que la structure d'arbre. En effet, l'ajout d'un élément dans une liste est "instantané" car on prend la liste existante et on la place dans une nouvelle liste ayant pour tête l'élement voulue. Pour ajouter un élément dans un arbre, même si l'on décidait arbitrairement d'ajouter les éléments uniquement à la racine, il faudra d'abord séparer l'arbre actuelle en deux moitiées. Et dans la plus part des cas, nous définissons une règles d'ajout afin de conservé les élements de façon ordonées. Ce qui implique de prendre du temps pour parcourir l'arbre jusqu'a la positon de l'élément. Il en va de même pour la sortie d'un élément. Si l'objectif est de sortir le 3ème élement rentré, la structure de liste est la plus adapté. 
+          La structure de liste est une strucutre efficace dans utilisation de tampon. Si j'ai besoin de faire beaucoup d'opération d'entrée et sortie avec des sorties proches des derniers éléments entrées, la structure de liste sera plus efficace que la structure d'arbre. En effet, l'ajout d'un élément dans une liste est "instantané" car on prend la liste existante et on la place dans une nouvelle liste ayant pour tête l'élement voulue. Pour ajouter un élément dans un arbre, même si l'on décidait arbitrairement d'ajouter les éléments uniquement à la racine, il faudra d'abord séparer l'arbre actuelle en deux moitiées. Et dans la plus part des cas, nous définissons une règles d'ajout afin de conservé les élements de façon ordonées. Ce qui implique de prendre du temps pour parcourir l'arbre jusqu'a la positon de l'élément. Il en va de même pour la sortie d'un élément. Si l'objectif est de sortir le 3ème élement rentré, la structure de liste est la plus adapté.
         </para>
         <para/>
         <para>
@@ -83,13 +83,13 @@
   </section>
   <para/>
   <para>
-    Voyons maintenant nos premiers arbres. 
+    Voyons maintenant nos premiers arbres.
   </para>
   <section>
     <title>Plantons nos premiers arbres.</title>
     <para/>
     <para>
-      Pour ce premier arbre, je vais vous proposer de faire un arbre binaire simple contenant des entiers. La règles de rangement sera simple : l'élément présent à la racine d'un arbre doit toujours être plus grand que celui de la racine de son fils gauche et plus petit que la racine du fils droit. Nous allons donc créer une structure puis une fonction permettant d'ajouter les élément dans l'arbres. Nous nous cherchons pas avoir un arbre équilibré (ce qui implique que si le premier élément que j'ajoute est 0, les éléments du sous arbres gauche seront tous négatif, et ceux du sous arbres droit positif. Je vais également une fonction pour représenter graphiquement un arbre en OCaml (cette fonction fait appel aux module gaphique de Caml et n'est donc pas réellement de la programmation fonctionnelle, mais elle a l'avantage de bien voir ce qui ce passe quand on travaille sur les arbres). 
+      Pour ce premier arbre, je vais vous proposer de faire un arbre binaire simple contenant des entiers. La règles de rangement sera simple : l'élément présent à la racine d'un arbre doit toujours être plus grand que celui de la racine de son fils gauche et plus petit que la racine du fils droit. Nous allons donc créer une structure puis une fonction permettant d'ajouter les élément dans l'arbres. Nous nous cherchons pas avoir un arbre équilibré (ce qui implique que si le premier élément que j'ajoute est 0, les éléments du sous arbres gauche seront tous négatif, et ceux du sous arbres droit positif. Je vais également une fonction pour représenter graphiquement un arbre en OCaml (cette fonction fait appel aux module gaphique de Caml et n'est donc pas réellement de la programmation fonctionnelle, mais elle a l'avantage de bien voir ce qui ce passe quand on travaille sur les arbres).
     </para>
     <para/>
     <para>
@@ -99,61 +99,238 @@
     <para>
       Tout d'abord, notre abre ne travaille que sur des entiers. Les racines et les feuilles seront donc des entiers. Ce qui va donner la structure suivante :
       <programlisting langage="ocaml">
-        type myTree = V | F of int | N of (myTree * int * myTree)
+(*
+    @type : myTree
+    Define a simple tree using a match for single value and integers only.
+    V -&gt; empty tree
+    F (i) -&gt; Tree containing one element only
+    N (ln * r * rn) -&gt; Tree with a left node, a root and a right node
+*)
+type myTree = V | F of int | N of (myTree * int * myTree)
       <programlisting>
     </para>
     <para>
       Ensuite, il nous faut une fonction pour créer un arbre puis une fonction pour y ajouter des éléments. Ce qui va donner :
       <programlisting langage="ocaml">
-        let newEmptyTree ()= V
+(*
+    @newEmptyTree
+    Simple function to initiate an empty tree using myTree type.
+    @return empty tree V
+*)
+let newEmptyTree ()= V;;
+
+(*
+    @add
+    Simple function to add an element into a myTree tree.
+    @param i int element to add
+    @param tree myTree tree in whom we which to add the element
+    @return new tree with i added into old tree
+*)
+let rec add i tree =
+    match tree with
+    | V -&gt; F (i)
+    | F (a) -&gt; if a &lt; i then N (V, a, F(i)) else N (F(i), a, V)
+    | N(fg, r, fd) -&gt; if i &lt; r then N (add i fg, r, fd) else N(fg, r, add i fd);;
+      </programlisting>
+    </para>
+    <para>
+      Enfin, pour des questions de confort visuel, je vous propose d'ajouter une fonction permettant de dessiner l'arbre dans une fenêtre (du bas vers le haut)
+      <programlisting langage="ocaml">
+(* Loading graphics library to used in REPL *)
+#load "graphics.cma";;
+(* Opening graphics module to avoid having to call Graphics.method*)
+open Graphics;;
+
+(*
+    @openGraph
+    Create a new graphic window using provided size.
+    @param w string width of the window in pixels
+    @param h string heigth of the window in pixels
+    @ensures a new graphic window is open
+*)
+let openGraph w h = let st = " " ^ w ^ "x" ^ h in open_graph st;;
+
+let resetGraph = clear_graph;;
+
+(*
+    @treeDrawing
+    Draw a tree in order
+    @param t myTree tree to draw
+    @param x int initial width position in px
+    @param y int initial height position in px
+    @param h int height of step in px
+    @param w int width of step in px
+    @param printer 'a -&gt; unit function to print element
+    @param textColor color text color
+    @param lineColor color line color
+    @effect Draw correctly the tree.
+*)
+let rec treeDrawing t x y h w printer textColor lineColor=
+  let drawingZoneWidth = w / 2 and drawingZoneHeight = h / 2 in
+  match t with
+  | F(l) -&gt; moveto (x + drawingZoneWidth) y; set_color textColor; printer l; set_color black;
+  | N(fg,r,fd) -&gt; begin
+                    moveto (x + drawingZoneWidth) (y + 12);
+                    set_color lineColor; lineto (x + drawingZoneWidth / 2) (y + h - 5);
+                    moveto (x + drawingZoneWidth) (y + 12); lineto (x+ drawingZoneWidth + drawingZoneWidth / 2) (y + h - 5);
+                    set_color textColor; moveto (x + drawingZoneWidth) y; printer r; set_color black;
+                    treeDrawing fg x (y+h) drawingZoneHeight drawingZoneWidth printer textColor lineColor;
+                    treeDrawing fd (x+drawingZoneWidth) (y+h) drawingZoneHeight drawingZoneWidth printer textColor lineColor;
+                  end
+  | _ -&gt; moveto (x + drawingZoneWidth) y; set_color textColor; draw_string "X"; set_color black;;
+
+let magicDrawing t printer =
+resetGraph();
+treeDrawing t 0 0 200 1800 printer red blue;;
+
+let soi i = string_of_int i;;
+
+let drawInt i = draw_string (soi i);;;
+
+openGraph "1000" "1000";;
+
+resetGraph;
+      </programlisting>
+    </para>
+    <para>
+      Si vous lancer ce code dans un interpréteur REPL Ocaml, vous devriez voir aparaitre la fenêtre suivante :
+        <mediaobject>
+          <imageobject>
+              <imagedata fileref='http://freville.iiens.net/images/repl_caml_tree1.png' />
+          </imageobject>
+        </mediaobject>
+    </para>
+    <para/>
+    <para>
+      Nous avons donc créer un arbre binaire simple, opérant sur des entiers uniquement et sans équilibrage. Voyons quelques fonctions simple sur cet arbre.
+    </para>
+    <para/>
+    <para>
+      Tout d'abord, faison une fonction pour connaitre la hauteur de l'arbre, c'est à dire, la distance entre la racine et la feuille la plus lointaine.
+    </para>
+    <para>
+      <programlisting langage="ocaml">
+(*
+  @getHeight
+  Get tree heigh
+  @param tree myTree tree we want to get hight from.
+  @return tree height
+*)
+let rec getHeight tree =
+  match tree with
+  | V -&gt; 0
+  | F(_) -&gt; 1
+  | N(fg,_,fd) -&gt; max (getHeight fg) (getHeight fd) + 1;;
+      </programlisting>
+    </para>
+    <para>
+      Cette fonction est extrémement. Il suffit de parcourir l'arbre et d'ajouter 1 aux maximum de la hauteur des deux fils.
+    </para>
+    <para>
+      Voyons maintenant comment récupérer un élément d'un arbre.
+    </para>
+    <para>
+      Il nous faut à nouveau parcourir l'arbre. Mais si, dans l'exemple de la hauteur, on parcourais systématiquement l'intégralité de l'arbre, ici, nous ne manipulons l'arbre que juque l'élément soit trouvé. Et l'on ne s'arrêteras pas sur tous les éléments. Pour chaque noeud, il nous faudra comparer la racine à l'élément chercher. Si ils sont égaux, l'élément est trouver, si la racine est plus grande, l'élément se trouve à gauche sinon, il se trouve à doite.
+    </para>
+    <para>
+      <programlisting langage="ocaml">
+(*
+    @isIn
+    Function to check if some element is in the tree
+    @param e int element to find
+    @param tree myTree tree where to find the element
+    @return true if e is in tree, false else
+ *)
+ let rec isIn e tree =
+    match tree with
+    | V -&gt; false
+    | F(a) -&gt; a == e
+    | N(fg,r,fd) -&gt; r == e || (r &gt; e &amp;&amp; isIn e fg) || (isIn e fd);;
+      </programlisting>
+    </para>
+    <para>
+      Vous pouvez facilement adapter cette fonction pour renvoyer l'élément à la place d'un booléan, ce qui pourrait être utile dans la suite de l'article. Mais voyons maintenant des fonctions un peu plus complexe. Toujours sur un arbre non équilibré bien sur.
+    </para>
+    <para/>
+    <section>
+     <title>Map</title>
+      <para/>
+      <para>
+        La fonction map est une fonction que l'on rencontre souvent sur les structures récursive. Il s'agit de créer une fonction afin d'appliquer une autre fonction à chaque élément de l'ensemble récursif. Elle se base sur les fonctions que l'on a déjà rencontré et permet de transformer l'objet placé. Les fonctions appliqué sur map, dans notre cas, doivent prendre en argument un entier et renvoyer un entier (car notre structure d'arbre ne manipule que des entiers).
+      </para>
+      <para>
+        Ce qui nous donne :
+        <programlisting langage="ocaml">
+(*
+    @myMap
+    Function to applu some function to each element in a tree
+    @param tree myTree tree where to find the element
+    @param f int -&gt; int function to apply'
+    @return new tree
+ *)
+let rec myMap tree f=
+    match tree with
+    | F(a) -&gt; F (f a)
+    | N(fg,r,fd) -&gt; N(myMap fg f, f r, myMap fd f)
+    | _ -&gt; V;;
+        </programlisting>
+      </para>
+      <para>
+        Cette version de la fonction à le mérite d'être simple et de facilement vérifier que les opérations ont bien été réaliser sur les bons éléments. Mais elle pose un problème vis à vis de notre structure d'arbre : elle ne vérifie pas nécessairement les propriétés de tri. Pour faire un exemple simple, si je choisis de multiplier par -1 tous les éléments, je vais bien obtenir un arbre d'entier après le map, mais celui-ci n'obéira plus à la règle d'ordre choisi. Compléxifion donc légèrement notre map en ajoutant une fonction d'ajout d'arbre dans un arbres.
+      </para>
+      <para>
+        Nous aurons alors les fonctions :
+        <programlisting langage="ocaml">
+(*
+    @addTreeInTree
+    Function to add a correct tree into a correct tree
+    @param tree1 myTree tree to add
+    @param tree2 myTree tree where to add
+    @return new tree
+ *)
+let rec addTreeInTree tree1 tree2 =
+    match tree1 with
+    | V-&gt; tree2
+    | F (e) -&gt; add e tree2
+    | (N (fg, r, fd)) -&gt;
+        begin
+            let newTree = add r tree2 in
+            let newTree = addTreeInTree fg newTree in
+            addTreeInTree fd newTree
+        end;;
+(*
+    @myMap
+    Function to applu some function to each element in a tree
+    @param tree myTree tree where to find the elements
+    @param f int -&gt; int function to apply'
+    @return new tree correctly formed
+ *)
+let rec myMap tree f =
+    match tree with
+    | F(a) -&gt; F (f a)
+    | N(fg,r,fd) -&gt; let tmpTree = add (f r) (myMapEasy fg f) in addTreeInTree tmpTree (myMapEasy fd f)
+        </programlisting>
+      </para>
+    </section>
+    <para/>
+    <para>
+      Nous voilons donc avec une boite à outils basique sur les arbres. Mais, à ce niveau la, nos arbres sont correct, mais pas très beau visuellement. En effet, ils peuvent être très mal équilibrer, allant jusqu'à ressembler à des listes.
+    </para>
+  </section>
+  <para/>
+  <para>
+    Voyons donc comment mieux créer les arbres pour que ceux-ci soient plus utiles et plus propre. Toujours dans le cas d'arbre binaire sur des entiers bien sur.
+  </para>
+  <section>
+    <title>Mon beau sapin</title>
+    <para/>
+    <para>
+      Afin que nos arbre soit plus efficace, nous allons voir comment les équilibrer et faire en sorte qu'il n'y aie pas de trop grands écarts entre les fils d'une racine. Notre structure ne va pas changer, nous travaillons toujours sur des arbres binaire d'entiers. Les seuls fonctions à adapter sont les fonctions d'ajout dans un arbre. Afin d'équilibrer nos arbres, nous décrétons qu'à présent, la différence de hauteur entre deux fils ne doit pas être supérieur à un. Il nous faut alors créer deux fonctions : une fonction pour décaler les arbres vers la droite, et une fonction pour décaler les arbres vers la gauche (comme une rotation).
+    </para>
+    <para>
+      Côté code :
+      <programlisting langage="ocaml">
       </programlisting>
     </para>
   </section>
 </section>
-
-
-        <!--En OCaml, nous pouvons facilement des structures tels que les arbres en utilisant les constructueurs de types. La syntaxe pour construire un élément est la suivante:
-        <programlisting langage="ocaml">
-          struct structName = E1 of Type1 | E2 of Type2 | ...
-        </programlisting>-->
-
-        <!--<itemizedlist>
-          <listitem>
-            <para>
-              OCaml est un langage principalement fonctionnelle. Il existe des syntaxes et des modules impératifs, mais il ne seront pas abordés dans cet article.
-            </para>
-          </listitem>
-          <listitem>
-            <para>
-              OCaml est un langage dynamiquement typé. C'est à dire que le type de la variable est déterminée après son affectation. Il est cependant possible de forcer le type d'une variable. 
-            </para>
-          </listitem>
-          <listitem>
-            <para>
-              Il faut manipuler les types avec précaution. En effet, chaque fonction attendra un certains type données. Afin d'être le plus réutilisable possible, les fonctions proposées auront toujours une dépendance de type minimal (ex : une fonction d'addition sera typés pour être utilisable par tous floats même si elle utilisé principalement sur des entiers dans notre cas)...
-            </para>
-          </listitem>
-          <listitem>
-            <para>
-              OCaml est très fortement typée. Les opérateurs sont souvent spécifiques à un type donné. Par exemple, si vous travaillez sur des entiers, les opérateurs standards seront +, -, *, /. Mais sur des réels, ces opérateurs seront toujours suivis d'un point : +., -., *., /. . Aussi, 0 +. 1.5 renverra une erreur. Il faudra écrire 0. +3 1.5. Il est possible de supprimer ces vérifications, mais il vaut mieux éviter de le faire tant que l'on n'est pas certains de la justesse du code.
-            </para>
-          </listitem>
-          <listitem>
-            <para>
-              Afin que tous sachent les prérequis de chaque fonction et sont utilités, celles ci seront commenter comme suit :        
-              <programlisting langage="ocaml">
-                (* 
-                  @name: Nom_de_la_fonction
-                  @ Description_de_la_fonction
-                  @parameter: Nom_du_paramètre Type Description
-                  ....
-                  @return: Description (Ce que retourne la fonction, dans quelle situation)
-                  @throw: Erreur Description 
-                *)
-
-              </programlisting>
-            </para>
-          </listitem>
-        </itemizedlist>
-      </para>
-      <para/>-->
