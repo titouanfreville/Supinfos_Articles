@@ -393,7 +393,7 @@ let rec balance tree =
     <para>
       Enfin, il nous faut ausser l'équilibre de l'arbre lors d'ajout d'élément ou d'arbre.
       <programlisting langage="ocaml">
-        (*
+(*
     @add
     Simple function to add an element into a myTree tree.
     @param i int element to add
@@ -417,9 +417,173 @@ let rec add i tree =
     Voyons maitenant comment abstraire nos arbres afin de pouvoir utiliser autre chose que des entiers.
   </para>
   <section>
-    <title>Arbre binaire non typé</title>
+    <title>Abstractions et structures basiques</title>
     <para/>
     <para>
+      Commençons par rendre notre structure polymorphique. Pour cela, il vous suffi de reprendre toutes les fonctions précédentes, et de modifier la déclaration de l'arbre ainsi :
+    </para>
+    <para>
+      <programlisting langage="ocaml">
+(*
+    @type : myTree
+    Define a simple tree using a match for single value
+    V -&gt; empty tree
+    F i -&gt; Tree containing one element only
+    N (ln * r * rn) -&gt; Tree with a left node, a root and a right node
+*)
+type 'a myTree = V | F of 'a | N of ('a myTree * 'a * 'a myTree)
+      </programlisting>
+    </para>
+    <para>
+      Ensuite, simplifions le type arbre pour supprimer l'élément Feuille. En effet, une Feuille est juste un noeud contenant deux fils vide. L'élément feuille n'est donc pas nécessaire, elle permet une lecture plus simple de l'arbre, mais n'est pas utiles à sa formation (par la suite, je travaillerais mes arbres sans feuilles, mais vous êtes libre de les concervées).
+    </para>
+    <para>
+      Nous aurons alors le fichier de code :
+      <programlisting langage="ocaml">
+(*
+    @type : myTree
+    Define a simple tree using a match for single value
+    V -&gt; empty tree
+    N (ln * r * rn) -&gt; Tree with a left node, a root and a right node
+*)
+type 'a myTree = V | N of ('a myTree * 'a * 'a myTree)
+
+(*
+    @newEmptyTree
+    Simple function to initiate an empty tree using myTree type.
+    @return empty tree V
+*)
+let newEmptyTree ()= V;;
+
+(*
+    @getHeight
+    Get tree heigh
+    @param tree myTree tree we want to get hight from.
+    @return tree height
+ *)
+ let rec getHeight tree =
+    match tree with
+    | V -&gt; 0
+    | N(V,_,V) -&gt; 1
+    | N(fg,_,fd) -&gt; max (getHeight fg) (getHeight fd) + 1;;
+
+(*
+    @rightRotate
+    Swap tree element to right
+    @param tree myTree tree to rotate
+    @return tree rotated
+ *)
+let rec rightRotate tree =
+    match tree with
+    | N(N(V,a,V),r,V) -&gt; N(V, a, N (V,r,V))
+    | N(
+        N(fgg, rg, fgd),
+        r, fd
+      ) -&gt; N(fgg, rg, N(fgd, r, fd))
+    | _ -&gt; tree;;
+
+(*
+    @leftRotate
+    Swap tree element to left
+    @param tree myTree tree to rotate
+    @return tree rotated
+ *)
+let rec leftRotate tree =
+    match tree with
+    | N(V,r,N (V,a,V)) -&gt; N(N (V,r,V), a, V)
+    | N(
+        fg, r,
+        N(fdg, rd, fdd)
+      ) -&gt; N(N(fg, r, fdg), rd, fdd)
+    | _ -&gt; tree;;
+
+(*
+    @balance
+    Balance a tree to avoid having a big useless tree
+    @param tree myTree tree to balance
+    @return tree balanced
+ *)
+let rec balance tree =
+    match tree with
+    | V -&gt; V
+    | N(V,_,V) -&gt; tree
+    | N (fg, _, fd) -&gt; 
+        begin
+            let h1 = getHeight (balance fg) and h2 = getHeight (balance fd) in
+            let diff = h1 - h2 in
+            if (diff &gt; 1) 
+            then rightRotate tree
+            else 
+                if (diff &lt; -1)
+                then leftRotate tree
+                else tree
+        end;;
+
+(*
+    @add
+    Simple function to add an element into a myTree tree.
+    @param i int element to add
+    @param tree myTree tree in whom we which to add the element
+    @return new tree with i added into old tree
+*)
+let rec add i tree =
+    match tree with
+    | V -&gt; N(V,i,V)
+    | N(fg, r, fd) -&gt; if i &lt; r then balance (N (add i fg, r, fd)) else balance (N(fg, r, add i fd));;
+
+(*
+    @addTreeInTree
+    Function to add a correct tree into a correct tree
+    @param tree1 myTree tree to add
+    @param tree2 myTree tree where to add
+    @return new tree
+ *)
+let rec addTreeInTree tree1 tree2 =
+    match tree1 with
+    | V-&gt; tree2
+    | (N (fg, r, fd)) -&gt;
+        begin
+            let newTree = add r tree2 in
+            let newTree = addTreeInTree fg newTree in
+            addTreeInTree fd newTree
+        end;;
+
+(*
+    @isIn
+    Function to check if some element is in the tree
+    @param e int element to find
+    @param tree myTree tree where to find the element
+    @return true if e is in tree, false else
+ *)
+ let rec isIn e tree =
+    match tree with
+    | V -&gt; false
+    | N(fg,r,fd) -&gt; r == e || (r &gt; e &amp;&amp; isIn e fg) || (isIn e fd);;
+
+(*
+    @myMapEasy
+    Function to applu some function to each element in a tree
+    @param tree myTree tree where to find the elements
+    @param f int -&gt; int function to apply'
+    @return new tree with no moved elements
+ *)
+let rec myMapEasy tree f =
+    match tree with
+    | N(fg,r,fd) -&gt; N(myMapEasy fg f, f r, myMapEasy fd f)
+    | _ -&gt; V;;
+
+(*
+    @myMap
+    Function to applu some function to each element in a tree
+    @param tree myTree tree where to find the elements
+    @param f int -&gt; int function to apply'
+    @return new tree correctly formed
+ *)
+let rec myMap tree f =
+    match tree with
+    | N(fg,r,fd) -&gt; let tmpTree = add (f r) (myMap fg f) in addTreeInTree tmpTree (myMap fd f)
+    | _ -&gt; V;;
+      </programlisting>
     </para>
   </section>
 </section>
