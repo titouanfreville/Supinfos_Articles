@@ -417,6 +417,7 @@ let rec add i tree =
     Voyons maitenant comment abstraire nos arbres afin de pouvoir utiliser autre chose que des entiers.
   </para>
   <section>
+<<<<<<< HEAD
     <title>Arbre binaire équilibré non typé</title>
     <para/>
     <para>
@@ -522,8 +523,5 @@ let rec myMap tree f cmp=
       Les arbres n-aires sont des structures d'arbres plus étendus. Plusieurs solutions s'offrent à nous pour créer ces arbres. Soit nous supposons que la valeur 'n' est fixe. Soit nous voulons gérer des arbres n-aires variable sans connaissance de la valeur de 'n' a chaque noeud.
     </para>
     <para/>
-    <para>
-      
-    </para>
   </section>
 </section>
