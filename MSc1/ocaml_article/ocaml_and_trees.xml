@@ -393,7 +393,7 @@ let rec balance tree =
     <para>
       Enfin, il nous faut ausser l'équilibre de l'arbre lors d'ajout d'élément ou d'arbre.
       <programlisting langage="ocaml">
-        (*
+(*
     @add
     Simple function to add an element into a myTree tree.
     @param i int element to add
@@ -417,9 +417,113 @@ let rec add i tree =
     Voyons maitenant comment abstraire nos arbres afin de pouvoir utiliser autre chose que des entiers.
   </para>
   <section>
-    <title>Arbre binaire non typé</title>
+    <title>Arbre binaire équilibré non typé</title>
     <para/>
     <para>
+      Pour adapter nos arbres et en supprimer les contraintes de type, il va nous falloir définir le type en utilisant une inconnue. Il va alors ressembler à:
+    </para>
+    <para>
+      <programlisting langage="ocaml">
+(*
+    @type : myTree
+    Define a simple tree using a match for single value and any type.
+    V -&gt; empty tree
+    F (i) -&gt; Tree containing one element only
+    N (ln * r * rn) -&gt; Tree with a left node, a root and a right node
+*)
+type myTree = V | F of int | N of (myTree * int * myTree)
+      </programlisting>
+    </para>
+    <para/>
+    <para>
+      Ensuite, nous avons deux possibilité, en fonction de la façon dont on veut que le code soit utiliser. Si vous en faire une librairie, la seule fonction a modifier sera la fonction de dessin. Sinon, il nous faut ajouter une fonction en paramètre pour pouvoir donner la comparaison correcte, si vous utilisait un type définis par vous même par exemple.
+    </para>
+    <para/>
+    <para>
+      Modifion donc nos fonction pour accepter différente fonction de tri. 
+    </para>
+    <para>
+      <programlisting langage="ocaml">
+(*
+    @add
+    Simple function to add an element into a myTree tree.
+    @param i 'a element to add
+    @param tree myTree tree in whom we which to add the element
+    @param cmp 'a -&gt; 'a -&gt; bool comparaison function used to sort element in tree
+    @return new tree with i added into old tree
+*)
+let rec add i tree cmp =
+    match tree with
+    | V -&gt; F (i)
+    | F (a) -&gt; if cmp a i then N (V, a, F(i)) else N (F(i), a, V)
+    | N(fg, r, fd) -&gt; if cmp i r then balance (N (add i fg cmp, r, fd)) else balance (N(fg, r, add i fd cmp));;
+
+(*
+    @addTreeInTree
+    Function to add a correct tree into a correct tree
+    @param tree1 myTree tree to add
+    @param tree2 myTree tree where to add
+    @param cmp 'a -&gt; 'a -&gt; bool comparaison function used to sort element in tree
+    @return new tree
+ *)
+let rec addTreeInTree tree1 tree2 cmp=
+    match tree1 with
+    | V-&gt; tree2
+    | F (e) -&gt; add e tree2  cmp
+    | (N (fg, r, fd)) -&gt;
+        begin
+            let newTree = add r tree2  cmp in
+            let newTree = addTreeInTree fg newTree  cmp in
+            addTreeInTree fd newTree  cmp
+        end;;
+
+(*
+    @isIn
+    Function to check if some element is in the tree
+    @param e int element to find
+    @param tree myTree tree where to find the element
+    @param cmp 'a -&gt; 'a -&gt; bool comparaison function used to sort element in tree
+    @return true if e is in tree, false else
+ *)
+ let rec isIn e tree cmp =
+    match tree with
+    | V -&gt; false
+    | F(a) -&gt; a == e
+    | N(fg,r,fd) -&gt; r == e || (cmp r e &amp;&amp; isIn e fd cmp) || (isIn e fg cmp);;
+
+(*
+    @myMap
+    Function to applu some function to each element in a tree
+    @param tree myTree tree where to find the elements
+    @param f int -&gt; int function to apply
+    @param cmp 'a -&gt; 'a -&gt; bool comparaison function used to sort element in tree
+    @return new tree correctly formed
+ *)
+let rec myMap tree f cmp=
+    match tree with
+    | F(a) -&gt; F (f a)
+    | N(fg,r,fd) -&gt; let tmpTree = add (f r) (myMapEasy fg f) cmp in addTreeInTree tmpTree (myMapEasy fd f)
+    | _ -&gt; V;;
+      </programlisting>
+    </para>
+    <para>
+      Cette fois, il nous a fallu modifier toutes les fonctions utilisant l'ordre de classement, suivant le même principe que pour la fonction map. Nous pouvons alors modifier a souhait l'ordre de tri, créer le notre et spécifier nos arbre binaire tout en conservant un certain aspect librairie.
+    </para>
+    <para/>
+    <para>
+      Voyons maintenant des stuctures d'arbre plus large, les arbres n aires.
+    </para>
+    <para/>
+  </section>
+  <section>
+    <title>Arbres n-aires</title>
+    <para/>
+    <para>
+      Les arbres n-aires sont des structures d'arbres plus étendus. Plusieurs solutions s'offrent à nous pour créer ces arbres. Soit nous supposons que la valeur 'n' est fixe. Soit nous voulons gérer des arbres n-aires variable sans connaissance de la valeur de 'n' a chaque noeud.
+    </para>
+    <para/>
+    <para>
+      
     </para>
   </section>
 </section>

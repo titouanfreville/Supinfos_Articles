@@ -1,11 +1,11 @@
 (*
     @type : myTree
-    Define a simple tree using a match for single value and any type.
+    Define a simple tree using a match for single value and integers only.
     V -> empty tree
     F (i) -> Tree containing one element only
     N (ln * r * rn) -> Tree with a left node, a root and a right node
 *)
-type myTree = V | F of int | N of (myTree * int * myTree)
+type 'a myTree = V | F of 'a | N of ('a myTree * 'a * 'a myTree)
 
 (*
     @newEmptyTree
@@ -81,32 +81,34 @@ let rec balance tree =
 (*
     @add
     Simple function to add an element into a myTree tree.
-    @param i int element to add
+    @param i 'a element to add
     @param tree myTree tree in whom we which to add the element
+    @param cmp 'a -> 'a -> bool comparaison function used to sort element in tree
     @return new tree with i added into old tree
 *)
-let rec add i tree =
+let rec add i tree cmp =
     match tree with
     | V -> F (i)
-    | F (a) -> if a < i then N (V, a, F(i)) else N (F(i), a, V)
-    | N(fg, r, fd) -> if i < r then balance (N (add i fg, r, fd)) else balance (N(fg, r, add i fd));;
+    | F (a) -> if cmp a i then N (V, a, F(i)) else N (F(i), a, V)
+    | N(fg, r, fd) -> if cmp i r then balance (N (add i fg cmp, r, fd)) else balance (N(fg, r, add i fd cmp));;
 
 (*
     @addTreeInTree
     Function to add a correct tree into a correct tree
     @param tree1 myTree tree to add
     @param tree2 myTree tree where to add
+    @param cmp 'a -> 'a -> bool comparaison function used to sort element in tree
     @return new tree
  *)
-let rec addTreeInTree tree1 tree2 =
+let rec addTreeInTree tree1 tree2 cmp=
     match tree1 with
     | V-> tree2
-    | F (e) -> add e tree2
+    | F (e) -> add e tree2  cmp
     | (N (fg, r, fd)) ->
         begin
-            let newTree = add r tree2 in
-            let newTree = addTreeInTree fg newTree in
-            addTreeInTree fd newTree
+            let newTree = add r tree2  cmp in
+            let newTree = addTreeInTree fg newTree  cmp in
+            addTreeInTree fd newTree  cmp
         end;;
 
 (*
@@ -114,13 +116,14 @@ let rec addTreeInTree tree1 tree2 =
     Function to check if some element is in the tree
     @param e int element to find
     @param tree myTree tree where to find the element
+    @param cmp 'a -> 'a -> bool comparaison function used to sort element in tree
     @return true if e is in tree, false else
  *)
- let rec isIn e tree =
+ let rec isIn e tree cmp =
     match tree with
     | V -> false
     | F(a) -> a == e
-    | N(fg,r,fd) -> r == e || (r > e && isIn e fg) || (isIn e fd);;
+    | N(fg,r,fd) -> r == e || (cmp r e && isIn e fd cmp) || (isIn e fg cmp);;
 
 (*
     @myMapEasy
@@ -139,19 +142,22 @@ let rec myMapEasy tree f =
     @myMap
     Function to applu some function to each element in a tree
     @param tree myTree tree where to find the elements
-    @param f int -> int function to apply'
+    @param f int -> int function to apply
+    @param cmp 'a -> 'a -> bool comparaison function used to sort element in tree
     @return new tree correctly formed
  *)
-let rec myMap tree f =
+let rec myMap tree f cmp=
     match tree with
     | F(a) -> F (f a)
-    | N(fg,r,fd) -> let tmpTree = add (f r) (myMapEasy fg f) in addTreeInTree tmpTree (myMapEasy fd f)
+    | N(fg,r,fd) -> let tmpTree = add (f r) (myMapEasy fg f) cmp in addTreeInTree tmpTree (myMapEasy fd f)
     | _ -> V;;
 
 (* Loading graphics library to used in REPL *)
 #load "graphics.cma";;
 (* Opening graphics module to avoid having to call Graphics.method*)
 open Graphics;;
+
+let defcomp a b = a < b;;
 
 (*
     @openGraph
@@ -206,43 +212,43 @@ openGraph "1900" "1000";;
 
 resetGraph;;
 let testTree = newEmptyTree ();;
-let testTree = add 0 testTree;;
-let testTree = add 4 testTree;;
-let testTree = add 2 testTree;;
-let testTree = add 1 testTree;;
-let testTree = add 3 testTree;;
-let testTree = add 6 testTree;;
-let testTree = add 9 testTree;;
-let testTree = add 7 testTree;;
-let testTree = add 10 testTree;;
-let testTree = add (- 4) testTree;;
-let testTree = add (- 2) testTree;;
-let testTree = add (- 1) testTree;;
-let testTree = add (- 3) testTree;;
-let testTree = add (- 6) testTree;;
-let testTree = add (- 9) testTree;;
-let testTree = add (- 7) testTree;;
-let testTree = add (- 10) testTree
+let testTree = add 0 testTree defcomp;;
+let testTree = add 4 testTree defcomp;;
+let testTree = add 2 testTree defcomp;;
+let testTree = add 1 testTree defcomp;;
+let testTree = add 3 testTree defcomp;;
+let testTree = add 6 testTree defcomp;;
+let testTree = add 9 testTree defcomp;;
+let testTree = add 7 testTree defcomp;;
+let testTree = add 10 testTree defcomp;;
+let testTree = add (- 4) testTree defcomp;;
+let testTree = add (- 2) testTree defcomp;;
+let testTree = add (- 1) testTree defcomp;;
+let testTree = add (- 3) testTree defcomp;;
+let testTree = add (- 6) testTree defcomp;;
+let testTree = add (- 9) testTree defcomp;;
+let testTree = add (- 7) testTree defcomp;;
+let testTree = add (- 10) testTree defcomp;;
 
 
 let newTree = newEmptyTree ();;
-let newTree = add 10 newTree;;
-let newTree = add 2 newTree;;
-let newTree = add 84 newTree;;
-let newTree = add 10 newTree;;
-let newTree = add 51 newTree;;
-let newTree = add 67 newTree;;
-let newTree = add 91 newTree;;
-let newTree = add 17 newTree;;
-let newTree = add 100 newTree;;
-let newTree = add (- 41) newTree;;
-let newTree = add (- 872) newTree;;
-let newTree = add (- 13) newTree;;
-let newTree = add (- 31) newTree;;
-let newTree = add (- 46) newTree;;
-let newTree = add (- 90) newTree;;
-let newTree = add (- 788) newTree;;
-let newTree = add (- 1) newTree;;
+let newTree = add 10 newTree defcomp;;
+let newTree = add 2 newTree defcomp;;
+let newTree = add 84 newTree defcomp;;
+let newTree = add 10 newTree defcomp;;
+let newTree = add 51 newTree defcomp;;
+let newTree = add 67 newTree defcomp;;
+let newTree = add 91 newTree defcomp;;
+let newTree = add 17 newTree defcomp;;
+let newTree = add 100 newTree defcomp;;
+let newTree = add (- 41) newTree defcomp;;
+let newTree = add (- 872) newTree defcomp;;
+let newTree = add (- 13) newTree defcomp;;
+let newTree = add (- 31) newTree defcomp;;
+let newTree = add (- 46) newTree defcomp;;
+let newTree = add (- 90) newTree defcomp;;
+let newTree = add (- 788) newTree defcomp;;
+let newTree = add (- 1) newTree defcomp;;
 
 magicDrawing testTree drawInt;;
 
@@ -253,34 +259,34 @@ getHeight testTree;;
 print_newline();;
 print_newline();;
 
-isIn 1 V;;
+isIn 1 V defcomp;;
 print_newline();;
-isIn 2 (F(1));;
-isIn 1 (F(1));;
+isIn 2 (F(1)) defcomp;;
+isIn 1 (F(1)) defcomp;;
 print_newline();;
-isIn 0 (N(F(1),2,F(3)));;
-isIn 1 (N(F(1),2,F(3)));;
-isIn 2 (N(F(1),2,F(3)));;
-isIn 3 (N(F(1),2,F(3)));;
+isIn 0 (N(F(1),2,F(3))) defcomp;;
+isIn 1 (N(F(1),2,F(3))) defcomp;;
+isIn 2 (N(F(1),2,F(3))) defcomp;;
+isIn 3 (N(F(1),2,F(3))) defcomp;;
 print_newline();;
-isIn (1000) testTree;;
-isIn (-1000) testTree;;
-isIn(8) testTree;;
-isIn (-10) testTree;;
-isIn(7) testTree;;
+isIn (1000) testTree defcomp;;
+isIn (-1000) testTree defcomp;;
+isIn(8) testTree defcomp;;
+isIn (-10) testTree defcomp;;
+isIn(7) testTree defcomp;;
 
 print_newline();;
 print_newline();;
-addTreeInTree V V;;
-addTreeInTree V (F(1));;
-addTreeInTree V (N(F(1), 0, V));;
+addTreeInTree V V defcomp;;
+addTreeInTree V (F(1)) defcomp;;
+addTreeInTree V (N(F(1), 0, V)) defcomp;;
 print_newline();;
-addTreeInTree (F(1)) V;;
-addTreeInTree (F(2)) (F(1));;
-addTreeInTree (F(1)) (N(F(1), 2, F(3));;
+addTreeInTree (F(1)) V defcomp;;
+addTreeInTree (F(2)) (F(1)) defcomp;;
+addTreeInTree (F(1)) (N(F(1), 2, F(3)) defcomp;;
 print_newline();;
-let newTestTree = addTreeInTree newTree testTree;;
-magicDrawing  newTestTree drawInt;;
+let newTestTree = addTreeInTree newTree testTree defcomp;;
+magicDrawing newTestTree drawInt;;
 
 (* let tranform a = a * 2 +1;;
 
