@@ -556,6 +556,7 @@ let rec myMap tree f cmp=
       Ce qui donne le code suivant: 
       <programlisting langage="ocaml">
 type dicTree = E | L of char | N of char * dicTree list
+
       </programlisting>
     </para>
   </section>
