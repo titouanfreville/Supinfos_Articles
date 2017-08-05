@@ -381,13 +381,13 @@ let rec balance tree =
     | N (fg, _, fd) -&gt; begin
         let h1 = getHeight (balance fg) and h2 = getHeight (balance fd) in
         let diff = h1 - h2 in
-        if (diff &gt; 1) 
+        if (diff &gt; 1)
         then balance (rightRotate tree)
-        else 
+        else
             if (diff &lt; -1)
             then balance (leftRotate tree)
             else tree
-    end  
+    end
       </programlisting>
     </para>
     <para>
@@ -440,7 +440,7 @@ type myTree = V | F of int | N of (myTree * int * myTree)
     </para>
     <para/>
     <para>
-      Modifion donc nos fonction pour accepter différente fonction de tri. 
+      Modifion donc nos fonction pour accepter différente fonction de tri.
     </para>
     <para>
       <programlisting langage="ocaml">
@@ -519,7 +519,7 @@ let rec myMap tree f cmp=
     <title>Arbres n-aires</title>
     <para/>
     <para>
-      Les arbres n-aires sont des structures d'arbres plus étendus. Plusieurs solutions s'offrent à nous pour créer ces arbres. Soit nous supposons que la valeur 'n' est fixe. Soit nous voulons gérer des arbres n-aires variable sans connaissance de la valeur de 'n' a chaque noeud.
+      Les arbres n-aires sont des structures d'arbres plus étendus. Plusieurs solutions s'offrent à nous pour créer ces arbres. Soit nous supposons que la valeur `n` est fixe. Soit nous voulons gérer des arbres n-aires variable sans connaissance de la valeur de `n` a chaque noeud.
     </para>
     <para/>
     <para>
@@ -530,10 +530,10 @@ let rec myMap tree f cmp=
     </para>
     <para/>
     <para>
-      Dans l'autre cas, nous devons résoudre le problème de réprésentation d'une quantité inconnue. Et il convient aussi de s'interroger sur la pertinance d'une structure équilibré dans une telle situation. 
+      Dans l'autre cas, nous devons résoudre le problème de réprésentation d'une quantité inconnue. Et il convient aussi de s'interroger sur la pertinance d'une structure équilibré dans une telle situation.
     </para>
     <para>
-      En effet, nous avons introduit le concept d'équilabrage lors du travail sur les arbres binaires. Ce type de structure est pertinante sur un arbre dont le nombre de fils maximale est connue, car il est possible de déterminer une logique d'ordre sur une telle structure (à condition que le type de donnée s'y prête). Mais si le nombre d'élément est inconnue, nous ne sommes probablement pas dans un cas ou l'équilibrage est primordial. En effet, les structures n-aires où n est inconnue vont souvent être utiliser pour des classements complexes style création d'un dictionnaire pour une langue. Nous savons que la structures n'aura jamais plus de 26 fils par noeud. Cependant, il n'est pas utile d'équilibré l'arbre, car le type de recherche qui nous interresse ici est une recherche de classement. Lors de la recherche dans un arbre dictionnaire, je ne vais pas chercher le mot "lambda" directement dans un feuille mais si il existe un chemin dans le dictionnaire menant à "lambda" lettre par lettre avec une sortie sur lambda. 
+      En effet, nous avons introduit le concept d'équilabrage lors du travail sur les arbres binaires. Ce type de structure est pertinante sur un arbre dont le nombre de fils maximale est connue, car il est possible de déterminer une logique d'ordre sur une telle structure (à condition que le type de donnée s'y prête). Mais si le nombre d'élément est inconnue, nous ne sommes probablement pas dans un cas ou l'équilibrage est primordial. En effet, les structures n-aires où n est inconnue vont souvent être utiliser pour des classements complexes style création d'un dictionnaire pour une langue. Nous savons que la structures n'aura jamais plus de 26 fils par noeud. Cependant, il n'est pas utile d'équilibré l'arbre, car le type de recherche qui nous interresse ici est une recherche de classement. Lors de la recherche dans un arbre dictionnaire, je ne vais pas chercher le mot "lambda" directement dans un feuille mais si il existe un chemin dans le dictionnaire menant à "lambda" lettre par lettre avec une sortie sur lambda.
     </para>
     <para/>
     <para>
@@ -548,16 +548,111 @@ let rec myMap tree f cmp=
           L (l) représente une feuille du dictionnaire, c'est à dire, un élément qui n'a plus de suite. Nous l'utilisons ici pour montrer la fin d'un mot. Cependant, si cette feuille représente L (a), cela ne veut pas dire qu'il n'existe pas de suffixe possible. Il permet juste d'indiquer un mot trouver.
         </listitem>
         <listitem>
-          N (l * dic) représente l'ensemble des suites possibles pour une lettre donnée. 
+          N (l * dic) représente l'ensemble des suites possibles pour une lettre donnée.
         </listitem>
       </itemizedlist>
     </para>
     <para>
-      Ce qui donne le code suivant: 
+      Ce qui donne le code suivant:
       <programlisting langage="ocaml">
-type dicTree = E | L of char | N of char * dicTree list
+        type dicTree = E | L of char | N of char * dicTree list
+      </programlisting>
+    </para>
+    <para/>
+    <para>
+      Une fois notre structure définie, il nous faut définir les fonctions permettants de la manipuler sans risque.
+    </para>
+    <para>
+      Dans notre cas, nous voulons être sure qu'une lettre n'apparaît pas plus de deux fois dans un suite liée à un mot (une fois si elle existe dans la suite de mot, une fois si elle est finale). Il nous faut également un point d'entrée globale dans l'arbre qui soit un caractère abscent des suites de mots, afin d'avoir notre noeud initial. Dans mon exemple, j'ai choisi d'utiliser l'espace (' ') pour base. D'autres caractère peuvent être utiliser, tel que $ tant qu'il ne sont pas présent dans les mots que nous voulons classer.
+    </para>
+    <para>
+      Nous définissons alors la fonction d'ajout d'un élément dans l'arbre ainsi :
+      <programlisting langage="ocaml">
+        let rec createDicNodeFromList l =
+            match l with
+            | [] -&gt; E
+            | t::[] -&gt; L t
+            | t::q -&gt; N(t, createDicNodeFromList q :: [])
 
+        let rec addCharInNode e childs =
+          match childs with
+          | [] -&gt; L e :: []
+          | t::q -&gt; match t with
+            | L c -&gt; if e == c then childs else addCharInNode e q
+            | _ -&gt; addCharInNode e q;;
+
+        (*
+          @addInDic_rec
+          Word to dic
+          @param word char list word to add
+          @param tree dicTree dictionnary for the word
+          @return new dicTree with word added
+        *)
+        let rec addInDic_rec word dic =
+          match (word, dic) with
+          | (_, N(' ', tl)) -&gt; N(' ', addWordInNode word tl)
+          | ([], _) -&gt; dic
+          | (t::[], E) -&gt; L t
+          | (t::[], L c) -&gt; N(c, (L t)::[])
+          | (t::[], N(c, tl)) -&gt; N(c, addCharInNode t tl)
+          | (t::q, E) -&gt; createDicNodeFromList word
+          | (t::q, L c) -&gt; N(c, (createDicNodeFromList word)::[])
+          | (t::q, N(c, tl)) -&gt; N(c, addWordInNode word tl)
+        and addWordInNode word dicList =
+          match (word, dicList) with
+          | (t::q, []) -&gt; let sd = L t in let el = addInDic_rec q sd in el :: []
+          | (t::q, n :: dq) -&gt; match n with
+            | L _ -&gt; addWordInNode word dq
+            | N(c, ch) -&gt; if t == c then addInDic_rec q n :: dq else n :: addWordInNode word dq
+          | _ -&gt; dicList;;
+
+        let addInDic word dic =
+          let cList = stringToList word in addInDic_rec cList dic;;
+      </programlisting>
+    </para>
+    <para>
+      Nous voyons ici une définission simultanée pour la fonction d'ajout d'un mot dans un dictionnaire. Cela est necessaire pour que les fonctions se reconnaissent. Si elles étaient définis séparemment, il serait impossible à l'une des deux de connaitre l'autre.
+    </para>
+    <para/>
+    <para>
+      Nous somme donc désormais capable d'ajouter des éléments dans un arbre correctement initialisé. Pour éviter les erreurs de l'utilisateur, nous pouvons définir une fonction d'initialisation pour les dictionnaires.
+    </para>
+    <para>
+      Mais interressons nous plutôt a l'intérêt du dictionnaire, a savoir valider un mot.
+    </para>
+    <para>
+      Implémentons une fonction qui va vérifier l'existence d'un mot dans notre dictionnaire.
+    </para>
+    <para>
+      <programlisting langage="ocaml">
+let rec isValidWord_rec word dic =
+  match (word, dic) with
+  | (t::[], L c) -&gt; t == c
+  | (t::q, N(c, tl)) -&gt; if c == ' '
+    then validateInNode word tl
+    else t == c &amp;&amp; validateInNode q tl
+  | (_, _) -&gt; false
+and validateInNode word dicList =
+  match (word, dicList) with
+  | (t::_, n :: dq) -&gt; begin
+    match n with
+    | N(c, ch) -&gt; if t == c then isValidWord_rec word n else validateInNode word dq
+    | L e -&gt; if t == e then isValidWord_rec word n else validateInNode word dq
+    | _ -&gt; validateInNode word dq
+  end
+  | (_, _) -&gt; false;;
+
+let isValidWord word dic =
+  let cList = stringToList word in isValidWord_rec cList dic;;
       </programlisting>
     </para>
   </section>
+  <para/>
+  <para>
+    Je vous remercie d'avoir lue cet article et espère que vous l'avez apprécié, et je vous laisse avec un rappel du lien vers les codes utiliser dans cet articles.
+  </para>
+  <para/>
+  <para>
+    <ulink url="https://github.com/titouanfreville/Supinfos_Articles/tree/master/MSc1/ocaml_article/resources">https://github.com/titouanfreville/Supinfos_Articles/tree/master/MSc1/ocaml_article/resources</ulink>
+  </para>
 </section>
