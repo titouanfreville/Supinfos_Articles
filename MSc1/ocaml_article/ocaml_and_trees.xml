@@ -417,7 +417,6 @@ let rec add i tree =
     Voyons maitenant comment abstraire nos arbres afin de pouvoir utiliser autre chose que des entiers.
   </para>
   <section>
-<<<<<<< HEAD
     <title>Arbre binaire équilibré non typé</title>
     <para/>
     <para>
@@ -523,5 +522,41 @@ let rec myMap tree f cmp=
       Les arbres n-aires sont des structures d'arbres plus étendus. Plusieurs solutions s'offrent à nous pour créer ces arbres. Soit nous supposons que la valeur 'n' est fixe. Soit nous voulons gérer des arbres n-aires variable sans connaissance de la valeur de 'n' a chaque noeud.
     </para>
     <para/>
+    <para>
+      Nous avons alors deux cas de figure. Le cas où le 'n' de notre abre n-aire est connue, et le cas où il n'est pas connue.
+    </para>
+    <para>
+      Dans le premier cas, nous pouvons adapter directement les codes vues jusqu'à présent en définissant la structure non plus comme un triplet mais comme un tuples de taille n+1 (la racine plus chacun des noeuds). Je vous laisse le soin de travailler vous-même cette solution. Ma version de cette gestion sera trouvable dans le répertoire consacré à cet article: <ulink url="https://github.com/titouanfreville/Supinfos_Articles/tree/master/MSc1/ocaml_article/resources">https://github.com/titouanfreville/Supinfos_Articles/tree/master/MSc1/ocaml_article/resources</ulink>
+    </para>
+    <para/>
+    <para>
+      Dans l'autre cas, nous devons résoudre le problème de réprésentation d'une quantité inconnue. Et il convient aussi de s'interroger sur la pertinance d'une structure équilibré dans une telle situation. 
+    </para>
+    <para>
+      En effet, nous avons introduit le concept d'équilabrage lors du travail sur les arbres binaires. Ce type de structure est pertinante sur un arbre dont le nombre de fils maximale est connue, car il est possible de déterminer une logique d'ordre sur une telle structure (à condition que le type de donnée s'y prête). Mais si le nombre d'élément est inconnue, nous ne sommes probablement pas dans un cas ou l'équilibrage est primordial. En effet, les structures n-aires où n est inconnue vont souvent être utiliser pour des classements complexes style création d'un dictionnaire pour une langue. Nous savons que la structures n'aura jamais plus de 26 fils par noeud. Cependant, il n'est pas utile d'équilibré l'arbre, car le type de recherche qui nous interresse ici est une recherche de classement. Lors de la recherche dans un arbre dictionnaire, je ne vais pas chercher le mot "lambda" directement dans un feuille mais si il existe un chemin dans le dictionnaire menant à "lambda" lettre par lettre avec une sortie sur lambda. 
+    </para>
+    <para/>
+    <para>
+      Implémentons donc un arbre dictionnaire comme exemple pour les arbres n-aires quelconques.
+    </para>
+    <para/>
+    <para>
+      La structure est simplement définis de la sorte:
+      <itemizedlist>
+        <listitem>E représente le dictionnaire vide</listitem>
+        <listitem>
+          L (l) représente une feuille du dictionnaire, c'est à dire, un élément qui n'a plus de suite. Nous l'utilisons ici pour montrer la fin d'un mot. Cependant, si cette feuille représente L (a), cela ne veut pas dire qu'il n'existe pas de suffixe possible. Il permet juste d'indiquer un mot trouver.
+        </listitem>
+        <listitem>
+          N (l * dic) représente l'ensemble des suites possibles pour une lettre donnée. 
+        </listitem>
+      </itemizedlist>
+    </para>
+    <para>
+      Ce qui donne le code suivant: 
+      <programlisting langage="ocaml">
+type dicTree = E | L of char | N of char * dicTree list
+      </programlisting>
+    </para>
   </section>
 </section>
