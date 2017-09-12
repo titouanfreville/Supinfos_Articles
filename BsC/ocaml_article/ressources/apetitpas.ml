@@ -3,22 +3,21 @@
   @ Fonction permettant de calculer la valeur a^b sur des réels
   @parameter: a float Nombre à mettre en puissance.
   @parameter: b int Puissance entière..
-  @return: a^b 
+  @return: a^b
 *)
-let rec pow a b = 
+let rec pow a b =
   match b with
   |0 -> 1.
   |_ -> a *. pow a (b-1);;
 
 (**
-  @name: Puissance
-  @ Fonction permettant de calculer la valeur a^b sur des réels
-  @parameter: a float Nombre à mettre en puissance.
-  @parameter: b int Puissance entière..
-  @return: a^b 
+  @name: factorielle
+  @ Fonction permettant de calculer la valeur a!
+  @parameter: a int Factorielle à calculer.
+  @return: a!
 *)
 let rec factorielle a =
-  match a with 
+  match a with
   |0 -> 1
   |_ -> a * factorielle (a-1);;
 
