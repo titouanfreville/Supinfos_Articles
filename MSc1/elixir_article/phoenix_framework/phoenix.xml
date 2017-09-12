@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE section PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<section>
+  <title>Elixir, Phoenix et les API</title>
+  <para/>
+  <section>
+    <title>Introduction</title>
+    <para/>
+    <para>
+      Nous avons introduit le language Elixir dans l'article : <ulink url="https://www.supinfo.com/articles/single/1906-programmation-fonctionnelle-elixir">La programmation fonctionnelle et Elixir</ulink>. Nous allons aujourd'hui retravailler avec ce langage dans le but de réaliser des interfaces de programmation (APIs) via le framework Phoenix. 
+    </para>
+    <para/>
+    <para>
+      Pour cela, nous devons installer plusieurs élément ou nous assurer que nous les avons déjà: 
+      <itemizedlist>
+        <listitem>
+          Une installation récente d'Elixir (nous utiliserons la version 1.5.0 dans les exemples proposés)
+        </listitem>
+        <listitem>
+          Le framework phoenix (que vous pouvez installer ainsi: 
+          <programlisting language="bash">
+          mix archive.install --force https://github.com/phoenixframework/archives/raw/master/phx_new-1.3.0.ez
+          </programlisting>
+        </listitem>
+        <listitem>
+          Have a ready to go PostgreSQL server
+        </listitem>
+      </itemizedlist>
+    </para>
+    <para/>
+  </section>
+  <para/>
+  <para>
+    Rentrons maintenant dans le vif du sujet. 
+  </para>
+  <section>
+    <title>Phoenix frameword</title>
+    <para/>
+    <para>
+      Phoenix est un framework Elixir simple à mettre en place permettant de créer rapidement des APIs web. Il permet de gérer facilement la mise en place du routing de l'API ainsi que la gestion et le traitement des données. Intégralement fonctionnelle (elixir étant un langage fonctionnelle), il gère facilement la récursivité et est par conséquent très adapté pour réaliser des interfaces mathématiques ou permettant la résolution de problème complexe pour les quels l'algorithmes de résolution est plus important que l'optimisation mémoire du processus.
+    </para>
+    <para/>
+    <para>
+      Les technologies à la base du framework sont très robustes, une API réalisé avec Phoenix permettra donc de gérer une grande quantité de requette sans trop de difficulté. De plus, de nombreux outils sont à la disposition de l'utilisateur du framework pour créer des communications en temps réel entre les utilisateurs.
+    </para>
+    <para/>
+  </section>
+  <para>
+    Commençons à explorer Phoenix.
+  </para>
+  <section>
+    <title>On the road</title>
+    <para/>
+    <para>
+      Si phoenix a été correctement installer, vous devriez pouvoir exécuter la commande suivante: 
+      <programlisting langage="bash">
+        mix phx.new supinfo_phoenix_learning
+      </programlisting>
+    </para>
+    <para/>
+    <para>
+      Cette commande va générer une base vous permettant de voir la structure d'une application phoenix et que nous allons pouvoir éditer pour ajouter nos propres fonctionnalitées. 
+    </para>
+    <para>
+      Si nous nous rendons dans le dossier créer par la commande (supinfo_phoenix_learning), nous pouvons lancer le serveur générer avec la command: 
+      <programlisting langage="bash">
+        mix phx.server
+      </programlisting>
+    </para>
+    <para/>
+    <para>
+      Suite à cette commande, la compilation des nouveaux fichiers vas être réaliser, puis le lancement du serveur en lui-même. Comme nous n'avons pas configuré de base de données, nous avons une erreur de connection à la base (affiché très fréquemment).
+    </para>
+    <para>
+      Nous pouvons tout de même aller voir sur <emphasis>localhost:4000</emphasis> la première page de notre petite API.
+    </para>
+    <para/>
+  </section>
+  <section>
+    <title>Management break</title>
+    <para/>
+    <para>
+      Un petit tour dans les fichiers de configurations et le fonctionnement de <emphasis>mix</emphasis>.
+    </para>
+    <para>
+      Mix est le gestionnaire de paquet et d'application d'élixir. Il se base sur un fichier <emphasis>mix.exs</emphasis> présent à la racine du projet. Lors de la génération du projet Phoenix le fichier <emphasis>mix.exs</emphasis> est initialisé avec les dépendances nécessaire à Phoenix et un grand nombre de parmètre pour le projet. Nous y trouvons le nom de l'application et ça version mais aussi la version minimale d'élixir requise pour faire tourner le projet ainsi que les éléments compilable autre.
+    </para>
+    <para>
+      Nous pouvons aussi voir une variable <emphasis>Mix.env</emphasis> dans ce fichier. Cette variable fait référence à la variable d'environement <emphasis>MIX_ENV</emphasis>. Par défault, mix s'éxécutera en environement :dev. En précisant cette variable, nous pouvons changer les configurations lues par mix mais aussi les dépendances chargé et certaines définition de chemins, alias ou autre. 
+    </para>
+    <para>
+      Voyons maintenant les fichiers de configuration en tant que tel. 
+    </para>
+    <para>
+      Dans le répertoir <emphasis>config</emphasis> nous pouvons voir plusieurs fichiers (config.exs, dev.exs, prod.exs, prod.secret.exs, test.exs) correspondant au différent environement et à la configuration de base utilisé par les différents environement. L'import des configuration spécifique ou auxiliaire se fait via la commande <emphasis>import_config</emphasis>. Dans le fichier de configuration général (config.exs), nous voyons que la commande est appelé avec le paramètre <emphasis>#{Mix.env}.exs</emphasis> qui va permettre de charger les configurations spécifique à l'environement utilisé en plus de la configuration standart. Nous pouvons nous aussi utilisé cette commande afin de séparé notre configuration en plusieurs élément.
+    </para>
+    <para/>
+    <para>
+      Créons par exemple une session spécifique à la base de donnée.
+    </para>
+    <para>
+      Pour cela, ajoutons un fichier <emphasis>databases.exs</emphasis> dans le répertoir configuration, et ajoutons, dans le fichier de configuration basique, la ligne <emphasis>import_config "database.exs"</emphasis>.
+    </para>
+    <para>
+      Nous pouvons maintenant ajouter des configurations propres à la database dans le fichier nouvellement créer. Essayons par exemple la configuration suivante
+    </para>
+    <para>
+      <programlisting langage="elixir">
+        use Mix.Config
+
+        config :supinfo_phoenix_learning, SupinfoPhoenixLearning.Repo,
+          adapter: Ecto.Adapters.Postgres,
+          database: "supinfo_phoenix_learning",
+          username: "supinfo",
+          password: "supinfou",
+          hostname: "0.0.0.0"
+      </programlisting>
+    </para>
+    <para>
+      Avant de tester cette nouvelle configuration, pensons à vérifier qu'il n'y a pas d'interférence entre l'ancienne configuration et la nouvelle. Notemment, vérifions que les informations de base de données n'ont pas été définis et importés après les notres (par exemple, dans le fichier dev.exs). Pensons aussi à créer la base de donnée et à la configurer selon nos besoins. Cela fait, nous pouvons relancer le serveur.
+    </para>
+    <para>
+      Cette fois, vous ne devriez pas avoir d'erreur afficher dans les logs du serveur mais uniquement les informations de navigation et démarage du serveur.
+    </para>
+  </section>
+  <para/>
+  <section>
+    <title>Un peu de routing</title>
+    <para/>
+    <para>
+
+    </para>
+  </section>
+</section>

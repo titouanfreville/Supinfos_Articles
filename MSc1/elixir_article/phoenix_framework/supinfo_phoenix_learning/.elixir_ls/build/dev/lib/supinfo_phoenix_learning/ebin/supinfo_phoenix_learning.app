@@ -1,0 +1,13 @@
+{application,supinfo_phoenix_learning,
+             [{applications,[kernel,stdlib,elixir,logger,runtime_tools,
+                             gettext,phoenix_pubsub,cowboy,phoenix_html,
+                             phoenix,phoenix_live_reload,postgrex,
+                             phoenix_ecto]},
+              {description,"supinfo_phoenix_learning"},
+              {modules,['Elixir.SupinfoPhoenixLearning',
+                        'Elixir.SupinfoPhoenixLearning.Application',
+                        'Elixir.SupinfoPhoenixLearningWeb']},
+              {registered,[]},
+              {vsn,"0.0.1"},
+              {mod,{'Elixir.SupinfoPhoenixLearning.Application',[]}},
+              {extra_applications,[logger,runtime_tools]}]}.
