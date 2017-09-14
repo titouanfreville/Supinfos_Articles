@@ -24,7 +24,7 @@
 | Créer une chaine de tracking en Elixir     |                                                                                                                                                    |          |                               |       | B      |         |
 | Embarquez un dev facilement avec Docker    |                                                                                                                                                    |          |                               |       | B      |         |
 | Accueillir vos devs sans master            |                                                                                                                                                    |          |                               |       | L to B |         |
-| Test unitaire en Elixir                    |                                                                                                                                                    |          |                               |       | B      |         |
+| Test unitaire en Elixir                    |                                                                                                                                                    |          | Alexis Bourdon                |       | B      |         |
 
 ## Référence taille/points
 
