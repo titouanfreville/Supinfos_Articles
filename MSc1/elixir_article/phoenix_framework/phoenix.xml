@@ -128,7 +128,620 @@
     <title>Un peu de routing</title>
     <para/>
     <para>
-
+      Dans phoenix, les routes sont définis via un fichier <emphasis>route.ex</emphasis> présent de le répertoir <emphasis>lib/{NOM_PROJET}_web</emphasis>. Le routing se fait en deux parties: la pipeline et le scope. La pipeline va permettre de définir toutes les fonctions appliquées avant de processer la route. Il définis notemment les types de fichiers accepté, les sessions et autre sécurité nécessaire aux application. La partie scope va définir le type de protocol appliquée à la route (get/post/...), la fonction lié et les paramètres passables.
     </para>
+    <para>
+      Créons des routes pas à pas.
+    </para>
+    <section>
+      <title>Des petits chemins</title>
+      <para/>
+      <para>
+        Commençons simplement par ajouter une route affichant "Je suis toujours là ..." tant que le serveur existe. C'est à dire ajoutons une route liée au protocol <emphasis>get</emphasis> appelé <emphasis>/alive</emphasis> et n'attendant pas de paramètre. Par soucis de simplicité, nous allons simplement l'ajouter dans le scope racine prédéfinis par phoenix.
+      </para>
+      <para>
+        Pour cela, nous ajoutons la ligne 
+        <programlisting langage="elixir">
+          get "/alive", PageController, :alive
+        </programlisting>
+      </para>
+      <para>
+        Si nous essayons d'accéder tel quel à notre nouvelle route, une erreur va être déclencher par le serveur, celui-ci ne sachant pas comment gérer notre nouvelle route, la méthode <emphasis>alive</emphasis>.
+      </para>
+      <para>
+        Ajoutons donc la méthode.
+      </para>
+      <para>
+        Le module <emphasis>PageController</emphasis> se trouve dans la partie <emphasis>controllers</emphasis> de l'application. Nous y trouvons la méthode utilisé pour affiché l'indexe, qui se contente d'afficher la page <emphasis>index.html</emphasis>. Passant par la pipeline <emphasis>browser</emphasis> destiné à afficher des pages web et n'acceptant que des retours en HTML, nous allons donc devoir ajouter notre méthode alive et créer une vue alive.html.
+      </para>
+      <para>
+        Ce qui nous donne:
+        <itemizedlist>
+          <listitem>
+            <programlisting langage="elixir">
+              def alive(conn, _params) do
+                render conn, "alive.html"
+              end
+            </programlisting>
+          </listitem>
+          <listitem>
+            <programlisting langage="html">
+                &lt;div class="jumbotron"&gt;
+                  &lt;h2&gt;Je suis toujours la ...&lt;/h2&gt;
+                &lt;/div&gt;
+              &lt;/div&gt;
+            </programlisting>
+          </listitem>
+        </itemizedlist>
+      </para>
+      <para/>
+      <para>
+        Ajoutons cette fois un scope contenant deux route : hello et hello/nom/sexe ou nom et sexe sont des paramètres de la requête. 
+      </para>
+      <para>
+        Nous allons réutiliser la pipeline browser pour cela, afin de simplifier notre tache dans un premier temps. Il nous faut donc créer un nouveau controller, que nous appelerons HelloController, et un gestionnaire de vue lié à hello, HelloView. Dans la patie template, il va aussi nous falloir ajouter une session consacréer à hello.
+      </para>
+      <para>
+        Nous ajoutons alors le code suivant dans le fichier router: 
+        <programlisting langage="elixir">
+          scope "/hello", SupinfoPhoenixLearningWeb do
+            pipe_through :browser
+
+            get "/", HelloController, :index
+            get "/polite/:nom/:sexe", HelloController, :polite_messenger
+          end
+        </programlisting>
+        Créons le fichier hello_controller contenant le code : 
+        <programlisting language="elixir">
+          defmodule SupinfoPhoenixLearningWeb.HelloController do
+            use SupinfoPhoenixLearningWeb, :controller
+
+            def index(conn, _params) do
+              render conn, "index.html"
+            end
+
+            def polite_messenger(conn, %{"nom" => messenger, "sexe" => gender}) do
+              render conn, "polite.html", messenger: messenger, gender: gender
+            end
+          end
+        </programlisting>
+        , le fichier hello_view :
+        <programlisting language="elixir">
+          defmodule SupinfoPhoenixLearningWeb.HelloView do
+            use SupinfoPhoenixLearningWeb, :view
+          end
+        </programlisting>
+        , et le fichier de template polite.html.eex :
+        <programlisting langage="html.eex">
+          &lt;div class="jumbotron"&gt;
+            &lt;h2&gt;Hello. I am &lt;%= @messenger %&gt; and I am a &lt;%= @gender %&gt;&lt;/h2&gt;
+          &lt;/div&gt;
+        </programlisting>
+      </para>
+      <para>
+        Le template index est copier directement de l'index de la partie page.
+      </para>
+      <para>
+        Cela fait, vous pouvez jouer avec votre nouvelle route :-).
+      </para>
+    </section>
+    <para/>
+    <para>
+      Assez joué avec les templates, voyons la partie API à proprement parler
+    </para>
+    <section>
+      <title>De vrai chemins</title>
+      <para/>
+      <para>
+        La plus part des API aujourd'hui vont fonctionner en utilisant la définition d'objet JSON (JavaScript Object N???). C'est un format de description d'objet simple et agréable à manipuler permettant de transmettre assez facilement des informations à processer. Cependant, si votre objectif est d'afficher facilement et proprement les informations demandé, vous préférerez sans doutes le formatage XML, intégré nativement dans les pages en HTML, étant tous deux des languages balisées.
+      </para>
+      <para>
+        Dans notre contexte, nous utiliserons plutôt une API JSON, ayant la possibilité de rendre directement les informations dans une page web via le système de template plutôt qu'en envoyant des template XML. 
+      </para>
+      <para>
+        Mettons en place les premières routes de notre API JSON.
+      </para>
+      <para>
+        Tout d'abord, mettons en place un set de routes nous permettant de tester les méthodes essentielle d'une API, c'est à dire, une route permettant de vérifier que l'API est disponible, que nous allons appeler healthy, et un ensemble de route <emphasis>get, post, put et delete</emphasis> appliqué à la racine qui vont ce contenter de nous dire qu'ils ont bien reçue l'appel et l'objet lorsqu'il y a besoin.
+      </para>
+      <para>
+        Ajoutons donc les scope <emphasis>/api</emphasis> a notre router et créons le controller <emphasis>ApiController</emphasis> permettant de gérer les routes précédemment définis.
+      </para>
+      <para>
+        Ce qui nous donne dans le router: 
+        <programlisting language="elixir">
+          scope "/api", SupinfoPhoenixLearningWeb do
+            pipe_through :api
+
+            get "/healthy", ApiController, :healthy
+            get "/", ApiController, :get_test
+            post "/", ApiController, :post_test
+            put "/", ApiController, :put_test
+            delete "/", ApiController, :delete_test
+          end
+        </programlisting>
+        et le controller suivant:
+        <programlisting language="elixir">
+          defmodule SupinfoPhoenixLearningWeb.ApiController do
+            use SupinfoPhoenixLearningWeb, :controller
+
+            def healthy(conn, _par) do
+              json conn, "healthy"
+            end
+
+            def get_test(conn, _par) do
+            json conn, "Get Ok"
+            end 
+
+            def post_test(conn, obj) do
+              json conn, %{ok: "Post well recievied", object: obj}
+            end
+
+            def put_test(conn, obj) do
+              json conn, %{ok: "Put well recievied", object: obj}
+            end
+
+            def delete_test(conn, obj) do
+              json conn, %{ok: "Delete well recievied", object: obj}
+            end
+          end
+        </programlisting>
+      </para>
+      <para>
+        Vous pouvez tester nos nouvelles routes. Vous devriez recevoir un message disant que l'objet à bien été reçue via la méthode demandé, et le cas échéant, l'objet reçue.
+      </para>
+    </section>
+    <para/>
+    <para>
+      Et si nous passions à une API efficace avec gestion des données ?
+    </para>
+    <section>
+      <title>Nouveau modèle</title>
+      <para/>
+      <para>
+        Avant d'aller plus loin, préparons un petit peu de modèle de donnée.
+      </para>
+      <para>
+        Créons un modèle simple de gestion de bibliothèque. Il nous faut 
+        <itemizedlist>
+          <listitem>
+            Le nom de l'ouvrage
+          </listitem>
+          <listitem>
+            Son auteur
+          </listitem>
+          <listitem>
+            Sa date de publication
+          </listitem>
+          <listitem>
+            Son éditeur
+          </listitem>
+          <listitem>
+            Et un identifiant unique sous forme de chaîne de charactère
+          </listitem>
+        </itemizedlist>
+      </para>
+      <para>
+        Pour aider dans la gestion des bases de données, Phoenix intègre par défault une dépendance d'élixir appeler <emphasis>Ecto</emphasis>. Nous allons donc créer le modèle en utilisant cet dépendances.
+      </para>
+      <para>
+        Pour cela, il nous faut d'abord créer un fichier qui servira à référencer le schéma de la table créer et les méthode que l'on peut lui appliquer puis un script de migration qui va permettre de créer la table ou de la mettre à jour en fonction des besoins. Le système de migration d'Ecto se base sur une table de référence enregistrant des identifiants de migrations, c'est à dire que l'on ne pourra pas utiliser le même nom de fichier de migrations plusieurs fois sur la même instance de base de données.
+      </para>
+      <para>
+        Phoenix intégrant naturellement ecto, il est possible de générer le fichier de création de notre modèle et le modèle. Pour créer notre modèle, nous allons donc juste utiliser cette fonctionnalitée comme suit :
+        <programlisting language="terminal">
+          mix phx.gen.schema SupinfoPhoenixLearningWeb.Books books bookID:string title:string author:string editor:string publicationDate:utc_datetime
+        </programlisting>
+      </para>
+      <para>
+        Nous obtenons le schéma suivant :
+        <programlisting language="elixir">
+          defmodule SupinfoPhoenixLearning.SupinfoPhoenixLearningWeb.Books do
+            use Ecto.Schema
+            import Ecto.Changeset
+            alias SupinfoPhoenixLearning.SupinfoPhoenixLearningWeb.Books
+
+
+            schema "books" do
+              field :author, :string
+              field :bookID, :string
+              field :editor, :string
+              field :publicationDate, :utc_datetime
+              field :title, :string
+
+              timestamps()
+            end
+
+            @doc false
+            def changeset(%Books{} = books, attrs) do
+              books
+              |> cast(attrs, [:bookID, :title, :author, :editor, :publicationDate])
+              |> validate_required([:bookID, :title, :author, :editor, :publicationDate])
+            end
+          end
+        </programlisting>
+      </para>
+      <para>
+        Et le fichier de création :
+        <programlisting language="elixir">
+          defmodule SupinfoPhoenixLearning.Repo.Migrations.CreateBooks do
+            use Ecto.Migration
+
+            def change do
+              create table(:books) do
+                add :bookID, :string
+                add :title, :string
+                add :author, :string
+                add :editor, :string
+                add :publicationDate, :utc_datetime
+
+                timestamps()
+              end
+
+            end
+          end
+        </programlisting>
+      </para>
+      <para>
+        Il nous reste alors à créer la table dans notre base de donnée en appelant la commande
+        <programlisting language="terminal">
+          mix ecto.migrate
+        </programlisting>
+      </para>
+      <para>
+        Nous pouvons désormais faire des routes pour gérer notre bibliothèque.
+      </para>
+    </section>
+    <para/>
+    <section>
+      <title>Routes et autoroutes</title>
+      <para/>
+      <para>
+        Tout à l'heure, nous avons créer à la main quatre route correspondant aux utilitaires de base pour une API CRUD. Phoenix nous propose un nom de route spécifique permettant de générer l'intégralité des routes standart d'une telle API, à saoir l'obtention de tous les éments ainsi que leur édition, création et suppression y compris en utilisant des getters d'édition (pour l'utilisation des templates ;)).
+      </para>
+      <para>
+        Il nous faut alors simplement définir une nouvelle route <emphasis>ressources "{endpoint}", {ControllerModule}</emphasis> et créer le controller avec les bons noms de méthodes.
+      </para>
+      <para>
+        Je vous propose le controller suivant: 
+        <programlisting language="elixir">
+        defmodule SupinfoPhoenixLearningWeb.BookController do
+          use SupinfoPhoenixLearningWeb, :controller
+          alias SupinfoPhoenixLearning.Repo
+          alias SupinfoPhoenixLearning.SupinfoPhoenixLearningWeb.Books
+          require Logger
+          import Ecto.Query
+
+          def index(conn, _par) do
+            json conn, Repo.all(Books)
+          end
+
+          def edit(conn, _par) do
+            render conn, "edit.html"
+          end
+
+          def new(conn, _par) do
+            render conn, "new.html"
+          end
+
+          def show(conn, %{"id" => id}) do
+            json conn, Repo.one(from b in Books, where: ilike(b.bookID, ^id))
+          end
+
+          def create(conn, book) do
+            ins_book = Books.parse book
+            try do
+              Repo.insert(ins_book)
+              json conn, %{ok: "Well created book.", book: book}
+            rescue
+              _ -&gt;
+                conn = conn.put_status 422
+                json conn, %{ok: "Error while creating book.", book: book}
+            end
+          end
+
+          def update(conn, %{"id" => id, "book" => book}) do
+            current_book = Repo.one(from b in Books, where: ilike(b.bookID, ^id))
+            res = Books.update(current_book, book)
+            unless elem(res, 0) == :ok do
+              json conn, %{ok: "Error while updating book.", error: elem(res, 1), new_book: book}
+            else
+              json conn, %{ok: "Well updated book.", new_book: book}
+            end
+          end
+
+          def delete(conn,  %{"id" => id}) do
+            book = Repo.one(from b in Books, where: ilike(b.bookID, ^id))
+            res = Repo.delete(book)
+            unless elem(res, 0) == :ok do
+              json conn, %{ok: "Error while deleting book.", error: elem(res, 1), book: book}
+            else
+              json conn, %{ok: "Well deleted book.", book: book}
+            end
+          end
+        end
+        </programlisting>
+      </para>
+      <para>
+        A vous d'implémenter les sous fonctions requises.
+      </para>
+    </section>
+    <para/>
+    <section>
+      <title>Les vues</title>
+      <para/>
+      <para>
+        Implémentons maintenant les vues d'éditions et de créations pour notre bibliothèque.
+      </para>
+      <para>
+        Pour cela, nous allons utiliser le générateur de formulaire inclus dans Phoenix. Celui-ci requiert l'implémentation de fonctions <emphasis>changeset</emphasis>, celle-ci pouvant servir à plusieurs situations. Dans notre cas, nous allons avoir deux fonctions <emphasis>changeset</emphasis>, une pout la mise à jour des données, l'autre pour leur créations.
+      </para>
+      <para>
+        Commençons par la création de nouveau éléments.
+      </para>
+      <para>
+        La fonction de vérification de données que nous allons utilisée va devoir vérifier la présence des informations bookID, title et author, et la contrainte d'unicité de la clé bookID. Elle s'implémente ainsi:
+        <programlisting langage="elixir">
+          def changeset(%Books{} = books, attrs \\ %{}) do
+            books
+            |> cast(attrs, [:bookID, :title, :author, :editor, :publicationDate])
+            |> validate_required([:bookID, :title, :author])
+            |> unique_constraint(:bookID)
+          end
+        </programlisting>
+      </para>
+      <para>
+        Ensuite, il nous faut créer la vue que nous allons utilisée. Celle ci est extrémement simple, chaque donnée à ajouter posséde un champs qui lui est propre. Elle va ressembler à ceci:
+        <programlisting langage="html.eex">
+          &lt;div class="jumbotron">
+            &lt;h2>New Book&lt;/h2>
+            &lt;%= form_for @changeset, book_path(@conn, :create), [as: :book], fn f -> %>
+              &lt;label>
+                Title: &lt;%= text_input f, :title %>
+              &lt;/label>
+              &lt;label>
+                  Author: &lt;%= text_input f, :author %>
+              &lt;/label>
+              &lt;label>
+                  Editor: &lt;%= text_input f, :editor %>
+              &lt;/label>
+              &lt;label>
+                  Book id: &lt;%= text_input f, :bookID %>
+              &lt;/label>
+              &lt;label>
+                  Publication date: &lt;%= datetime_select f, :publicationDate %>
+              &lt;/label>
+              &lt;%= submit "Register" %>
+            &lt;% end %>
+          &lt;/div>
+        </programlisting>
+      </para>
+      <para>
+        Nous pouvons alors recevoir les nouvelles données dans notre méthode create. Cependant, le format de données n'étant pas le même via le formulaire que celui que nous utilisions lors d'appel direct à la fonction, il nous faut la modifier légérement pour supporter le nouveau format. Elle sera alors de la forme:
+        <programlisting language="elixir">
+          def create(conn, book) do
+            ins_book = 
+              if Map.has_key?(book, "book") do
+                Books.parse book["book"]
+              else
+                Books.parse book
+              end
+            try do
+              Repo.insert(ins_book)
+              json conn, %{ok: "Well created book.", book: ins_book}
+            rescue
+              _ ->
+                conn = conn.put_status 422
+                json conn, %{ok: "Error while creating book.", book: ins_book}
+            end
+          end
+        </programlisting>
+        et la fonciton de parsing sera: 
+        <programlisting language="elixir">
+          def parse(book) do
+            date = get_pub_date(book)
+            pub_date = Ecto.DateTime.cast date
+            pub_date =
+              unless elem(pub_date, 0) == :ok do
+                nil 
+              else
+                elem(pub_date, 1)
+              end
+
+            %Books{
+              bookID: get_id(book),
+              title: book["title"],
+              author: book["author"],
+              editor: book["editor"],
+              publicationDate: pub_date
+            }
+          end
+        </programlisting>
+      </para>
+      <para/>
+      <para>
+        Une fois l'éditions faite, nous aurons les fichiers finaux:
+        <itemizedlist>
+          <listitem>
+            book_controller.ex
+            <programlisting language="elixir">
+              defmodule SupinfoPhoenixLearningWeb.BookController do
+              use SupinfoPhoenixLearningWeb, :controller
+              alias SupinfoPhoenixLearning.Repo
+              alias SupinfoPhoenixLearning.SupinfoPhoenixLearningWeb.Books
+              require Logger
+              import Ecto.Query
+
+              def index(conn, _par) do
+                json conn, Repo.all(Books)
+              end
+
+              def edit(conn, %{"id" => id}) do
+                Logger.debug "Edit ????"
+                current_book = Repo.one(from b in Books, where: ilike(b.bookID, ^id))
+                render conn, "edit.html", changeset: Books.changeset(%Books{}), old_book: current_book
+              end
+
+              def new(conn, _par) do
+                render conn, "new.html", changeset: Books.changeset(%Books{})
+              end
+
+              def show(conn, %{"id" => id}) do
+                json conn, Repo.one(from b in Books, where: ilike(b.bookID, ^id))
+              end
+
+              def create(conn, book) do
+                ins_book = 
+                  if Map.has_key?(book, "book") do
+                    Books.parse book["book"]
+                  else
+                    Books.parse book
+                  end
+                try do
+                  Repo.insert(ins_book)
+                  json conn, %{ok: "Well created book.", book: ins_book}
+                rescue
+                  _ ->
+                    conn = conn.put_status 422
+                    json conn, %{ok: "Error while creating book.", book: ins_book}
+                end
+              end
+
+              def update(conn, %{"id" => id, "book" => book}) do
+                current_book = Repo.one(from b in Books, where: ilike(b.bookID, ^id))
+                ins_book = 
+                  if Map.has_key?(book, "book") do
+                    book["book"]
+                  else
+                    book
+                  end
+                res = Books.update(current_book, ins_book)
+                unless elem(res, 0) == :ok do
+                  json conn, %{ok: "Error while updating book.", error: elem(res, 1), new_book: book}
+                else
+                  json conn, %{ok: "Well updated book.", new_book: book}
+                end
+              end
+
+              def delete(conn,  %{"id" => id}) do
+                book = Repo.one(from b in Books, where: ilike(b.bookID, ^id))
+                res = Repo.delete(book)
+                unless elem(res, 0) == :ok do
+                  json conn, %{ok: "Error while deleting book.", error: elem(res, 1), book: book}
+                else
+                  json conn, %{ok: "Well deleted book.", book: book}
+                end
+              end
+            end
+            </programlisting>
+          </listitem>
+          <listitem>
+            books.ex
+            <programlisting language="elixir">
+            defmodule SupinfoPhoenixLearning.SupinfoPhoenixLearningWeb.Books do
+              use Ecto.Schema
+              import Ecto.Changeset
+              alias SupinfoPhoenixLearning.SupinfoPhoenixLearningWeb.Books
+              alias SupinfoPhoenixLearning.Repo
+              require Logger
+
+              @derive {Poison.Encoder, only: [:author, :bookId, :title, :editor, :publicationDate]}
+
+
+              schema "books" do
+                field :author, :string
+                field :bookID, :string
+                field :editor, :string
+                field :publicationDate, :utc_datetime
+                field :title, :string
+
+                timestamps()
+              end
+
+              @doc false
+              def changeset(%Books{} = books, attrs \\ %{}) do
+                books
+                |> cast(attrs, [:bookID, :title, :author, :editor, :publicationDate])
+                |> validate_required([:bookID, :title, :author])
+                |> unique_constraint(:bookID)
+              end
+
+              def changeset_update(%Books{} = books, attrs \\ %{}) do
+                books
+                |> cast(attrs, [:title, :author, :editor, :publicationDate])
+              end
+
+              defp get_pub_date(%{"publication-date" => date}) do
+                date
+              end
+
+              defp get_pub_date(%{"publicationDate" => date}) do
+                date
+              end
+
+              defp get_id(%{"book-id" => id}), do: id 
+
+              defp get_id(%{"bookID" => id}), do: id  
+
+              def parse(book) do
+                date = get_pub_date(book)
+                pub_date = Ecto.DateTime.cast date
+                pub_date =
+                  unless elem(pub_date, 0) == :ok do
+                    nil 
+                  else
+                    elem(pub_date, 1)
+                  end
+
+                %Books{
+                  bookID: get_id(book),
+                  title: book["title"],
+                  author: book["author"],
+                  editor: book["editor"],
+                  publicationDate: pub_date
+                }
+              end
+
+              def update(old, new) do
+                old
+                |> changeset_update(new)
+                |> Repo.update()
+              end
+            end
+            </programlisting>
+          </listitem>
+          <listitem>
+            edit.html.eex
+            <programlisting language="html.eex">
+              &lt;div class="jumbotron">
+                &lt;h2>Edit Book&lt;/h2>
+                &lt;%= form_for @changeset, book_path(@conn, :update, @old_book.bookID), [as: :book, method: :put], fn f -> %>
+                  &lt;label>
+                    Title: &lt;%= text_input f, :title, value: @old_book.title %>
+                  &lt;/label>
+                  &lt;label>
+                      Author: &lt;%= text_input f, :author, value: @old_book.author %>
+                  &lt;/label>
+                  &lt;label>
+                      Editor: &lt;%= text_input f, :editor, value: @old_book.editor %>
+                  &lt;/label>
+                  &lt;label>
+                      Publication date: &lt;%= datetime_select f, :publicationDate, value: @old_book.publicationDate %>
+                  &lt;/label>
+                  &lt;%= submit "Update" %>
+                &lt;% end %>
+              &lt;/div>
+            </programlisting>
+          </listitem>
+        </itemizedlist>
+      </para>
+    </section>
   </section>
+  <para/>
+  <para>
+    Je vous remercie d'avoir lue ce petit article de présentation sur le framework Phoenix. Le framework est bien sur bien plus puissant que ce que nous avons présenté dans cet article, celui-ci étant destiné à un public non spécialisé. Si vous voulez aller plus loin, la documentation du framework est assez complète, et il est très facile de trouver des exemples sur github.
+  </para>
+  <para>
+    Vous pouvez retrouver le répertoir contenant tous les codes présentés dans cet article à cette adresse: <ulink url="https://github.com/titouanfreville/Supinfos_Articles/tree/master/MSc1/elixir_article/phoenix_framework/supinfo_phoenix_learning">https://github.com/titouanfreville/Supinfos_Articles/tree/master/MSc1/elixir_article/phoenix_framework/supinfo_phoenix_learning</ulink>
+  </para>
 </section>

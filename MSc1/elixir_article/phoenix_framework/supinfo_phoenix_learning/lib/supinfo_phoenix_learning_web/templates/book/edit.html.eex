@@ -1,0 +1,18 @@
+<div class="jumbotron">
+  <h2>Edit Book</h2>
+  <%= form_for @changeset, book_path(@conn, :update, @old_book.bookID), [as: :book, method: :put], fn f -> %>
+    <label>
+       Title: <%= text_input f, :title, value: @old_book.title %>
+    </label>
+    <label>
+        Author: <%= text_input f, :author, value: @old_book.author %>
+    </label>
+    <label>
+        Editor: <%= text_input f, :editor, value: @old_book.editor %>
+    </label>
+    <label>
+        Publication date: <%= datetime_select f, :publicationDate, value: @old_book.publicationDate %>
+    </label>
+    <%= submit "Update" %>
+  <% end %>
+</div>

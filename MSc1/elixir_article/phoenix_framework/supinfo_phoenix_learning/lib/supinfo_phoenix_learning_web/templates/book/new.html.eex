@@ -1,0 +1,21 @@
+<div class="jumbotron">
+  <h2>New Book</h2>
+  <%= form_for @changeset, book_path(@conn, :create), [as: :register], fn f -> %>
+    <label>
+       Title: <%= text_input f, :title %>
+    </label>
+    <label>
+        Author: <%= text_input f, :author %>
+    </label>
+    <label>
+        Editor: <%= text_input f, :editor %>
+    </label>
+    <label>
+        Book id: <%= text_input f, :bookID %>
+    </label>
+    <label>
+        Publication date: <%= datetime_select f, :publicationDate %>
+    </label>
+    <%= submit "Register" %>
+  <% end %>
+</div>
